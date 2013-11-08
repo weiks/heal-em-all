@@ -9,7 +9,9 @@ Imagine, what if the cure exists? If zombies plague can be stoped? But watch out
 -   [Kris Urbas](https://twitter.com/krzysu) - programming, story
 - 	[Pawel Madeja](http://pawelmadeja.com/) - graphics
 
-## Great thanks to authors of these open source projects!
+## Open source
+
+Great thanks to authors of these projects!
 
 -   [phaser.io](http://phaser.io/)
 -   [grunt.js](http://gruntjs.com/)
