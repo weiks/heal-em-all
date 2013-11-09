@@ -23,12 +23,10 @@ BasicGame.Preloader.prototype = {
         // this.load.setPreloadSprite(this.preloadBar);
 
         //  Here we load most of the assets our game needs
-        this.load.image('bet', 'images/rocket.png');
-        this.load.image('ball', 'images/ball.png');
-        this.load.image('background', 'images/background1.jpg');
-
         this.load.tilemap('map', 'data/map.tmx', null, Phaser.Tilemap.CSV);
         this.load.tileset('tiles', 'images/tiles.png', 70, 70, -1, 0, 0);
+
+        this.load.image('player', 'images/player.png');
 
 
     },

@@ -1,29 +1,37 @@
 BasicGame.Player = function(game, params) {
-	this.game = game;
-	this.sprite = game.add.sprite(450, 80, 'ball');
+    this.game = game;
+    this.sprite = game.add.sprite(450, 80, 'player');
     this.sprite.anchor.setTo(0.5, 0.5);
+
+    this.jumpSpeed = 600;
+    this.movingSpeed = 300;
 };
 
 BasicGame.Player.prototype = {
 
     update: function() {
+        var cursors = this.game.cursors;
+
+        this.sprite.body.gravity.y = 14;
+        this.sprite.body.bounce.y = 0.1;
         this.sprite.body.velocity.x = 0;
-        this.sprite.body.velocity.y = 0;
-        this.sprite.body.angularVelocity = 0;
+        this.sprite.body.collideWorldBounds = true;
 
-        if (this.game.cursors.left.isDown)
-        {
-            this.sprite.body.angularVelocity = -200;
-        }
-        else if (this.game.cursors.right.isDown)
-        {
-            this.sprite.body.angularVelocity = 200;
+        if(cursors.up.isDown) {
+            if(this.sprite.body.touching.down) {
+                this.sprite.body.velocity.y = -this.jumpSpeed;
+            }
         }
 
-        if (this.game.cursors.up.isDown)
-        {
-            this.sprite.body.velocity.copyFrom(this.game.physics.velocityFromAngle(this.sprite.angle, 300));
+        if(cursors.left.isDown) {
+            this.sprite.body.velocity.x = -this.movingSpeed;
+            this.sprite.scale.x = -1;
         }
+        else if(cursors.right.isDown) {
+            this.sprite.body.velocity.x = this.movingSpeed;
+            this.sprite.scale.x = 1;
+        }
+
     }
 
 }
