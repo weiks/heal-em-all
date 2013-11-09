@@ -34,7 +34,7 @@ BasicGame.Game.prototype = {
         // map
         var map = this.add.tilemap('map');
         var tileset = this.add.tileset('tiles');
-        // console.log(tileset);
+
         tileset.setCollisionRange(0, tileset.total - 1, true, true, true, true);
 
         this.layer = this.add.tilemapLayer(0, 0, 1024, 768, tileset, map, 0);
@@ -44,6 +44,9 @@ BasicGame.Game.prototype = {
         this.player = new BasicGame.Player(this);
         this.camera.follow(this.player.sprite);
 
+        // bullets
+        this.bullet = new BasicGame.Bullet(this, this.player);
+
     },
 
     update: function() {
@@ -51,6 +54,7 @@ BasicGame.Game.prototype = {
         this.physics.collide(this.player.sprite, this.layer);
 
         this.player.update();
+        this.bullet.update();
 
     },
 

@@ -27,7 +27,7 @@ BasicGame.Preloader.prototype = {
         this.load.tileset('tiles', 'images/tiles.png', 70, 70, -1, 0, 0);
 
         this.load.image('player', 'images/player.png');
-
+        this.load.image('bullet', 'images/bullet.png');
 
     },
 
