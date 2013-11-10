@@ -1,0 +1,42 @@
+{
+  "zombie1": {
+    "sx": 0,
+    "sy": 0,
+    "cols": 1,
+    "tilew": 68,
+    "tileh": 90,
+    "frames": 5
+  },
+  "zombie2": {
+    "sx": 68,
+    "sy": 0,
+    "cols": 1,
+    "tilew": 68,
+    "tileh": 90,
+    "frames": 5
+  },
+  "zombie3": {
+    "sx": 136,
+    "sy": 0,
+    "cols": 1,
+    "tilew": 68,
+    "tileh": 90,
+    "frames": 5
+  },
+  "zombie4": {
+    "sx": 204,
+    "sy": 0,
+    "cols": 1,
+    "tilew": 68,
+    "tileh": 90,
+    "frames": 5
+  },
+  "zombie5": {
+    "sx": 272,
+    "sy": 0,
+    "cols": 1,
+    "tilew": 68,
+    "tileh": 90,
+    "frames": 5
+  }
+}

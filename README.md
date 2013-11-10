@@ -13,5 +13,5 @@ Imagine, what if the cure exists? If zombies plague can be stoped? But watch out
 
 Great thanks to authors of these projects!
 
--   [phaser.io](http://phaser.io/)
+-   [Quintus JavaScript game engine](http://html5quintus.com/)
 -   [grunt.js](http://gruntjs.com/)
