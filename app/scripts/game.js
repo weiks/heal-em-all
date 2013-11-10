@@ -80,6 +80,10 @@
       return document.body.appendChild(stats.domElement);
     },
     stageLevel: function() {
+      this.Q.state.reset({
+        enemiesCounter: 0,
+        lives: 0
+      });
       this.Q.clearStages();
       this.Q.stageScene("level1", {
         sort: true
@@ -315,7 +319,7 @@
   Q = Game.Q;
 
   Q.scene("stats", function(stage) {
-    var button, container, isPaused, lifesLabel, pausedScreen;
+    var button, container, enemiesCounterLabel, isPaused, lifesLabel, pausedScreen;
     container = stage.insert(new Q.UI.Container({
       x: Q.width / 2,
       y: 20,
@@ -323,14 +327,10 @@
       h: 40,
       radius: 0
     }));
-    lifesLabel = container.insert(new Q.UI.Text({
-      label: "Lives: " + Game.player.p.lifePoints,
-      color: "#000",
-      x: 0,
-      y: 0,
-      size: 30
-    }));
+    lifesLabel = container.insert(new Q.UI.LivesCounter());
     lifesLabel.p.x = -container.p.w / 2 + lifesLabel.p.w / 2 + 20;
+    enemiesCounterLabel = container.insert(new Q.UI.EnemiesCounter());
+    enemiesCounterLabel.p.x = -container.p.w / 2 + enemiesCounterLabel.p.w / 2 + 160;
     Game.infoLabel = new Q.UI.InfoLabel;
     container.insert(Game.infoLabel);
     button = container.insert(new Q.UI.Button({
@@ -379,7 +379,7 @@
         w: 5,
         h: 5,
         speed: 500,
-        gravity: 0,
+        gravity: 1,
         type: Game.SPRITE_BULLET,
         collisionMask: Game.SPRITE_TILES | Game.SPRITE_ENEMY
       });
@@ -446,6 +446,7 @@
         type: Game.SPRITE_ENEMY,
         collisionMask: Game.SPRITE_TILES | Game.SPRITE_PLAYER | Game.SPRITE_BULLET
       });
+      Q.state.inc("enemiesCounter", 1);
       this.add("2d, animation");
       this.on("hit", this, "collision");
       this.on("bump.right", this, "hitFromRight");
@@ -493,7 +494,8 @@
     decreaseLifePoints: function() {
       this.p.lifePoints -= 1;
       if (this.p.lifePoints <= 0) {
-        return this.destroy();
+        this.destroy();
+        return Q.state.dec("enemiesCounter", 1);
       }
     },
     canSeeThePlayer: function() {
@@ -509,37 +511,6 @@
       } else {
         this.canSeeThePlayerObj.status = false;
       }
-    }
-  });
-
-}).call(this);
-
-(function() {
-  var Q;
-
-  Q = Game.Q;
-
-  Q.UI.InfoLabel = Q.UI.Text.extend("UI.InfoLabel", {
-    init: function(p, defaultProps) {
-      return this._super(p, {
-        label: "",
-        color: "#000",
-        x: 100,
-        y: 0,
-        size: 28
-      });
-    },
-    intro: function() {
-      return this.p.label = "I need to cure them";
-    },
-    clear: function() {
-      return this.p.label = "";
-    },
-    lifeLevelLow: function() {
-      return this.p.label = "I need to be more careful";
-    },
-    lifeLost: function() {
-      return this.p.label = "That hurts!";
     }
   });
 
@@ -592,6 +563,7 @@
       this.p.speed = 300;
       this.p.savedPosition.x = this.p.x;
       this.p.savedPosition.y = this.p.y;
+      Q.state.set("lives", this.p.lifePoints);
       this.on("bump.left, bump.right, bump.bottom, bump.top", this, "collision");
       return this.on("player.outOfMap", this, "restore");
     },
@@ -645,7 +617,6 @@
       }
     },
     updateLifePoints: function(newLives) {
-      var lifesLabel;
       if (newLives != null) {
         this.p.lifePoints += newLives;
       } else {
@@ -662,12 +633,90 @@
           Game.infoLabel.lifeLevelLow();
         }
       }
-      lifesLabel = Q("UI.Text", 1).first();
-      return lifesLabel.p.label = "Lives: " + this.p.lifePoints;
+      return Q.state.set("lives", this.p.lifePoints);
     },
     restore: function() {
       this.p.x = this.p.savedPosition.x;
       return this.p.y = this.p.savedPosition.y;
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
+  Q.UI.EnemiesCounter = Q.UI.Text.extend("UI.EnemiesCounter", {
+    init: function(p) {
+      this._super(p, {
+        text: "Zombies left: ",
+        label: "Zombies left: " + Q.state.get("enemiesCounter"),
+        size: 30,
+        x: 0,
+        y: 0,
+        color: "#000"
+      });
+      return Q.state.on("change.enemiesCounter", this, "updateLabel");
+    },
+    updateLabel: function(enemiesCounter) {
+      return this.p.label = this.p.text + enemiesCounter;
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
+  Q.UI.InfoLabel = Q.UI.Text.extend("UI.InfoLabel", {
+    init: function(p, defaultProps) {
+      return this._super(p, {
+        label: "",
+        color: "#000",
+        x: 100,
+        y: 0,
+        size: 28
+      });
+    },
+    intro: function() {
+      return this.p.label = "I need to cure them";
+    },
+    clear: function() {
+      return this.p.label = "";
+    },
+    lifeLevelLow: function() {
+      return this.p.label = "I need to be more careful";
+    },
+    lifeLost: function() {
+      return this.p.label = "That hurts!";
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
+  Q.UI.LivesCounter = Q.UI.Text.extend("UI.LivesCounter", {
+    init: function(p) {
+      this._super(p, {
+        text: "Lives: ",
+        label: "Lives: " + Q.state.get("lives"),
+        size: 30,
+        x: 0,
+        y: 0,
+        color: "#000"
+      });
+      return Q.state.on("change.lives", this, "updateLabel");
+    },
+    updateLabel: function(lives) {
+      return this.p.label = this.p.text + lives;
     }
   });
 

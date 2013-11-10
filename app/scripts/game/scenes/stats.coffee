@@ -9,19 +9,19 @@ Q.scene "stats", (stage) ->
     # fill: "rgba(0,0,0,0.5)"
     radius: 0
 
-  # lifes indicator
-  lifesLabel = container.insert new Q.UI.Text
-    label: "Lives: " + Game.player.p.lifePoints
-    color: "#000"
-    x: 0
-    y: 0
-    size: 30
 
+  # lifes indicator
+  lifesLabel = container.insert new Q.UI.LivesCounter()
   lifesLabel.p.x = -container.p.w/2 + lifesLabel.p.w/2 + 20 # margin
+
+  # enemies counter
+  enemiesCounterLabel = container.insert new Q.UI.EnemiesCounter()
+  enemiesCounterLabel.p.x = -container.p.w/2 + enemiesCounterLabel.p.w/2 + 160 # margin
 
   # game info/progress label
   Game.infoLabel = new Q.UI.InfoLabel
   container.insert Game.infoLabel
+
 
   # pause button
   button = container.insert new Q.UI.Button

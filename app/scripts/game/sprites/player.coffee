@@ -42,6 +42,8 @@ Q.Sprite.extend "Player",
     @p.savedPosition.x = @p.x
     @p.savedPosition.y = @p.y
 
+    Q.state.set "lives", @p.lifePoints
+
     # events
     @on "bump.left, bump.right, bump.bottom, bump.top", @, "collision"
     @on "player.outOfMap", @, "restore"
@@ -126,8 +128,7 @@ Q.Sprite.extend "Player",
         Game.infoLabel.lifeLevelLow()
 
     # always update label
-    lifesLabel = Q("UI.Text", 1).first()
-    lifesLabel.p.label = "Lives: " + @p.lifePoints
+    Q.state.set "lives", @p.lifePoints
 
   restore: ->
     @p.x = @p.savedPosition.x

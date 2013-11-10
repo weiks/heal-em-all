@@ -85,6 +85,10 @@ window.Game =
     document.body.appendChild( stats.domElement )
 
   stageLevel: ->
+    @Q.state.reset
+      enemiesCounter: 0
+      lives: 0
+
     @Q.clearStages()
     @Q.stageScene "level1",
       sort: true

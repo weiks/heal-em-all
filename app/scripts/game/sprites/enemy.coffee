@@ -26,7 +26,9 @@ Q.Sprite.extend "Enemy",
       type: Game.SPRITE_ENEMY
       collisionMask: Game.SPRITE_TILES | Game.SPRITE_PLAYER | Game.SPRITE_BULLET
 
-    @add("2d, animation")
+    Q.state.inc "enemiesCounter", 1
+
+    @add "2d, animation"
 
     # events
     @on "hit", @, "collision"
@@ -87,6 +89,9 @@ Q.Sprite.extend "Enemy",
 
     if @p.lifePoints <= 0
       @destroy()
+
+      # update enemies counter
+      Q.state.dec "enemiesCounter", 1
 
   canSeeThePlayer: ->
     player = Game.player.p

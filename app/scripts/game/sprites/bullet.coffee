@@ -8,7 +8,7 @@ Q.Sprite.extend "Bullet",
       w: 5
       h: 5
       speed: 500
-      gravity: 0
+      gravity: 1
       type: Game.SPRITE_BULLET
       collisionMask: Game.SPRITE_TILES | Game.SPRITE_ENEMY
 
