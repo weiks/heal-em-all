@@ -78,6 +78,9 @@ Q.Sprite.extend "Enemy",
     # set the correct direction of sprite
     @flip()
 
+    if @p.y > Game.map.p.h
+      @die()
+
   flip: ->
     if(@p.vx > 0)
       @p.flip = "x"
@@ -88,10 +91,13 @@ Q.Sprite.extend "Enemy",
     @p.lifePoints -= 1
 
     if @p.lifePoints <= 0
-      @destroy()
+      @die()
 
-      # update enemies counter
-      Q.state.dec "enemiesCounter", 1
+  die: ->
+    @destroy()
+
+    # update enemies counter
+    Q.state.dec "enemiesCounter", 1
 
   canSeeThePlayer: ->
     player = Game.player.p

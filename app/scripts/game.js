@@ -482,7 +482,10 @@
       if (!nextTile && ground && !this.canSeeThePlayerObj.status && this.p.canSeeThePlayerTimeout === 0) {
         this.p.vx = -this.p.vx;
       }
-      return this.flip();
+      this.flip();
+      if (this.p.y > Game.map.p.h) {
+        return this.die();
+      }
     },
     flip: function() {
       if (this.p.vx > 0) {
@@ -494,9 +497,12 @@
     decreaseLifePoints: function() {
       this.p.lifePoints -= 1;
       if (this.p.lifePoints <= 0) {
-        this.destroy();
-        return Q.state.dec("enemiesCounter", 1);
+        return this.die();
       }
+    },
+    die: function() {
+      this.destroy();
+      return Q.state.dec("enemiesCounter", 1);
     },
     canSeeThePlayer: function() {
       var isCloseFromLeft, isCloseFromRight, isTheSameY, lineOfSight, player;
