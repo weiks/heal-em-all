@@ -42,21 +42,21 @@ Q.scene "level1", (stage) ->
   enemies = [
 
     ["Enemy", Q.tilePos(39, 9, {sheet: "zombie4"})]
-    ["Enemy", Q.tilePos(39, 15, {vx: 100, sheet: "zombie5"})]
+    ["Enemy", Q.tilePos(39, 15, {startLeft: true, sheet: "zombie5"})]
     ["Enemy", Q.tilePos(39, 21, {sheet: "zombie3"})]
-    ["Enemy", Q.tilePos(39, 27, {vx: 100, sheet: "zombie2"})]
+    ["Enemy", Q.tilePos(39, 27, {startLeft: true, sheet: "zombie2"})]
     ["Enemy", Q.tilePos(39, 33, {sheet: "zombie1"})]
 
     ["Enemy", Q.tilePos(49, 9, {sheet: "zombie3"})]
     ["Enemy", Q.tilePos(49, 15, {sheet: "zombie2"})]
-    ["Enemy", Q.tilePos(49, 27, {vx: 100})]
+    ["Enemy", Q.tilePos(49, 27, {startLeft: true})]
     ["Enemy", Q.tilePos(49, 33, {sheet: "zombie4"})]
 
-    ["Enemy", Q.tilePos(60, 9, {vx: 100, sheet: "zombie5"})]
+    ["Enemy", Q.tilePos(60, 9, {startLeft: true, sheet: "zombie5"})]
     ["Enemy", Q.tilePos(60, 15, {sheet: "zombie1"})]
-    ["Enemy", Q.tilePos(60, 21, {vx: 100, sheet: "zombie4"})]
+    ["Enemy", Q.tilePos(60, 21, {startLeft: true, sheet: "zombie4"})]
     ["Enemy", Q.tilePos(60, 27, {sheet: "zombie3"})]
-    ["Enemy", Q.tilePos(60, 33, {vx: 100, sheet: "zombie2"})]
+    ["Enemy", Q.tilePos(60, 33, {startLeft: true, sheet: "zombie2"})]
 
   ]
 

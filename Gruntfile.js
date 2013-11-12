@@ -30,10 +30,10 @@ module.exports = function (grunt) {
                 files: ['test/spec/{,*/}*.coffee'],
                 tasks: ['coffee:test']
             },
-            // compass: {
-            //     files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
-            //     tasks: ['compass:server', 'autoprefixer']
-            // },
+            compass: {
+                files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
+                tasks: ['compass:server', 'autoprefixer']
+            },
             styles: {
                 files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
                 tasks: ['copy:styles', 'autoprefixer']
@@ -292,7 +292,7 @@ module.exports = function (grunt) {
         },
         concurrent: {
             server: [
-                // 'compass',
+                'compass',
                 'coffee:dist',
                 'copy:styles'
             ],
@@ -302,7 +302,7 @@ module.exports = function (grunt) {
             ],
             dist: [
                 'coffee',
-                // 'compass',
+                'compass',
                 'copy:styles',
                 'imagemin',
                 'svgmin',

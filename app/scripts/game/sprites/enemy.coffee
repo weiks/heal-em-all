@@ -18,7 +18,7 @@ Q.Sprite.extend "Enemy",
       lifePoints: 1
       x: 0
       y: 0
-      vx: -100
+      vx: 0
       z: 10
       canSeeThePlayerTimeout: 0
       sheet: "zombie1"
@@ -28,7 +28,7 @@ Q.Sprite.extend "Enemy",
 
     Q.state.inc "enemiesCounter", 1
 
-    @add "2d, animation"
+    @add "2d, animation" # zombieAI
 
     # events
     @on "hit", @, "collision"
@@ -52,40 +52,11 @@ Q.Sprite.extend "Enemy",
     @p.vx = -col.impact
 
   step: (dt) ->
-    # some AI - always try to catch player
-    @canSeeThePlayer() # create @canSeeThePlayerObj object
-
-    if @canSeeThePlayerObj.status
-      # I see the player, I will remember that for X sec
-      @p.canSeeThePlayerTimeout = 2
-
-      if (@canSeeThePlayerObj.left and @p.vx > 0) or (@canSeeThePlayerObj.right and @p.vx < 0)
-        # enemy goes in wrong direction, change it
-        @p.vx = -@p.vx
-    else
-      # run timeout
-      @p.canSeeThePlayerTimeout = Math.max(@p.canSeeThePlayerTimeout - dt, 0)
-
-    # locate gap and turn back
-    dirX = @p.vx/Math.abs(@p.vx)
-    ground = Q.stage().locate(@p.x, @p.y + @p.h/2 + 1, Game.SPRITE_TILES)
-    nextTile = Q.stage().locate(@p.x + dirX * @p.w/2 + dirX, @p.y + @p.h/2 + 1, Game.SPRITE_TILES)
-
-    # if we are on ground and there is a cliff
-    if(!nextTile and ground and !@canSeeThePlayerObj.status and @p.canSeeThePlayerTimeout == 0)
-      @p.vx = -@p.vx
-
-    # set the correct direction of sprite
-    @flip()
+    if @zombieStep?
+      @zombieStep(dt)
 
     if @p.y > Game.map.p.h
       @die()
-
-  flip: ->
-    if(@p.vx > 0)
-      @p.flip = "x"
-    else
-      @p.flip = false
 
   decreaseLifePoints: ->
     @p.lifePoints -= 1
@@ -99,22 +70,4 @@ Q.Sprite.extend "Enemy",
     # update enemies counter
     Q.state.dec "enemiesCounter", 1
 
-  canSeeThePlayer: ->
-    player = Game.player.p
-    lineOfSight = 250
-
-    @canSeeThePlayerObj = {}
-
-    # is player on the same level as enemy?
-    isTheSameY = player.y > @p.y - 10 and player.y < @p.y + 10
-
-    # is player in the near of the enemy?
-    @canSeeThePlayerObj.left = isCloseFromLeft = (player.x > @p.x - lineOfSight) and player.x < @p.x
-    @canSeeThePlayerObj.right = isCloseFromRight = (player.x < @p.x + lineOfSight) and player.x > @p.x
-
-    if isTheSameY and (isCloseFromLeft or isCloseFromRight)
-      @canSeeThePlayerObj.status = true
-    else
-      @canSeeThePlayerObj.status = false
-
-    return
+  

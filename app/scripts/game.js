@@ -125,6 +125,70 @@
 
   Q = Game.Q;
 
+  Q.component("zombieAI", {
+    added: function() {
+      var p;
+      p = this.entity.p;
+      if (p.startLeft === true) {
+        return p.vx = 100;
+      } else {
+        return p.vx = -100;
+      }
+    },
+    extend: {
+      zombieStep: function(dt) {
+        var dirX, ground, nextTile;
+        this.canSeeThePlayer();
+        if (this.canSeeThePlayerObj.status) {
+          this.p.canSeeThePlayerTimeout = 2;
+          if ((this.canSeeThePlayerObj.left && this.p.vx > 0) || (this.canSeeThePlayerObj.right && this.p.vx < 0)) {
+            this.p.vx = -this.p.vx;
+          }
+        } else {
+          this.p.canSeeThePlayerTimeout = Math.max(this.p.canSeeThePlayerTimeout - dt, 0);
+        }
+        dirX = this.p.vx / Math.abs(this.p.vx);
+        ground = Q.stage().locate(this.p.x, this.p.y + this.p.h / 2 + 1, Game.SPRITE_TILES);
+        nextTile = Q.stage().locate(this.p.x + dirX * this.p.w / 2 + dirX, this.p.y + this.p.h / 2 + 1, Game.SPRITE_TILES);
+        if (!nextTile && ground && !this.canSeeThePlayerObj.status && this.p.canSeeThePlayerTimeout === 0) {
+          this.p.vx = -this.p.vx;
+        }
+        this.flip();
+        if (this.p.y > Game.map.p.h) {
+          return this.die();
+        }
+      },
+      flip: function() {
+        if (this.p.vx > 0) {
+          return this.p.flip = "x";
+        } else {
+          return this.p.flip = false;
+        }
+      },
+      canSeeThePlayer: function() {
+        var isCloseFromLeft, isCloseFromRight, isTheSameY, lineOfSight, player;
+        player = Game.player.p;
+        lineOfSight = 250;
+        this.canSeeThePlayerObj = {};
+        isTheSameY = player.y > this.p.y - 10 && player.y < this.p.y + 10;
+        this.canSeeThePlayerObj.left = isCloseFromLeft = (player.x > this.p.x - lineOfSight) && player.x < this.p.x;
+        this.canSeeThePlayerObj.right = isCloseFromRight = (player.x < this.p.x + lineOfSight) && player.x > this.p.x;
+        if (isTheSameY && (isCloseFromLeft || isCloseFromRight)) {
+          this.canSeeThePlayerObj.status = true;
+        } else {
+          this.canSeeThePlayerObj.status = false;
+        }
+      }
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
   Q.load(Game.assets.all, function() {
     Q.sheet(Game.assets.map.sheetName, Game.assets.map.sheet, {
       tileW: Game.assets.map.tileSize,
@@ -214,7 +278,7 @@
         })
       ], [
         "Enemy", Q.tilePos(39, 15, {
-          vx: 100,
+          startLeft: true,
           sheet: "zombie5"
         })
       ], [
@@ -223,7 +287,7 @@
         })
       ], [
         "Enemy", Q.tilePos(39, 27, {
-          vx: 100,
+          startLeft: true,
           sheet: "zombie2"
         })
       ], [
@@ -240,7 +304,7 @@
         })
       ], [
         "Enemy", Q.tilePos(49, 27, {
-          vx: 100
+          startLeft: true
         })
       ], [
         "Enemy", Q.tilePos(49, 33, {
@@ -248,7 +312,7 @@
         })
       ], [
         "Enemy", Q.tilePos(60, 9, {
-          vx: 100,
+          startLeft: true,
           sheet: "zombie5"
         })
       ], [
@@ -257,7 +321,7 @@
         })
       ], [
         "Enemy", Q.tilePos(60, 21, {
-          vx: 100,
+          startLeft: true,
           sheet: "zombie4"
         })
       ], [
@@ -266,7 +330,7 @@
         })
       ], [
         "Enemy", Q.tilePos(60, 33, {
-          vx: 100,
+          startLeft: true,
           sheet: "zombie2"
         })
       ]
@@ -438,7 +502,7 @@
         lifePoints: 1,
         x: 0,
         y: 0,
-        vx: -100,
+        vx: 0,
         z: 10,
         canSeeThePlayerTimeout: 0,
         sheet: "zombie1",
@@ -466,32 +530,11 @@
       return this.p.vx = -col.impact;
     },
     step: function(dt) {
-      var dirX, ground, nextTile;
-      this.canSeeThePlayer();
-      if (this.canSeeThePlayerObj.status) {
-        this.p.canSeeThePlayerTimeout = 2;
-        if ((this.canSeeThePlayerObj.left && this.p.vx > 0) || (this.canSeeThePlayerObj.right && this.p.vx < 0)) {
-          this.p.vx = -this.p.vx;
-        }
-      } else {
-        this.p.canSeeThePlayerTimeout = Math.max(this.p.canSeeThePlayerTimeout - dt, 0);
+      if (this.zombieStep != null) {
+        this.zombieStep(dt);
       }
-      dirX = this.p.vx / Math.abs(this.p.vx);
-      ground = Q.stage().locate(this.p.x, this.p.y + this.p.h / 2 + 1, Game.SPRITE_TILES);
-      nextTile = Q.stage().locate(this.p.x + dirX * this.p.w / 2 + dirX, this.p.y + this.p.h / 2 + 1, Game.SPRITE_TILES);
-      if (!nextTile && ground && !this.canSeeThePlayerObj.status && this.p.canSeeThePlayerTimeout === 0) {
-        this.p.vx = -this.p.vx;
-      }
-      this.flip();
       if (this.p.y > Game.map.p.h) {
         return this.die();
-      }
-    },
-    flip: function() {
-      if (this.p.vx > 0) {
-        return this.p.flip = "x";
-      } else {
-        return this.p.flip = false;
       }
     },
     decreaseLifePoints: function() {
@@ -503,20 +546,6 @@
     die: function() {
       this.destroy();
       return Q.state.dec("enemiesCounter", 1);
-    },
-    canSeeThePlayer: function() {
-      var isCloseFromLeft, isCloseFromRight, isTheSameY, lineOfSight, player;
-      player = Game.player.p;
-      lineOfSight = 250;
-      this.canSeeThePlayerObj = {};
-      isTheSameY = player.y > this.p.y - 10 && player.y < this.p.y + 10;
-      this.canSeeThePlayerObj.left = isCloseFromLeft = (player.x > this.p.x - lineOfSight) && player.x < this.p.x;
-      this.canSeeThePlayerObj.right = isCloseFromRight = (player.x < this.p.x + lineOfSight) && player.x > this.p.x;
-      if (isTheSameY && (isCloseFromLeft || isCloseFromRight)) {
-        this.canSeeThePlayerObj.status = true;
-      } else {
-        this.canSeeThePlayerObj.status = false;
-      }
     }
   });
 
