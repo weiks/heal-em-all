@@ -4,6 +4,9 @@ Q.component "gun",
   added: ->
     Q.input.on("fire", @entity, "fireGun")
 
+  destroyed: ->
+  	Q.input.off("fire", @entity)
+
   extend:
     fireGun: ->
       bullet = @stage.insert new Q.Bullet

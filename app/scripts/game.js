@@ -5,6 +5,7 @@
       this.Q = Q = Quintus({
         development: true
       });
+      Q.debug = true;
       Q.include("Sprites, Scenes, Input, Touch, UI, 2D, Anim");
       Q.setup({
         width: 640,
@@ -106,6 +107,9 @@
     added: function() {
       return Q.input.on("fire", this.entity, "fireGun");
     },
+    destroyed: function() {
+      return Q.input.off("fire", this.entity);
+    },
     extend: {
       fireGun: function() {
         var bullet;
@@ -125,15 +129,75 @@
 
   Q = Game.Q;
 
+  Q.animations("human", {
+    stand: {
+      frames: [4],
+      rate: 1 / 2
+    },
+    run: {
+      frames: [4, 5, 6],
+      rate: 1 / 4
+    },
+    hit: {
+      frames: [0],
+      loop: false,
+      rate: 1 / 2,
+      next: "stand"
+    },
+    jump: {
+      frames: [2],
+      rate: 1 / 2
+    }
+  });
+
+  Q.component("humanAI", {
+    added: function() {
+      var p;
+      p = this.entity.p;
+      p.sheet = "player";
+      p.sprite = "human";
+      p.vx = 0;
+      Q._generatePoints(this.entity);
+      Q._generateCollisionPoints(this.entity);
+      return this.entity.play("stand");
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
+  Q.animations("enemy", {
+    stand: {
+      frames: [4],
+      rate: 1
+    },
+    run: {
+      frames: [4, 3, 2],
+      rate: 1 / 4
+    },
+    hit: {
+      frames: [0],
+      loop: false,
+      rate: 1 / 2,
+      next: "run"
+    }
+  });
+
   Q.component("zombieAI", {
     added: function() {
       var p;
       p = this.entity.p;
       if (p.startLeft === true) {
-        return p.vx = 100;
+        p.vx = 100;
       } else {
-        return p.vx = -100;
+        p.vx = -100;
       }
+      p.sprite = "enemy";
+      return this.entity.play("run");
     },
     extend: {
       zombieStep: function(dt) {
@@ -335,8 +399,51 @@
         })
       ]
     ];
-    return stage.loadAssets(enemies);
+    stage.loadAssets(enemies);
+    return stage.on('step', Q.timer, "check");
   });
+
+  Q.timer = {
+    turnTime: 8,
+    controlledSprite: null,
+    nextZombie: 0,
+    check: function(dt) {
+      this.turnTime = Math.max(this.turnTime - dt, 0);
+      if (this.turnTime === 0) {
+        this.turnTime = 8;
+        if (!this.controlledSprite) {
+          this.controlledSprite = Game.player;
+        }
+        this.controlledSprite.del("platformerControls");
+        this.controlledSprite.p.vx = 0;
+        if (this.controlledSprite.isA('Player')) {
+          this.changeToZombie();
+        } else {
+          this.changeToPlayer();
+        }
+        this.controlledSprite.add("platformerControls");
+        return Q.stages[0].follow(this.controlledSprite, {
+          x: true,
+          y: true
+        }, {
+          minX: 0,
+          maxX: Game.map.p.w,
+          minY: 0,
+          maxY: Game.map.p.h
+        });
+      }
+    },
+    changeToZombie: function() {
+      this.controlledSprite = Q.stages[0].lists.Enemy[this.nextZombie];
+      this.nextZombie++;
+      if (this.nextZombie >= Q.stages[0].lists.Enemy.length) {
+        return this.nextZombie = 0;
+      }
+    },
+    changeToPlayer: function() {
+      return this.controlledSprite = Game.player;
+    }
+  };
 
 }).call(this);
 
@@ -483,19 +590,6 @@
 
   Q = Game.Q;
 
-  Q.animations("enemy", {
-    run: {
-      frames: [4, 3, 2],
-      rate: 1 / 4
-    },
-    hit: {
-      frames: [0],
-      loop: false,
-      rate: 1 / 2,
-      next: "run"
-    }
-  });
-
   Q.Sprite.extend("Enemy", {
     init: function(p) {
       this._super(p, {
@@ -505,22 +599,25 @@
         vx: 0,
         z: 10,
         canSeeThePlayerTimeout: 0,
-        sheet: "zombie1",
-        sprite: "enemy",
         type: Game.SPRITE_ENEMY,
         collisionMask: Game.SPRITE_TILES | Game.SPRITE_PLAYER | Game.SPRITE_BULLET
       });
       Q.state.inc("enemiesCounter", 1);
-      this.add("2d, animation");
+      this.add("2d, animation, zombieAI");
       this.on("hit", this, "collision");
       this.on("bump.right", this, "hitFromRight");
-      this.on("bump.left", this, "hitFromLeft");
-      return this.play("run");
+      return this.on("bump.left", this, "hitFromLeft");
     },
     collision: function(col) {
+      var human;
       if (col.obj.isA("Bullet")) {
         this.play("hit");
-        return this.decreaseLifePoints();
+        this.die();
+        human = this.stage.insert(new Q.Player({
+          x: this.p.x,
+          y: this.p.y
+        }));
+        return human.del("platformerControls, gun");
       }
     },
     hitFromRight: function(col) {

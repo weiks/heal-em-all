@@ -5,7 +5,7 @@ window.Game =
     @Q = Q = Quintus
       development: true
 
-    # Q.debug = true
+    Q.debug = true
     # Q.debugFill = true
 
     # main setup

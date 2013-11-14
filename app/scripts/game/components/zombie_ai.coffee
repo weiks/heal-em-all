@@ -1,13 +1,34 @@
 Q = Game.Q
 
+# animations object
+Q.animations "enemy",
+  stand:
+    frames: [4]
+    rate: 1
+  run:
+    frames: [4, 3, 2]
+    rate: 1/4
+  hit:
+    frames: [0]
+    loop: false
+    rate: 1/2
+    next: "run"
+
 Q.component "zombieAI",
   added: ->
-    p = @.entity.p
+    p = @entity.p
 
     if p.startLeft == true
       p.vx = 100
     else
       p.vx = -100
+
+    # if !p.sheet?
+    #   p.sheet = "zombie1"
+    p.sprite = "enemy"
+
+    # animations
+    @entity.play "run"
 
   extend:
     zombieStep: (dt) ->
