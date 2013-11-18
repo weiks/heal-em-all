@@ -25,6 +25,7 @@ window.Game =
     @SPRITE_ENEMY = 4
     @SPRITE_BULLET = 8
     @SPRITE_PLAYER_COLLECTIBLE = 16
+    @SPRITE_HUMAN = 32
     @SPRITE_ALL = 0xFFFF
 
     # rest of init

@@ -23,8 +23,6 @@ Q.component "zombieAI",
     else
       p.vx = -100
 
-    # if !p.sheet?
-    #   p.sheet = "zombie1"
     p.sprite = "enemy"
 
     # animations

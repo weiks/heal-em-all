@@ -9,6 +9,7 @@ Q.Sprite.extend "Enemy",
       y: 0
       vx: 0
       z: 20
+      sheet: "zombie1"
       canSeeThePlayerTimeout: 0
       type: Game.SPRITE_ENEMY
       collisionMask: Game.SPRITE_TILES | Game.SPRITE_PLAYER | Game.SPRITE_BULLET
@@ -25,13 +26,7 @@ Q.Sprite.extend "Enemy",
   collision: (col) ->
     if col.obj.isA("Bullet")
       @play("hit")
-      # @decreaseLifePoints()
-      # @del "zombieAI"
-      # @add "humanAI"
-
-      @die()
-      human = @stage.insert new Q.Player(x: @p.x, y: @p.y)
-      human.del "platformerControls, gun"
+      @decreaseLifePoints()
 
   hitFromRight: (col) ->
     # don't stop after collision
@@ -57,7 +52,8 @@ Q.Sprite.extend "Enemy",
   die: ->
     @destroy()
 
+    # replace zombie with human
+    @stage.insert new Q.Human(x: @p.x, y: @p.y)
+
     # update enemies counter
     Q.state.dec "enemiesCounter", 1
-
-  

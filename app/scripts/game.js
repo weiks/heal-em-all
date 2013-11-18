@@ -20,6 +20,7 @@
       this.SPRITE_ENEMY = 4;
       this.SPRITE_BULLET = 8;
       this.SPRITE_PLAYER_COLLECTIBLE = 16;
+      this.SPRITE_HUMAN = 32;
       this.SPRITE_ALL = 0xFFFF;
       this.prepareAssets();
       this.initStats();
@@ -123,49 +124,6 @@
           direction: this.p.direction
         }));
       }
-    }
-  });
-
-}).call(this);
-
-(function() {
-  var Q;
-
-  Q = Game.Q;
-
-  Q.animations("human", {
-    stand: {
-      frames: [4],
-      rate: 1 / 2
-    },
-    run: {
-      frames: [4, 5, 6],
-      rate: 1 / 4
-    },
-    hit: {
-      frames: [0],
-      loop: false,
-      rate: 1 / 2,
-      next: "stand"
-    },
-    jump: {
-      frames: [2],
-      rate: 1 / 2
-    }
-  });
-
-  Q.component("humanAI", {
-    added: function() {
-      var p;
-      p = this.entity.p;
-      p.sheet = "player";
-      p.sprite = "human";
-      p.vx = 0;
-      p.type = Game.SPRITE_PLAYER_COLLECTIBLE;
-      p.collisionMask = Game.SPRITE_TILES;
-      Q._generatePoints(this.entity);
-      Q._generateCollisionPoints(this.entity);
-      return this.entity.play("stand");
     }
   });
 
@@ -631,6 +589,7 @@
         y: 0,
         vx: 0,
         z: 20,
+        sheet: "zombie1",
         canSeeThePlayerTimeout: 0,
         type: Game.SPRITE_ENEMY,
         collisionMask: Game.SPRITE_TILES | Game.SPRITE_PLAYER | Game.SPRITE_BULLET
@@ -642,15 +601,9 @@
       return this.on("bump.left", this, "hitFromLeft");
     },
     collision: function(col) {
-      var human;
       if (col.obj.isA("Bullet")) {
         this.play("hit");
-        this.die();
-        human = this.stage.insert(new Q.Player({
-          x: this.p.x,
-          y: this.p.y
-        }));
-        return human.del("platformerControls, gun");
+        return this.decreaseLifePoints();
       }
     },
     hitFromRight: function(col) {
@@ -675,7 +628,72 @@
     },
     die: function() {
       this.destroy();
+      this.stage.insert(new Q.Human({
+        x: this.p.x,
+        y: this.p.y
+      }));
       return Q.state.dec("enemiesCounter", 1);
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
+  Q.animations("human", {
+    stand: {
+      frames: [4],
+      rate: 1 / 2
+    },
+    run: {
+      frames: [4, 5, 6],
+      rate: 1 / 4
+    },
+    hit: {
+      frames: [0],
+      loop: false,
+      rate: 1 / 2,
+      next: "stand"
+    },
+    jump: {
+      frames: [2],
+      rate: 1 / 2
+    }
+  });
+
+  Q.Sprite.extend("Human", {
+    init: function(p) {
+      this._super(p, {
+        x: 0,
+        y: 0,
+        vx: 0,
+        z: 20,
+        sheet: "player",
+        sprite: "human",
+        type: Game.SPRITE_HUMAN,
+        collisionMask: Game.SPRITE_TILES | Game.SPRITE_ENEMY
+      });
+      this.add("2d, animation");
+      this.play("stand");
+      return this.on("hit", this, "collision");
+    },
+    collision: function(col) {
+      var random1to5, randomBool;
+      if (col.obj.isA("Enemy")) {
+        this.play("hit");
+        this.destroy();
+        random1to5 = Math.floor(Math.random() * 5) + 1;
+        randomBool = Math.floor(Math.random() * 2);
+        return this.stage.insert(new Q.Enemy({
+          x: this.p.x,
+          y: this.p.y,
+          sheet: "zombie" + random1to5,
+          startLeft: randomBool
+        }));
+      }
     }
   });
 
