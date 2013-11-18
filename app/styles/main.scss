@@ -14,3 +14,33 @@ body {
 #quintus_container {
   background: #dee8e9;
 }
+
+#loading {
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  z-index: 100;
+}
+
+#loading-container {
+  position: relative;
+  top: 50%;
+  margin: 0 auto;
+  width: 70%;
+  border: 1px solid black;
+  text-align: center;
+  height: 40px;
+}
+
+#loading-progress {
+  width: 0%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 40px;
+  background-color: red;
+  opacity: 0.4;
+}

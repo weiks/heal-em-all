@@ -36,7 +36,7 @@ Q.Sprite.extend "Player",
 
     @add("2d, platformerControls, animation, gun")
 
-    @p.jumpSpeed = -570
+    @p.jumpSpeed = -680
     @p.speed = 300
     @p.savedPosition.x = @p.x
     @p.savedPosition.y = @p.y

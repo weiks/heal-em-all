@@ -31,3 +31,5 @@ Q.Sprite.extend 'Background',
       offsetY - @p.deltaY,
       @imgEl.width,
       @imgEl.height
+
+    # ctx.drawImage @imgEl, 0, 0

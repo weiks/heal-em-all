@@ -68,7 +68,7 @@ window.Game =
     # now we can add metadata
     @assets.map.sheetName = "tiles"
     @assets.all = assetsAsArray
-    @assets.map.tileSize = 50
+    @assets.map.tileSize = 70
 
   # helper to conver obj to array
   objValueToArray: (obj, array) ->

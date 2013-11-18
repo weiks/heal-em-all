@@ -61,7 +61,7 @@
       this.objValueToArray(this.assets, assetsAsArray);
       this.assets.map.sheetName = "tiles";
       this.assets.all = assetsAsArray;
-      return this.assets.map.tileSize = 50;
+      return this.assets.map.tileSize = 70;
     },
     objValueToArray: function(obj, array) {
       var key, value, _results;
@@ -226,6 +226,17 @@
     Q.compileSheets(Game.assets.enemies.sheet, Game.assets.enemies.dataAsset);
     Q.compileSheets(Game.assets.items.sheet, Game.assets.items.dataAsset);
     return Game.stageLevel();
+  }, {
+    progressCallback: function(loaded, total) {
+      var container, element;
+      console.log(loaded, total);
+      element = document.getElementById("loading-progress");
+      element.style.width = Math.floor(loaded / total * 100) + "%";
+      if (loaded === total) {
+        container = document.getElementById("loading");
+        return container.parentNode.removeChild(container);
+      }
+    }
   });
 
 }).call(this);
@@ -884,7 +895,7 @@
         collisionMask: Game.SPRITE_TILES | Game.SPRITE_ENEMY | Game.SPRITE_PLAYER_COLLECTIBLE
       });
       this.add("2d, platformerControls, animation, gun");
-      this.p.jumpSpeed = -570;
+      this.p.jumpSpeed = -680;
       this.p.speed = 300;
       this.p.savedPosition.x = this.p.x;
       this.p.savedPosition.y = this.p.y;
