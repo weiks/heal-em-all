@@ -45,7 +45,7 @@
         map: {
           dataAsset: "map.tmx",
           sheet: "map_tiles.png",
-          bg: "bg.jpg"
+          bg: "bg_2.jpg"
         },
         enemies: {
           dataAsset: "enemies.json",
@@ -311,6 +311,7 @@
 
   Q.scene("level1", function(stage) {
     var background, doorKeyPositions, enemies, gunPositions, items, map, player, random;
+    stage.insert(new Q.Background());
     Game.map = map = new Q.TileLayer({
       type: Game.SPRITE_TILES,
       layerIndex: 1,
@@ -526,6 +527,40 @@
         return stage.remove(pausedScreen);
       }
     });
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
+  Q.Sprite.extend('Background', {
+    init: function(p) {
+      this._super(p, {
+        x: 0,
+        y: 0,
+        z: 0,
+        asset: Game.assets.map.bg,
+        type: Q.SPRITE_NONE
+      });
+      this.imgEl = this.asset();
+      this.p.deltaX = (this.imgEl.width - Q.width) / 2;
+      return this.p.deltaY = (this.imgEl.height - Q.height) / 2;
+    },
+    draw: function(ctx) {
+      var offsetX, offsetY, viewport;
+      viewport = this.stage.viewport;
+      if (viewport) {
+        offsetX = viewport.centerX - Q.width / 2;
+        offsetY = viewport.centerY - Q.height / 2;
+      } else {
+        offsetX = 0;
+        offsetY = 0;
+      }
+      return ctx.drawImage(this.imgEl, offsetX - this.p.deltaX, offsetY - this.p.deltaY, this.imgEl.width, this.imgEl.height);
+    }
   });
 
 }).call(this);

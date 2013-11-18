@@ -51,7 +51,7 @@ window.Game =
       map:
         dataAsset: "map.tmx"
         sheet: "map_tiles.png"
-        bg: "bg.jpg"
+        bg: "bg_2.jpg"
       enemies:
         dataAsset: "enemies.json"
         sheet: "enemies.png"
