@@ -16,7 +16,6 @@ Q.load Game.assets.all,
     # Q.stageScene "start", 2
   , {
     progressCallback: (loaded, total) ->
-      console.log loaded, total
       element = document.getElementById("loading-progress")
       element.style.width = Math.floor(loaded/total*100) + "%"
 

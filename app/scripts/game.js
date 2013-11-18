@@ -229,7 +229,6 @@
   }, {
     progressCallback: function(loaded, total) {
       var container, element;
-      console.log(loaded, total);
       element = document.getElementById("loading-progress");
       element.style.width = Math.floor(loaded / total * 100) + "%";
       if (loaded === total) {
