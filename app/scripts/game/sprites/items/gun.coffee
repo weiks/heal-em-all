@@ -5,6 +5,7 @@ Q.Sprite.extend "Gun",
     @_super p,
       x: 0
       y: 0
+      z: 10
       sheet: "gun"
       type: Game.SPRITE_PLAYER_COLLECTIBLE
       sensor: true

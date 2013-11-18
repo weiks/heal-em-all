@@ -13,6 +13,7 @@ Q.scene "level1", (stage) ->
     sheet: Game.assets.map.sheetName
     tileW: Game.assets.map.tileSize
     tileH: Game.assets.map.tileSize
+    z: 2
 
   stage.collisionLayer map
 
@@ -24,6 +25,7 @@ Q.scene "level1", (stage) ->
     sheet: Game.assets.map.sheetName
     tileW: Game.assets.map.tileSize
     tileH: Game.assets.map.tileSize
+    z: 1
 
   stage.insert background
 
@@ -52,7 +54,7 @@ Q.scene "level1", (stage) ->
 
     ["Enemy", Q.tilePos(49, 9, {sheet: "zombie3"})]
     ["Enemy", Q.tilePos(49, 15, {sheet: "zombie2"})]
-    ["Enemy", Q.tilePos(49, 27, {startLeft: true})]
+    ["Enemy", Q.tilePos(49, 27, {startLeft: true, sheet: "zombie1"})]
     ["Enemy", Q.tilePos(49, 33, {sheet: "zombie4"})]
 
     ["Enemy", Q.tilePos(60, 9, {startLeft: true, sheet: "zombie5"})]

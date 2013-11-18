@@ -5,6 +5,7 @@ Q.Sprite.extend "Key",
     @_super p,
       x: 0
       y: 0
+      z: 10
       sheet: "key"
       type: Game.SPRITE_PLAYER_COLLECTIBLE
       sensor: true

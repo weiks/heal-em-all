@@ -5,6 +5,7 @@ Q.Sprite.extend "Door",
     @_super p,
       x: 0
       y: 0
+      z: 10
       sheet: "door_closed"
       opened: false
       type: Game.SPRITE_PLAYER_COLLECTIBLE

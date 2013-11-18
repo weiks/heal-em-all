@@ -8,7 +8,7 @@ Q.Sprite.extend "Enemy",
       x: 0
       y: 0
       vx: 0
-      z: 10
+      z: 20
       canSeeThePlayerTimeout: 0
       type: Game.SPRITE_ENEMY
       collisionMask: Game.SPRITE_TILES | Game.SPRITE_PLAYER | Game.SPRITE_BULLET

@@ -5,6 +5,7 @@ Q.Sprite.extend "ExitSign",
     @_super p,
       x: 0
       y: 0
+      z: 10
       sheet: "exit_sign"
       type: Game.SPRITE_NONE
 

@@ -24,6 +24,8 @@ Q.component "humanAI",
     p.sheet = "player"
     p.sprite = "human"
     p.vx = 0
+    p.type = Game.SPRITE_PLAYER_COLLECTIBLE
+    p.collisionMask = Game.SPRITE_TILES
 
     Q._generatePoints(@entity)
     Q._generateCollisionPoints(@entity)

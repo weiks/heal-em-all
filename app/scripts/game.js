@@ -161,6 +161,8 @@
       p.sheet = "player";
       p.sprite = "human";
       p.vx = 0;
+      p.type = Game.SPRITE_PLAYER_COLLECTIBLE;
+      p.collisionMask = Game.SPRITE_TILES;
       Q._generatePoints(this.entity);
       Q._generateCollisionPoints(this.entity);
       return this.entity.play("stand");
@@ -318,7 +320,8 @@
       dataAsset: Game.assets.map.dataAsset,
       sheet: Game.assets.map.sheetName,
       tileW: Game.assets.map.tileSize,
-      tileH: Game.assets.map.tileSize
+      tileH: Game.assets.map.tileSize,
+      z: 2
     });
     stage.collisionLayer(map);
     background = new Q.TileLayer({
@@ -327,7 +330,8 @@
       dataAsset: Game.assets.map.dataAsset,
       sheet: Game.assets.map.sheetName,
       tileW: Game.assets.map.tileSize,
-      tileH: Game.assets.map.tileSize
+      tileH: Game.assets.map.tileSize,
+      z: 1
     });
     stage.insert(background);
     Game.player = player = stage.insert(new Q.Player(Q.tilePos(49.5, 21)));
@@ -374,7 +378,8 @@
         })
       ], [
         "Enemy", Q.tilePos(49, 27, {
-          startLeft: true
+          startLeft: true,
+          sheet: "zombie1"
         })
       ], [
         "Enemy", Q.tilePos(49, 33, {
@@ -625,7 +630,7 @@
         x: 0,
         y: 0,
         vx: 0,
-        z: 10,
+        z: 20,
         canSeeThePlayerTimeout: 0,
         type: Game.SPRITE_ENEMY,
         collisionMask: Game.SPRITE_TILES | Game.SPRITE_PLAYER | Game.SPRITE_BULLET
@@ -686,6 +691,7 @@
       this._super(p, {
         x: 0,
         y: 0,
+        z: 10,
         sheet: "door_closed",
         opened: false,
         type: Game.SPRITE_PLAYER_COLLECTIBLE,
@@ -724,6 +730,7 @@
       return this._super(p, {
         x: 0,
         y: 0,
+        z: 10,
         sheet: "exit_sign",
         type: Game.SPRITE_NONE
       });
@@ -742,6 +749,7 @@
       this._super(p, {
         x: 0,
         y: 0,
+        z: 10,
         sheet: "gun",
         type: Game.SPRITE_PLAYER_COLLECTIBLE,
         sensor: true
@@ -769,7 +777,7 @@
       this._super(p, {
         x: 0,
         y: 0,
-        z: 1,
+        z: 10,
         sheet: "heart",
         type: Game.SPRITE_PLAYER_COLLECTIBLE,
         sensor: true
@@ -797,6 +805,7 @@
       this._super(p, {
         x: 0,
         y: 0,
+        z: 10,
         sheet: "key",
         type: Game.SPRITE_PLAYER_COLLECTIBLE,
         sensor: true
