@@ -1,0 +1,20 @@
+Q = Game.Q
+
+Q.Sprite.extend "Heart",
+  init: (p) ->
+    @_super p,
+      x: 0
+      y: 0
+      z: 1
+      sheet: "heart"
+      type: Game.SPRITE_PLAYER_COLLECTIBLE
+      sensor: true
+
+    # events
+    @on "sensor", @, "sensor"
+
+  sensor: (obj) ->
+    if obj.isA("Player")
+      obj.updateLifePoints(1)
+      Game.infoLabel.extraLifeFound()
+      @destroy()

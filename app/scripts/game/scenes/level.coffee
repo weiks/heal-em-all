@@ -5,7 +5,7 @@ Q.scene "level1", (stage) ->
   # main map with collision
   Game.map = map = new Q.TileLayer
     type: Game.SPRITE_TILES
-    layerIndex: 0
+    layerIndex: 1
     dataAsset: Game.assets.map.dataAsset
     sheet: Game.assets.map.sheetName
     tileW: Game.assets.map.tileSize
@@ -15,7 +15,7 @@ Q.scene "level1", (stage) ->
 
   # decorations
   background = new Q.TileLayer
-    layerIndex: 1,
+    layerIndex: 2,
     type: Game.SPRITE_NONE
     dataAsset: Game.assets.map.dataAsset
     sheet: Game.assets.map.sheetName
@@ -63,48 +63,55 @@ Q.scene "level1", (stage) ->
   stage.loadAssets(enemies)
 
 
-  stage.on 'step', Q.timer, "check"
+  # items
+  doorKeyPositions = [
+    door: Q.tilePos(50, 2.65)
+    sign: Q.tilePos(48, 3)
+    key: Q.tilePos(49.5, 38.8)
+    heart1: Q.tilePos(5, 20.9)
+    heart2: Q.tilePos(94, 20.9)
+  ,
+    door: Q.tilePos(49, 38.65)
+    sign: Q.tilePos(51, 39)
+    key: Q.tilePos(49.5, 2.8)
+    heart1: Q.tilePos(5, 20.9)
+    heart2: Q.tilePos(94, 20.9)
+  ,
+    door: Q.tilePos(4, 20.65)
+    sign: Q.tilePos(6, 21)
+    key: Q.tilePos(94, 20.8)
+    heart1: Q.tilePos(49.5, 38.9)
+    heart2: Q.tilePos(49.5, 2.9)
+  ,
+    door: Q.tilePos(95, 20.65)
+    sign: Q.tilePos(93, 21)
+    key: Q.tilePos(5, 20.8)
+    heart1: Q.tilePos(49.5, 38.9)
+    heart2: Q.tilePos(49.5, 2.9)
+  ]
 
+  gunPositions = [
+    Q.tilePos(36, 15)
+    Q.tilePos(63, 15)
+    Q.tilePos(36, 27)
+    Q.tilePos(63, 27)
+  ]
 
-Q.timer =
-  turnTime: 8
-  controlledSprite: null
-  nextZombie: 0
+  random = Math.floor(Math.random() * 4)
 
-  check: (dt) ->
-    @turnTime = Math.max(@turnTime - dt, 0)
+  items = [
+    ["Key", doorKeyPositions[random].key]
+    ["Door", doorKeyPositions[random].door]
+    ["ExitSign", doorKeyPositions[random].sign]
+    ["Gun", gunPositions[random]]
+    ["Heart", doorKeyPositions[random].heart1]
+    ["Heart", doorKeyPositions[random].heart2]
 
-    if @turnTime == 0
-      @turnTime = 8
+    ["Heart", Q.tilePos(4.5, 5.9)]
+    ["Heart", Q.tilePos(7.5, 38.9)]
+    ["Heart", Q.tilePos(94.5, 6.9)]
+    ["Heart", Q.tilePos(92.5, 36.9)]
+  ]
 
-      # change controls
-      if !@controlledSprite
-        @controlledSprite = Game.player
+  stage.loadAssets(items)
 
-      @controlledSprite.del "platformerControls"
-      @controlledSprite.p.vx = 0
-
-      if @controlledSprite.isA('Player')
-        @changeToZombie()
-      else
-        @changeToPlayer()
-
-      @controlledSprite.add "platformerControls"
-
-      Q.stages[0].follow @controlledSprite,
-        x: true
-        y: true
-      ,
-        minX: 0
-        maxX: Game.map.p.w
-        minY: 0
-        maxY: Game.map.p.h
-
-  changeToZombie: ->
-    @controlledSprite = Q.stages[0].lists.Enemy[@nextZombie]
-    @nextZombie++
-    if @nextZombie >= Q.stages[0].lists.Enemy.length
-      @nextZombie = 0
-
-  changeToPlayer: ->
-    @controlledSprite = Game.player

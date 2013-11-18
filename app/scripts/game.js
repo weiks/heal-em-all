@@ -5,7 +5,6 @@
       this.Q = Q = Quintus({
         development: true
       });
-      Q.debug = true;
       Q.include("Sprites, Scenes, Input, Touch, UI, 2D, Anim");
       Q.setup({
         width: 640,
@@ -44,12 +43,17 @@
           sheet: "player.png"
         },
         map: {
-          dataAsset: "map_v3.tmx",
-          sheet: "map_tiles.png"
+          dataAsset: "map.tmx",
+          sheet: "map_tiles.png",
+          bg: "bg.jpg"
         },
         enemies: {
           dataAsset: "enemies.json",
           sheet: "enemies.png"
+        },
+        items: {
+          dataAsset: "items.json",
+          sheet: "items.png"
         }
       };
       assetsAsArray = [];
@@ -260,6 +264,7 @@
     });
     Q.compileSheets(Game.assets.player.sheet, Game.assets.player.dataAsset);
     Q.compileSheets(Game.assets.enemies.sheet, Game.assets.enemies.dataAsset);
+    Q.compileSheets(Game.assets.items.sheet, Game.assets.items.dataAsset);
     return Game.stageLevel();
   });
 
@@ -305,10 +310,10 @@
   Q = Game.Q;
 
   Q.scene("level1", function(stage) {
-    var background, enemies, map, player;
+    var background, doorKeyPositions, enemies, gunPositions, items, map, player, random;
     Game.map = map = new Q.TileLayer({
       type: Game.SPRITE_TILES,
-      layerIndex: 0,
+      layerIndex: 1,
       dataAsset: Game.assets.map.dataAsset,
       sheet: Game.assets.map.sheetName,
       tileW: Game.assets.map.tileSize,
@@ -316,7 +321,7 @@
     });
     stage.collisionLayer(map);
     background = new Q.TileLayer({
-      layerIndex: 1,
+      layerIndex: 2,
       type: Game.SPRITE_NONE,
       dataAsset: Game.assets.map.dataAsset,
       sheet: Game.assets.map.sheetName,
@@ -400,50 +405,38 @@
       ]
     ];
     stage.loadAssets(enemies);
-    return stage.on('step', Q.timer, "check");
+    doorKeyPositions = [
+      {
+        door: Q.tilePos(50, 2.65),
+        sign: Q.tilePos(48, 3),
+        key: Q.tilePos(49.5, 38.8),
+        heart1: Q.tilePos(5, 20.9),
+        heart2: Q.tilePos(94, 20.9)
+      }, {
+        door: Q.tilePos(49, 38.65),
+        sign: Q.tilePos(51, 39),
+        key: Q.tilePos(49.5, 2.8),
+        heart1: Q.tilePos(5, 20.9),
+        heart2: Q.tilePos(94, 20.9)
+      }, {
+        door: Q.tilePos(4, 20.65),
+        sign: Q.tilePos(6, 21),
+        key: Q.tilePos(94, 20.8),
+        heart1: Q.tilePos(49.5, 38.9),
+        heart2: Q.tilePos(49.5, 2.9)
+      }, {
+        door: Q.tilePos(95, 20.65),
+        sign: Q.tilePos(93, 21),
+        key: Q.tilePos(5, 20.8),
+        heart1: Q.tilePos(49.5, 38.9),
+        heart2: Q.tilePos(49.5, 2.9)
+      }
+    ];
+    gunPositions = [Q.tilePos(36, 15), Q.tilePos(63, 15), Q.tilePos(36, 27), Q.tilePos(63, 27)];
+    random = Math.floor(Math.random() * 4);
+    items = [["Key", doorKeyPositions[random].key], ["Door", doorKeyPositions[random].door], ["ExitSign", doorKeyPositions[random].sign], ["Gun", gunPositions[random]], ["Heart", doorKeyPositions[random].heart1], ["Heart", doorKeyPositions[random].heart2], ["Heart", Q.tilePos(4.5, 5.9)], ["Heart", Q.tilePos(7.5, 38.9)], ["Heart", Q.tilePos(94.5, 6.9)], ["Heart", Q.tilePos(92.5, 36.9)]];
+    return stage.loadAssets(items);
   });
-
-  Q.timer = {
-    turnTime: 8,
-    controlledSprite: null,
-    nextZombie: 0,
-    check: function(dt) {
-      this.turnTime = Math.max(this.turnTime - dt, 0);
-      if (this.turnTime === 0) {
-        this.turnTime = 8;
-        if (!this.controlledSprite) {
-          this.controlledSprite = Game.player;
-        }
-        this.controlledSprite.del("platformerControls");
-        this.controlledSprite.p.vx = 0;
-        if (this.controlledSprite.isA('Player')) {
-          this.changeToZombie();
-        } else {
-          this.changeToPlayer();
-        }
-        this.controlledSprite.add("platformerControls");
-        return Q.stages[0].follow(this.controlledSprite, {
-          x: true,
-          y: true
-        }, {
-          minX: 0,
-          maxX: Game.map.p.w,
-          minY: 0,
-          maxY: Game.map.p.h
-        });
-      }
-    },
-    changeToZombie: function() {
-      this.controlledSprite = Q.stages[0].lists.Enemy[this.nextZombie];
-      this.nextZombie++;
-      if (this.nextZombie >= Q.stages[0].lists.Enemy.length) {
-        return this.nextZombie = 0;
-      }
-    },
-    changeToPlayer: function() {
-      return this.controlledSprite = Game.player;
-    }
-  };
 
 }).call(this);
 
@@ -653,6 +646,144 @@
 
   Q = Game.Q;
 
+  Q.Sprite.extend("Door", {
+    init: function(p) {
+      this._super(p, {
+        x: 0,
+        y: 0,
+        sheet: "door_closed",
+        opened: false,
+        type: Game.SPRITE_PLAYER_COLLECTIBLE,
+        sensor: true
+      });
+      return this.on("sensor", this, "sensor");
+    },
+    sensor: function(obj) {
+      if (obj.isA("Player")) {
+        if (obj.p.hasKey && !this.p.opened) {
+          obj.p.hasKey = false;
+          this.p.opened = true;
+          this.p.sheet = "door_open";
+          return Game.infoLabel.doorOpen();
+        } else if (!this.p.opened) {
+          return Game.infoLabel.keyNeeded();
+        } else if (this.p.opened && (Q.inputs['up'] || Q.inputs['action'])) {
+          Q.stageScene("end", 2, {
+            label: "You Won!"
+          });
+          return obj.destroy();
+        }
+      }
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
+  Q.Sprite.extend("ExitSign", {
+    init: function(p) {
+      return this._super(p, {
+        x: 0,
+        y: 0,
+        sheet: "exit_sign",
+        type: Game.SPRITE_NONE
+      });
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
+  Q.Sprite.extend("Gun", {
+    init: function(p) {
+      this._super(p, {
+        x: 0,
+        y: 0,
+        sheet: "gun",
+        type: Game.SPRITE_PLAYER_COLLECTIBLE,
+        sensor: true
+      });
+      return this.on("sensor", this, "sensor");
+    },
+    sensor: function(obj) {
+      if (obj.isA("Player")) {
+        obj.add("gun");
+        Game.infoLabel.gunFound();
+        return this.destroy();
+      }
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
+  Q.Sprite.extend("Heart", {
+    init: function(p) {
+      this._super(p, {
+        x: 0,
+        y: 0,
+        z: 1,
+        sheet: "heart",
+        type: Game.SPRITE_PLAYER_COLLECTIBLE,
+        sensor: true
+      });
+      return this.on("sensor", this, "sensor");
+    },
+    sensor: function(obj) {
+      if (obj.isA("Player")) {
+        obj.updateLifePoints(1);
+        Game.infoLabel.extraLifeFound();
+        return this.destroy();
+      }
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
+  Q.Sprite.extend("Key", {
+    init: function(p) {
+      this._super(p, {
+        x: 0,
+        y: 0,
+        sheet: "key",
+        type: Game.SPRITE_PLAYER_COLLECTIBLE,
+        sensor: true
+      });
+      return this.on("sensor", this, "sensor");
+    },
+    sensor: function(obj) {
+      if (obj.isA("Player")) {
+        obj.p.hasKey = true;
+        Game.infoLabel.keyFound();
+        return this.destroy();
+      }
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
   Q.animations("player", {
     stand: {
       frames: [4],
@@ -707,13 +838,14 @@
         this.p.flip = "x";
       }
       if (this.p.y > Game.map.p.h) {
-        this.p.y = 0;
+        this.updateLifePoints();
+        this.trigger("player.outOfMap");
       }
       if (this.p.x > Game.map.p.w) {
-        this.p.x = 0;
+        this.p.x = Game.map.p.w;
       }
       if (this.p.x < 0) {
-        this.p.x = Game.map.p.w;
+        this.p.x = 0;
       }
       if (this.p.timeToNextSave > 0) {
         this.p.timeToNextSave = Math.max(this.p.timeToNextSave - dt, 0);
@@ -724,6 +856,14 @@
       }
       if (this.p.timeInvincible > 0) {
         this.p.timeInvincible = Math.max(this.p.timeInvincible - dt, 0);
+      }
+      if (this.p.vy > 1100) {
+        this.p.willBeDead = true;
+      }
+      if (this.p.willBeDead && this.p.vy < 1100) {
+        this.updateLifePoints();
+        this.p.willBeDead = false;
+        this.trigger("player.outOfMap");
       }
       if (this.p.vy !== 0) {
         return this.play("jump");
@@ -815,13 +955,28 @@
       });
     },
     intro: function() {
-      return this.p.label = "I need to cure them";
+      return this.p.label = "I need to find the way out of here";
+    },
+    keyNeeded: function() {
+      return this.p.label = "I need the key";
+    },
+    doorOpen: function() {
+      return this.p.label = "Nice! Now I need to 'jump' inside the door";
+    },
+    gunFound: function() {
+      return this.p.label = "I found the gun, I can shoot pressing Z";
+    },
+    keyFound: function() {
+      return this.p.label = "I found the key, now I need to find the the door";
     },
     clear: function() {
       return this.p.label = "";
     },
     lifeLevelLow: function() {
       return this.p.label = "I need to be more careful";
+    },
+    extraLifeFound: function() {
+      return this.p.label = "I feel better now!";
     },
     lifeLost: function() {
       return this.p.label = "That hurts!";

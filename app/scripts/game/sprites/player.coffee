@@ -29,7 +29,6 @@ Q.Sprite.extend "Player",
       z: 100
       savedPosition: {}
       hasKey: false
-      # asset: Game.assets.player.sheet # find nice hero asset, static for the beginning
       sheet: "player"
       sprite: "player"
       type: Game.SPRITE_PLAYER
@@ -56,15 +55,15 @@ Q.Sprite.extend "Player",
 
     # check if out of map
     if @p.y > Game.map.p.h
-      @p.y = 0
-      # @updateLifePoints()
-      # @trigger "player.outOfMap"
+      @updateLifePoints()
+      @trigger "player.outOfMap"
 
+    # do not allow to get out of level
     if @p.x > Game.map.p.w
-      @p.x = 0
+      @p.x = Game.map.p.w
 
     if @p.x < 0
-      @p.x = Game.map.p.w
+      @p.x = 0
 
     # save
     if @p.timeToNextSave > 0
@@ -79,13 +78,13 @@ Q.Sprite.extend "Player",
       @p.timeInvincible = Math.max(@p.timeInvincible - dt, 0)
 
     # jump from too high place
-    # if @p.vy > 1100
-    #   @p.willBeDead = true
+    if @p.vy > 1100
+      @p.willBeDead = true
 
-    # if @p.willBeDead && @p.vy < 1100
-    #   @updateLifePoints()
-    #   @p.willBeDead = false
-    #   @trigger "player.outOfMap"
+    if @p.willBeDead && @p.vy < 1100
+      @updateLifePoints()
+      @p.willBeDead = false
+      @trigger "player.outOfMap"
 
     # animations
     if @p.vy != 0

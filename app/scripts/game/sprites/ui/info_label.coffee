@@ -10,13 +10,28 @@ Q.UI.InfoLabel = Q.UI.Text.extend "UI.InfoLabel",
       size: 28
 
   intro: ->
-    @p.label = "I need to cure them"
+    @p.label = "I need to find the way out of here"
+
+  keyNeeded: ->
+    @p.label = "I need the key"
+
+  doorOpen: ->
+    @p.label = "Nice! Now I need to 'jump' inside the door"
+
+  gunFound: ->
+    @p.label = "I found the gun, I can shoot pressing Z"
+
+  keyFound: ->
+    @p.label = "I found the key, now I need to find the the door"
 
   clear: ->
     @p.label = ""
 
   lifeLevelLow: ->
     @p.label = "I need to be more careful"
+
+  extraLifeFound: ->
+    @p.label = "I feel better now!"
 
   lifeLost: ->
     @p.label = "That hurts!"

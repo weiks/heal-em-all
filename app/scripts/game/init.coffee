@@ -5,7 +5,7 @@ window.Game =
     @Q = Q = Quintus
       development: true
 
-    Q.debug = true
+    # Q.debug = true
     # Q.debugFill = true
 
     # main setup
@@ -49,11 +49,15 @@ window.Game =
         dataAsset: "player.json"
         sheet: "player.png"
       map:
-        dataAsset: "map_v3.tmx"
+        dataAsset: "map.tmx"
         sheet: "map_tiles.png"
+        bg: "bg.jpg"
       enemies:
         dataAsset: "enemies.json"
         sheet: "enemies.png"
+      items:
+        dataAsset: "items.json"
+        sheet: "items.png"
 
 
     # convert to array for Q.load
