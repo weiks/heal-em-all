@@ -69,7 +69,11 @@ Q.component "zombieAI",
       player = Game.player.p
       lineOfSight = 250
 
-      @canSeeThePlayerObj = {}
+      @canSeeThePlayerObj =
+        status: false
+
+      if Game.player.isDestroyed?
+        return
 
       # is player on the same level as enemy?
       isTheSameY = player.y > @p.y - 10 and player.y < @p.y + 10

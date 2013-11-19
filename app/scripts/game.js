@@ -209,7 +209,12 @@
         var isCloseFromLeft, isCloseFromRight, isTheSameY, lineOfSight, player;
         player = Game.player.p;
         lineOfSight = 250;
-        this.canSeeThePlayerObj = {};
+        this.canSeeThePlayerObj = {
+          status: false
+        };
+        if (Game.player.isDestroyed != null) {
+          return;
+        }
         isTheSameY = player.y > this.p.y - 10 && player.y < this.p.y + 10;
         this.canSeeThePlayerObj.left = isCloseFromLeft = (player.x > this.p.x - lineOfSight) && player.x < this.p.x;
         this.canSeeThePlayerObj.right = isCloseFromRight = (player.x < this.p.x + lineOfSight) && player.x > this.p.x;
