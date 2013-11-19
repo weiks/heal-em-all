@@ -97,6 +97,17 @@
       });
       this.Q.stageScene("stats", 1);
       return Game.infoLabel.intro();
+    },
+    setCameraTo: function(stage, toFollowObj) {
+      return stage.follow(toFollowObj, {
+        x: true,
+        y: true
+      }, {
+        minX: 0,
+        maxX: Game.map.p.w,
+        minY: 0,
+        maxY: Game.map.p.h
+      });
     }
   };
 
@@ -157,9 +168,9 @@
       var p;
       p = this.entity.p;
       if (p.startLeft === true) {
-        p.vx = 100;
+        p.vx = 60;
       } else {
-        p.vx = -100;
+        p.vx = -60;
       }
       p.sprite = "enemy";
       return this.entity.play("run");
@@ -305,15 +316,7 @@
     stage.insert(background);
     Game.player = player = stage.insert(new Q.Player(Q.tilePos(49.5, 21)));
     stage.add("viewport");
-    stage.follow(player, {
-      x: true,
-      y: true
-    }, {
-      minX: 0,
-      maxX: map.p.w,
-      minY: 0,
-      maxY: map.p.h
-    });
+    Game.setCameraTo(stage, player);
     enemies = [
       [
         "Enemy", Q.tilePos(39, 9, {
@@ -828,19 +831,12 @@
         Game.infoLabel.lifeLost();
         this.play("hit", 1);
         if (this.p.lifePoints <= 0) {
+          Game.infoLabel.zombieModeOn();
           zombiePlayer = this.stage.insert(new Q.ZombiePlayer({
             x: this.p.x,
             y: this.p.y
           }));
-          this.stage.follow(zombiePlayer, {
-            x: true,
-            y: true
-          }, {
-            minX: 0,
-            maxX: Game.map.p.w,
-            minY: 0,
-            maxY: Game.map.p.h
-          });
+          Game.setCameraTo(this.stage, zombiePlayer);
           this.destroy();
         }
         if (this.p.lifePoints === 1) {
@@ -897,12 +893,13 @@
         collisionMask: Game.SPRITE_TILES | Game.SPRITE_PLAYER_COLLECTIBLE
       });
       this.add("2d, platformerControls, animation");
-      this.p.jumpSpeed = -680;
-      this.p.speed = 300;
+      this.p.jumpSpeed = -500;
+      this.p.speed = 140;
       this.p.savedPosition.x = this.p.x;
       this.p.savedPosition.y = this.p.y;
+      Game.infoLabel.zombieModeOnNext();
       this.on("bump.left, bump.right, bump.bottom, bump.top", this, "collision");
-      return this.on("player.outOfMap", this, "restore");
+      return this.on("player.outOfMap", this, "die");
     },
     step: function(dt) {
       if (this.p.direction === "left") {
@@ -927,13 +924,6 @@
         this.savePosition();
         this.p.timeToNextSave = 2;
       }
-      if (this.p.vy > 1100) {
-        this.p.willBeDead = true;
-      }
-      if (this.p.willBeDead && this.p.vy < 1100) {
-        this.p.willBeDead = false;
-        this.trigger("player.outOfMap");
-      }
       if (this.p.vy !== 0) {
         return this.play("jump");
       } else if (this.p.vx !== 0) {
@@ -952,9 +942,15 @@
         return this.p.savedPosition.y = this.p.y;
       }
     },
-    restore: function() {
-      this.p.x = this.p.savedPosition.x;
-      return this.p.y = this.p.savedPosition.y;
+    die: function() {
+      var player;
+      player = this.stage.insert(new Q.Player({
+        x: this.p.savedPosition.x,
+        y: this.p.savedPosition.y
+      }));
+      Game.setCameraTo(this.stage, player);
+      Game.infoLabel.zombieModeOff();
+      return this.destroy();
     }
   });
 
@@ -1167,6 +1163,15 @@
     },
     lifeLost: function() {
       return this.p.label = "That hurts!";
+    },
+    zombieModeOn: function() {
+      return this.p.label = "I was bitten. I'm turning. Nooo!";
+    },
+    zombieModeOnNext: function() {
+      return this.p.label = "I need to kill myself";
+    },
+    zombieModeOff: function() {
+      return this.p.label = "Ok, back to businness";
     }
   });
 
@@ -1180,8 +1185,8 @@
   Q.UI.LivesCounter = Q.UI.Text.extend("UI.LivesCounter", {
     init: function(p) {
       this._super(p, {
-        text: "Lives: ",
-        label: "Lives: " + Q.state.get("lives"),
+        text: "Health: ",
+        label: "Health: " + Q.state.get("lives"),
         size: 30,
         x: 0,
         y: 0,

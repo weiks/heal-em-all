@@ -33,16 +33,17 @@ Q.Sprite.extend "ZombiePlayer",
 
     @add("2d, platformerControls, animation")
 
-    @p.jumpSpeed = -680
-    @p.speed = 300
+    @p.jumpSpeed = -500
+    @p.speed = 140
     @p.savedPosition.x = @p.x
     @p.savedPosition.y = @p.y
 
     # Q.state.set "lives", @p.lifePoints
+    Game.infoLabel.zombieModeOnNext()
 
     # events
     @on "bump.left, bump.right, bump.bottom, bump.top", @, "collision"
-    @on "player.outOfMap", @, "restore"
+    @on "player.outOfMap", @, "die"
 
   step: (dt) ->
     if @p.direction == "left"
@@ -69,14 +70,6 @@ Q.Sprite.extend "ZombiePlayer",
       @savePosition()
       @p.timeToNextSave = 2
 
-    # jump from too high place
-    if @p.vy > 1100
-      @p.willBeDead = true
-
-    if @p.willBeDead && @p.vy < 1100
-      @p.willBeDead = false
-      @trigger "player.outOfMap"
-
     # animations
     if @p.vy != 0
       @play("jump")
@@ -96,6 +89,14 @@ Q.Sprite.extend "ZombiePlayer",
       @p.savedPosition.x = @p.x
       @p.savedPosition.y = @p.y
 
-  restore: ->
-    @p.x = @p.savedPosition.x
-    @p.y = @p.savedPosition.y
+  die: ->
+    # zombie mode ends
+    player = @stage.insert new Q.Player
+      x: @p.savedPosition.x
+      y: @p.savedPosition.y
+
+    Game.setCameraTo(@stage, player)
+
+    Game.infoLabel.zombieModeOff()
+
+    @destroy()

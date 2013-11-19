@@ -19,9 +19,9 @@ Q.component "zombieAI",
     p = @entity.p
 
     if p.startLeft == true
-      p.vx = 100
+      p.vx = 60
     else
-      p.vx = -100
+      p.vx = -60
 
     p.sprite = "enemy"
 

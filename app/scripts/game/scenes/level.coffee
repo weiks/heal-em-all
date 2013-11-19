@@ -34,14 +34,7 @@ Q.scene "level1", (stage) ->
 
   # camera
   stage.add("viewport")
-  stage.follow player,
-    x: true
-    y: true
-  ,
-    minX: 0
-    maxX: map.p.w
-    minY: 0
-    maxY: map.p.h
+  Game.setCameraTo(stage, player)
 
   # enemies by columns
   enemies = [

@@ -103,6 +103,15 @@ window.Game =
     # the story
     Game.infoLabel.intro()
 
+  setCameraTo: (stage, toFollowObj) ->
+    stage.follow toFollowObj,
+      x: true
+      y: true
+    ,
+      minX: 0
+      maxX: Game.map.p.w
+      minY: 0
+      maxY: Game.map.p.h
 
 
 # init game

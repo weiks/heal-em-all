@@ -124,18 +124,13 @@ Q.Sprite.extend "Player",
         #   label: "You Died"
 
         # zombie mode!
+        Game.infoLabel.zombieModeOn()
+
         zombiePlayer = @stage.insert new Q.ZombiePlayer
           x: @p.x
           y: @p.y
 
-        @stage.follow zombiePlayer,
-          x: true
-          y: true
-        ,
-          minX: 0
-          maxX: Game.map.p.w
-          minY: 0
-          maxY: Game.map.p.h
+        Game.setCameraTo(@stage, zombiePlayer)
 
         @destroy()
 

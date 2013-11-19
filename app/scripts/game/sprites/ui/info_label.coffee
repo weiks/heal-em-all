@@ -36,4 +36,13 @@ Q.UI.InfoLabel = Q.UI.Text.extend "UI.InfoLabel",
   lifeLost: ->
     @p.label = "That hurts!"
 
+  zombieModeOn: ->
+    @p.label = "I was bitten. I'm turning. Nooo!"
+
+  zombieModeOnNext: ->
+    @p.label = "I need to kill myself"
+
+  zombieModeOff: ->
+    @p.label = "Ok, back to businness"
+
 
