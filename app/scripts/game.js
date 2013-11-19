@@ -21,6 +21,7 @@
       this.SPRITE_BULLET = 8;
       this.SPRITE_PLAYER_COLLECTIBLE = 16;
       this.SPRITE_HUMAN = 32;
+      this.SPRITE_ZOMBIE_PLAYER = 64;
       this.SPRITE_ALL = 0xFFFF;
       this.prepareAssets();
       this.initStats();
@@ -46,7 +47,7 @@
         map: {
           dataAsset: "map.tmx",
           sheet: "map_tiles.png",
-          bg: "bg_2.jpg"
+          bg: "bg.png"
         },
         enemies: {
           dataAsset: "enemies.json",
@@ -714,6 +715,256 @@
 
   Q = Game.Q;
 
+  Q.animations("player", {
+    stand: {
+      frames: [4],
+      rate: 1 / 2
+    },
+    run: {
+      frames: [4, 5, 6],
+      rate: 1 / 4
+    },
+    hit: {
+      frames: [0],
+      loop: false,
+      rate: 1 / 2,
+      next: "stand"
+    },
+    jump: {
+      frames: [2],
+      rate: 1 / 2
+    }
+  });
+
+  Q.Sprite.extend("Player", {
+    init: function(p) {
+      this._super(p, {
+        lifePoints: 3,
+        timeInvincible: 0,
+        timeToNextSave: 0,
+        x: 0,
+        y: 0,
+        z: 100,
+        savedPosition: {},
+        hasKey: false,
+        sheet: "player",
+        sprite: "player",
+        type: Game.SPRITE_PLAYER,
+        collisionMask: Game.SPRITE_TILES | Game.SPRITE_ENEMY | Game.SPRITE_PLAYER_COLLECTIBLE
+      });
+      this.add("2d, platformerControls, animation, gun");
+      this.p.jumpSpeed = -680;
+      this.p.speed = 300;
+      this.p.savedPosition.x = this.p.x;
+      this.p.savedPosition.y = this.p.y;
+      Q.state.set("lives", this.p.lifePoints);
+      this.on("bump.left, bump.right, bump.bottom, bump.top", this, "collision");
+      return this.on("player.outOfMap", this, "restore");
+    },
+    step: function(dt) {
+      if (this.p.direction === "left") {
+        this.p.flip = false;
+      }
+      if (this.p.direction === "right") {
+        this.p.flip = "x";
+      }
+      if (this.p.y > Game.map.p.h) {
+        this.updateLifePoints();
+        this.trigger("player.outOfMap");
+      }
+      if (this.p.x > Game.map.p.w) {
+        this.p.x = Game.map.p.w;
+      }
+      if (this.p.x < 0) {
+        this.p.x = 0;
+      }
+      if (this.p.timeToNextSave > 0) {
+        this.p.timeToNextSave = Math.max(this.p.timeToNextSave - dt, 0);
+      }
+      if (this.p.timeToNextSave === 0) {
+        this.savePosition();
+        this.p.timeToNextSave = 2;
+      }
+      if (this.p.timeInvincible > 0) {
+        this.p.timeInvincible = Math.max(this.p.timeInvincible - dt, 0);
+      }
+      if (this.p.vy > 1100) {
+        this.p.willBeDead = true;
+      }
+      if (this.p.willBeDead && this.p.vy < 1100) {
+        this.updateLifePoints();
+        this.p.willBeDead = false;
+        this.trigger("player.outOfMap");
+      }
+      if (this.p.vy !== 0) {
+        return this.play("jump");
+      } else if (this.p.vx !== 0) {
+        return this.play("run");
+      } else {
+        return this.play("stand");
+      }
+    },
+    collision: function(col) {
+      if (col.obj.isA("Enemy") && this.p.timeInvincible === 0) {
+        this.updateLifePoints();
+        return this.p.timeInvincible = 1;
+      }
+    },
+    savePosition: function() {
+      var dirX, ground;
+      dirX = this.p.vx / Math.abs(this.p.vx);
+      ground = Q.stage().locate(this.p.x, this.p.y + this.p.h / 2 + 1, Game.SPRITE_TILES);
+      if (ground) {
+        this.p.savedPosition.x = this.p.x;
+        return this.p.savedPosition.y = this.p.y;
+      }
+    },
+    updateLifePoints: function(newLives) {
+      var zombiePlayer;
+      if (newLives != null) {
+        this.p.lifePoints += newLives;
+      } else {
+        this.p.lifePoints -= 1;
+        Game.infoLabel.lifeLost();
+        this.play("hit", 1);
+        if (this.p.lifePoints <= 0) {
+          zombiePlayer = this.stage.insert(new Q.ZombiePlayer({
+            x: this.p.x,
+            y: this.p.y
+          }));
+          this.stage.follow(zombiePlayer, {
+            x: true,
+            y: true
+          }, {
+            minX: 0,
+            maxX: Game.map.p.w,
+            minY: 0,
+            maxY: Game.map.p.h
+          });
+          this.destroy();
+        }
+        if (this.p.lifePoints === 1) {
+          Game.infoLabel.lifeLevelLow();
+        }
+      }
+      return Q.state.set("lives", this.p.lifePoints);
+    },
+    restore: function() {
+      this.p.x = this.p.savedPosition.x;
+      return this.p.y = this.p.savedPosition.y;
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
+  Q.animations("zombiePlayer", {
+    stand: {
+      frames: [4],
+      rate: 1
+    },
+    run: {
+      frames: [4, 3, 2],
+      rate: 1 / 4
+    },
+    hit: {
+      frames: [0],
+      loop: false,
+      rate: 1 / 2,
+      next: "run"
+    },
+    jump: {
+      frames: [2],
+      rate: 1 / 2
+    }
+  });
+
+  Q.Sprite.extend("ZombiePlayer", {
+    init: function(p) {
+      this._super(p, {
+        timeToNextSave: 0,
+        x: 0,
+        y: 0,
+        z: 100,
+        savedPosition: {},
+        sheet: "zombie5",
+        sprite: "zombiePlayer",
+        type: Game.SPRITE_ZOMBIE_PLAYER,
+        collisionMask: Game.SPRITE_TILES | Game.SPRITE_PLAYER_COLLECTIBLE
+      });
+      this.add("2d, platformerControls, animation");
+      this.p.jumpSpeed = -680;
+      this.p.speed = 300;
+      this.p.savedPosition.x = this.p.x;
+      this.p.savedPosition.y = this.p.y;
+      this.on("bump.left, bump.right, bump.bottom, bump.top", this, "collision");
+      return this.on("player.outOfMap", this, "restore");
+    },
+    step: function(dt) {
+      if (this.p.direction === "left") {
+        this.p.flip = false;
+      }
+      if (this.p.direction === "right") {
+        this.p.flip = "x";
+      }
+      if (this.p.y > Game.map.p.h) {
+        this.trigger("player.outOfMap");
+      }
+      if (this.p.x > Game.map.p.w) {
+        this.p.x = Game.map.p.w;
+      }
+      if (this.p.x < 0) {
+        this.p.x = 0;
+      }
+      if (this.p.timeToNextSave > 0) {
+        this.p.timeToNextSave = Math.max(this.p.timeToNextSave - dt, 0);
+      }
+      if (this.p.timeToNextSave === 0) {
+        this.savePosition();
+        this.p.timeToNextSave = 2;
+      }
+      if (this.p.vy > 1100) {
+        this.p.willBeDead = true;
+      }
+      if (this.p.willBeDead && this.p.vy < 1100) {
+        this.p.willBeDead = false;
+        this.trigger("player.outOfMap");
+      }
+      if (this.p.vy !== 0) {
+        return this.play("jump");
+      } else if (this.p.vx !== 0) {
+        return this.play("run");
+      } else {
+        return this.play("stand");
+      }
+    },
+    collision: function(col) {},
+    savePosition: function() {
+      var dirX, ground;
+      dirX = this.p.vx / Math.abs(this.p.vx);
+      ground = Q.stage().locate(this.p.x, this.p.y + this.p.h / 2 + 1, Game.SPRITE_TILES);
+      if (ground) {
+        this.p.savedPosition.x = this.p.x;
+        return this.p.savedPosition.y = this.p.y;
+      }
+    },
+    restore: function() {
+      this.p.x = this.p.savedPosition.x;
+      return this.p.y = this.p.savedPosition.y;
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
   Q.Sprite.extend("Door", {
     init: function(p) {
       this._super(p, {
@@ -846,142 +1097,6 @@
         Game.infoLabel.keyFound();
         return this.destroy();
       }
-    }
-  });
-
-}).call(this);
-
-(function() {
-  var Q;
-
-  Q = Game.Q;
-
-  Q.animations("player", {
-    stand: {
-      frames: [4],
-      rate: 1 / 2
-    },
-    run: {
-      frames: [4, 5, 6],
-      rate: 1 / 4
-    },
-    hit: {
-      frames: [0],
-      loop: false,
-      rate: 1 / 2,
-      next: "stand"
-    },
-    jump: {
-      frames: [2],
-      rate: 1 / 2
-    }
-  });
-
-  Q.Sprite.extend("Player", {
-    init: function(p) {
-      this._super(p, {
-        lifePoints: 3,
-        timeInvincible: 0,
-        timeToNextSave: 0,
-        x: 0,
-        y: 0,
-        z: 100,
-        savedPosition: {},
-        hasKey: false,
-        sheet: "player",
-        sprite: "player",
-        type: Game.SPRITE_PLAYER,
-        collisionMask: Game.SPRITE_TILES | Game.SPRITE_ENEMY | Game.SPRITE_PLAYER_COLLECTIBLE
-      });
-      this.add("2d, platformerControls, animation, gun");
-      this.p.jumpSpeed = -680;
-      this.p.speed = 300;
-      this.p.savedPosition.x = this.p.x;
-      this.p.savedPosition.y = this.p.y;
-      Q.state.set("lives", this.p.lifePoints);
-      this.on("bump.left, bump.right, bump.bottom, bump.top", this, "collision");
-      return this.on("player.outOfMap", this, "restore");
-    },
-    step: function(dt) {
-      if (this.p.direction === "left") {
-        this.p.flip = false;
-      }
-      if (this.p.direction === "right") {
-        this.p.flip = "x";
-      }
-      if (this.p.y > Game.map.p.h) {
-        this.updateLifePoints();
-        this.trigger("player.outOfMap");
-      }
-      if (this.p.x > Game.map.p.w) {
-        this.p.x = Game.map.p.w;
-      }
-      if (this.p.x < 0) {
-        this.p.x = 0;
-      }
-      if (this.p.timeToNextSave > 0) {
-        this.p.timeToNextSave = Math.max(this.p.timeToNextSave - dt, 0);
-      }
-      if (this.p.timeToNextSave === 0) {
-        this.savePosition();
-        this.p.timeToNextSave = 2;
-      }
-      if (this.p.timeInvincible > 0) {
-        this.p.timeInvincible = Math.max(this.p.timeInvincible - dt, 0);
-      }
-      if (this.p.vy > 1100) {
-        this.p.willBeDead = true;
-      }
-      if (this.p.willBeDead && this.p.vy < 1100) {
-        this.updateLifePoints();
-        this.p.willBeDead = false;
-        this.trigger("player.outOfMap");
-      }
-      if (this.p.vy !== 0) {
-        return this.play("jump");
-      } else if (this.p.vx !== 0) {
-        return this.play("run");
-      } else {
-        return this.play("stand");
-      }
-    },
-    collision: function(col) {
-      if (col.obj.isA("Enemy") && this.p.timeInvincible === 0) {
-        this.updateLifePoints();
-        return this.p.timeInvincible = 1;
-      }
-    },
-    savePosition: function() {
-      var dirX, ground;
-      dirX = this.p.vx / Math.abs(this.p.vx);
-      ground = Q.stage().locate(this.p.x, this.p.y + this.p.h / 2 + 1, Game.SPRITE_TILES);
-      if (ground) {
-        this.p.savedPosition.x = this.p.x;
-        return this.p.savedPosition.y = this.p.y;
-      }
-    },
-    updateLifePoints: function(newLives) {
-      if (newLives != null) {
-        this.p.lifePoints += newLives;
-      } else {
-        this.p.lifePoints -= 1;
-        Game.infoLabel.lifeLost();
-        this.play("hit", 1);
-        if (this.p.lifePoints <= 0) {
-          this.destroy();
-          Q.stageScene("end", 2, {
-            label: "You Died"
-          });
-        }
-        if (this.p.lifePoints === 1) {
-          Game.infoLabel.lifeLevelLow();
-        }
-      }
-      return Q.state.set("lives", this.p.lifePoints);
-    },
-    restore: function() {
-      this.p.x = this.p.savedPosition.x;
-      return this.p.y = this.p.savedPosition.y;
     }
   });
 

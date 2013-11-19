@@ -26,6 +26,7 @@ window.Game =
     @SPRITE_BULLET = 8
     @SPRITE_PLAYER_COLLECTIBLE = 16
     @SPRITE_HUMAN = 32
+    @SPRITE_ZOMBIE_PLAYER = 64
     @SPRITE_ALL = 0xFFFF
 
     # rest of init
@@ -52,7 +53,7 @@ window.Game =
       map:
         dataAsset: "map.tmx"
         sheet: "map_tiles.png"
-        bg: "bg_2.jpg"
+        bg: "bg.png"
       enemies:
         dataAsset: "enemies.json"
         sheet: "enemies.png"

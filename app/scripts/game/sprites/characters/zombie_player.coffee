@@ -1,47 +1,44 @@
 Q = Game.Q
 
 # animations object
-Q.animations "player",
+Q.animations "zombiePlayer",
   stand:
     frames: [4]
-    rate: 1/2
+    rate: 1
   run:
-    frames: [4, 5, 6]
+    frames: [4, 3, 2]
     rate: 1/4
   hit:
     frames: [0]
     loop: false
     rate: 1/2
-    next: "stand"
+    next: "run"
   jump:
     frames: [2]
     rate: 1/2
 
-# player object and logic
-Q.Sprite.extend "Player",
+# main object and logic
+Q.Sprite.extend "ZombiePlayer",
   init: (p) ->
     @_super p,
-      lifePoints: 3
-      timeInvincible: 0
       timeToNextSave: 0
       x: 0
       y: 0
       z: 100
       savedPosition: {}
-      hasKey: false
-      sheet: "player"
-      sprite: "player"
-      type: Game.SPRITE_PLAYER
-      collisionMask: Game.SPRITE_TILES | Game.SPRITE_ENEMY | Game.SPRITE_PLAYER_COLLECTIBLE
+      sheet: "zombie5"
+      sprite: "zombiePlayer"
+      type: Game.SPRITE_ZOMBIE_PLAYER
+      collisionMask: Game.SPRITE_TILES | Game.SPRITE_PLAYER_COLLECTIBLE
 
-    @add("2d, platformerControls, animation, gun")
+    @add("2d, platformerControls, animation")
 
     @p.jumpSpeed = -680
     @p.speed = 300
     @p.savedPosition.x = @p.x
     @p.savedPosition.y = @p.y
 
-    Q.state.set "lives", @p.lifePoints
+    # Q.state.set "lives", @p.lifePoints
 
     # events
     @on "bump.left, bump.right, bump.bottom, bump.top", @, "collision"
@@ -55,7 +52,6 @@ Q.Sprite.extend "Player",
 
     # check if out of map
     if @p.y > Game.map.p.h
-      @updateLifePoints()
       @trigger "player.outOfMap"
 
     # do not allow to get out of level
@@ -73,16 +69,11 @@ Q.Sprite.extend "Player",
       @savePosition()
       @p.timeToNextSave = 2
 
-    # collision with enemy timeout
-    if @p.timeInvincible > 0
-      @p.timeInvincible = Math.max(@p.timeInvincible - dt, 0)
-
     # jump from too high place
     if @p.vy > 1100
       @p.willBeDead = true
 
     if @p.willBeDead && @p.vy < 1100
-      @updateLifePoints()
       @p.willBeDead = false
       @trigger "player.outOfMap"
 
@@ -95,11 +86,7 @@ Q.Sprite.extend "Player",
       @play("stand")
 
   collision: (col) ->
-    if col.obj.isA("Enemy") && @p.timeInvincible == 0
-      @updateLifePoints()
-
-      # will be invincible for 1 second
-      @p.timeInvincible = 1
+    # if col.obj.isA("Enemy")
 
   savePosition: ->
     dirX = @p.vx/Math.abs(@p.vx)
@@ -108,26 +95,6 @@ Q.Sprite.extend "Player",
     if ground
       @p.savedPosition.x = @p.x
       @p.savedPosition.y = @p.y
-
-  updateLifePoints: (newLives) ->
-    if newLives?
-      @p.lifePoints += newLives
-
-    else
-      @p.lifePoints -= 1
-      Game.infoLabel.lifeLost()
-      @play("hit", 1)
-
-      if @p.lifePoints <= 0
-        @destroy()
-        Q.stageScene "end", 2,
-          label: "You Died"
-
-      if @p.lifePoints == 1
-        Game.infoLabel.lifeLevelLow()
-
-    # always update label
-    Q.state.set "lives", @p.lifePoints
 
   restore: ->
     @p.x = @p.savedPosition.x
