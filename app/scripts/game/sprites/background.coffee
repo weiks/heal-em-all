@@ -12,6 +12,12 @@ Q.Sprite.extend 'Background',
 
     @imgEl = @asset()
 
+    ratio = @imgEl.width/@imgEl.height
+
+    # background cover vertically
+    @imgEl.width = Q.width + 10
+    @imgEl.height = @imgEl.width * ratio
+
     # find background draw start point to achive viewport.centerX == imgEl.centerX
     @p.deltaX = (@imgEl.width - Q.width)/2
     @p.deltaY = (@imgEl.height - Q.height)/2

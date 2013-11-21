@@ -285,7 +285,6 @@
 
   Q.scene("level1", function(stage) {
     var background, doorKeyPositions, enemies, gunPositions, items, map, player, random;
-    stage.insert(new Q.Background());
     Game.map = map = new Q.TileLayer({
       type: Game.SPRITE_TILES,
       layerIndex: 1,
@@ -506,6 +505,7 @@
 
   Q.Sprite.extend('Background', {
     init: function(p) {
+      var ratio;
       this._super(p, {
         x: 0,
         y: 0,
@@ -514,6 +514,9 @@
         type: Q.SPRITE_NONE
       });
       this.imgEl = this.asset();
+      ratio = this.imgEl.width / this.imgEl.height;
+      this.imgEl.width = Q.width + 10;
+      this.imgEl.height = this.imgEl.width * ratio;
       this.p.deltaX = (this.imgEl.width - Q.width) / 2;
       return this.p.deltaY = (this.imgEl.height - Q.height) / 2;
     },

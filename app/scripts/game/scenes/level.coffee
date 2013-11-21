@@ -3,7 +3,7 @@ Q = Game.Q
 Q.scene "level1", (stage) ->
 
   # bg image
-  stage.insert new Q.Background()
+  # stage.insert new Q.Background()
 
   # main map with collision
   Game.map = map = new Q.TileLayer
