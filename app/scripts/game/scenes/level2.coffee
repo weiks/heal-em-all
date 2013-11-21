@@ -1,6 +1,6 @@
 Q = Game.Q
 
-Q.scene "level1", (stage) ->
+Q.scene "level2", (stage) ->
 
   # bg image
   # stage.insert new Q.Background()
@@ -8,8 +8,8 @@ Q.scene "level1", (stage) ->
   # main map with collision
   Game.map = map = new Q.TileLayer
     type: Game.SPRITE_TILES
-    layerIndex: 1
-    dataAsset: Game.assets.map.dataAsset
+    layerIndex: 0
+    dataAsset: Game.assets.level2.dataAsset
     sheet: Game.assets.map.sheetName
     tileW: Game.assets.map.tileSize
     tileH: Game.assets.map.tileSize
@@ -19,9 +19,9 @@ Q.scene "level1", (stage) ->
 
   # decorations
   background = new Q.TileLayer
-    layerIndex: 2,
+    layerIndex: 1,
     type: Game.SPRITE_NONE
-    dataAsset: Game.assets.map.dataAsset
+    dataAsset: Game.assets.level2.dataAsset
     sheet: Game.assets.map.sheetName
     tileW: Game.assets.map.tileSize
     tileH: Game.assets.map.tileSize

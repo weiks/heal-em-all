@@ -51,9 +51,12 @@ window.Game =
         dataAsset: "player.json"
         sheet: "player.png"
       map:
-        dataAsset: "map.tmx"
         sheet: "map_tiles.png"
         bg: "bg.png"
+      level1:
+        dataAsset: "level1.tmx"
+      level2:
+        dataAsset: "level2.tmx"
       enemies:
         dataAsset: "enemies.json"
         sheet: "enemies.png"
