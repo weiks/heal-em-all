@@ -1,19 +1,5 @@
 Q = Game.Q
 
-# animations object
-Q.animations "enemy",
-  stand:
-    frames: [4]
-    rate: 1
-  run:
-    frames: [4, 3, 2]
-    rate: 1/4
-  hit:
-    frames: [0]
-    loop: false
-    rate: 1/2
-    next: "run"
-
 Q.component "zombieAI",
   added: ->
     p = @entity.p
@@ -22,8 +8,6 @@ Q.component "zombieAI",
       p.vx = 60
     else
       p.vx = -60
-
-    p.sprite = "enemy"
 
     # animations
     @entity.play "run"

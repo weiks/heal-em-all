@@ -47,7 +47,7 @@ Q.scene "level1", (stage) ->
 
     ["Enemy", Q.tilePos(49, 9, {sheet: "zombie3"})]
     ["Enemy", Q.tilePos(49, 15, {sheet: "zombie2"})]
-    ["Enemy", Q.tilePos(49, 27, {startLeft: true, sheet: "zombie1"})]
+    ["Zombie", Q.tilePos(49, 27, {startLeft: true})]
     ["Enemy", Q.tilePos(49, 33, {sheet: "zombie4"})]
 
     ["Enemy", Q.tilePos(60, 9, {startLeft: true, sheet: "zombie5"})]

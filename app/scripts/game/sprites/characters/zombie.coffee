@@ -1,21 +1,21 @@
 Q = Game.Q
 
-# animations object
-Q.animations "enemy",
+#
+Q.animations "zombie",
   stand:
-    frames: [4]
+    frames: [1]
     rate: 1
   run:
-    frames: [4, 3, 2]
-    rate: 1/4
+    frames: [0, 1, 2, 1]
+    rate: 0.4
   hit:
     frames: [0]
     loop: false
     rate: 1/2
     next: "run"
 
-# enemy object and logic
-Q.Sprite.extend "Enemy",
+#
+Q.Sprite.extend "Zombie",
   init: (p) ->
     @_super p,
       lifePoints: 1
@@ -23,8 +23,8 @@ Q.Sprite.extend "Enemy",
       y: 0
       vx: 0
       z: 20
-      sheet: "zombie1"
-      sprite: "enemy"
+      sheet: "zombie_new"
+      sprite: "zombie"
       canSeeThePlayerTimeout: 0
       type: Game.SPRITE_ENEMY
       collisionMask: Game.SPRITE_TILES | Game.SPRITE_PLAYER | Game.SPRITE_BULLET
@@ -32,6 +32,13 @@ Q.Sprite.extend "Enemy",
     Q.state.inc "enemiesCounter", 1
 
     @add "2d, animation, zombieAI"
+
+    @p.points = [
+      [-35, -55 ],
+      [ 35, -55 ],
+      [ 35,  70 ],
+      [-35,  70 ]
+    ]
 
     # events
     @on "hit", @, "collision"

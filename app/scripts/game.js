@@ -56,6 +56,10 @@
         items: {
           dataAsset: "items.json",
           sheet: "items.png"
+        },
+        zombie: {
+          dataAsset: "zombie.json",
+          sheet: "zombie.png"
         }
       };
       assetsAsArray = [];
@@ -146,23 +150,6 @@
 
   Q = Game.Q;
 
-  Q.animations("enemy", {
-    stand: {
-      frames: [4],
-      rate: 1
-    },
-    run: {
-      frames: [4, 3, 2],
-      rate: 1 / 4
-    },
-    hit: {
-      frames: [0],
-      loop: false,
-      rate: 1 / 2,
-      next: "run"
-    }
-  });
-
   Q.component("zombieAI", {
     added: function() {
       var p;
@@ -172,7 +159,6 @@
       } else {
         p.vx = -60;
       }
-      p.sprite = "enemy";
       return this.entity.play("run");
     },
     extend: {
@@ -242,6 +228,7 @@
     Q.compileSheets(Game.assets.player.sheet, Game.assets.player.dataAsset);
     Q.compileSheets(Game.assets.enemies.sheet, Game.assets.enemies.dataAsset);
     Q.compileSheets(Game.assets.items.sheet, Game.assets.items.dataAsset);
+    Q.compileSheets(Game.assets.zombie.sheet, Game.assets.zombie.dataAsset);
     return Game.stageLevel();
   }, {
     progressCallback: function(loaded, total) {
@@ -354,9 +341,8 @@
           sheet: "zombie2"
         })
       ], [
-        "Enemy", Q.tilePos(49, 27, {
-          startLeft: true,
-          sheet: "zombie1"
+        "Zombie", Q.tilePos(49, 27, {
+          startLeft: true
         })
       ], [
         "Enemy", Q.tilePos(49, 33, {
@@ -600,6 +586,23 @@
 
   Q = Game.Q;
 
+  Q.animations("enemy", {
+    stand: {
+      frames: [4],
+      rate: 1
+    },
+    run: {
+      frames: [4, 3, 2],
+      rate: 1 / 4
+    },
+    hit: {
+      frames: [0],
+      loop: false,
+      rate: 1 / 2,
+      next: "run"
+    }
+  });
+
   Q.Sprite.extend("Enemy", {
     init: function(p) {
       this._super(p, {
@@ -609,6 +612,7 @@
         vx: 0,
         z: 20,
         sheet: "zombie1",
+        sprite: "enemy",
         canSeeThePlayerTimeout: 0,
         type: Game.SPRITE_ENEMY,
         collisionMask: Game.SPRITE_TILES | Game.SPRITE_PLAYER | Game.SPRITE_BULLET
@@ -853,6 +857,87 @@
     restore: function() {
       this.p.x = this.p.savedPosition.x;
       return this.p.y = this.p.savedPosition.y;
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
+  Q.animations("zombie", {
+    stand: {
+      frames: [1],
+      rate: 1
+    },
+    run: {
+      frames: [0, 1, 2, 1],
+      rate: 0.4
+    },
+    hit: {
+      frames: [0],
+      loop: false,
+      rate: 1 / 2,
+      next: "run"
+    }
+  });
+
+  Q.Sprite.extend("Zombie", {
+    init: function(p) {
+      this._super(p, {
+        lifePoints: 1,
+        x: 0,
+        y: 0,
+        vx: 0,
+        z: 20,
+        sheet: "zombie_new",
+        sprite: "zombie",
+        canSeeThePlayerTimeout: 0,
+        type: Game.SPRITE_ENEMY,
+        collisionMask: Game.SPRITE_TILES | Game.SPRITE_PLAYER | Game.SPRITE_BULLET
+      });
+      Q.state.inc("enemiesCounter", 1);
+      this.add("2d, animation, zombieAI");
+      this.p.points = [[-35, -55], [35, -55], [35, 70], [-35, 70]];
+      this.on("hit", this, "collision");
+      this.on("bump.right", this, "hitFromRight");
+      return this.on("bump.left", this, "hitFromLeft");
+    },
+    collision: function(col) {
+      if (col.obj.isA("Bullet")) {
+        this.play("hit");
+        return this.decreaseLifePoints();
+      }
+    },
+    hitFromRight: function(col) {
+      return this.p.vx = col.impact;
+    },
+    hitFromLeft: function(col) {
+      return this.p.vx = -col.impact;
+    },
+    step: function(dt) {
+      if (this.zombieStep != null) {
+        this.zombieStep(dt);
+      }
+      if (this.p.y > Game.map.p.h) {
+        return this.die();
+      }
+    },
+    decreaseLifePoints: function() {
+      this.p.lifePoints -= 1;
+      if (this.p.lifePoints <= 0) {
+        return this.die();
+      }
+    },
+    die: function() {
+      this.destroy();
+      this.stage.insert(new Q.Human({
+        x: this.p.x,
+        y: this.p.y
+      }));
+      return Q.state.dec("enemiesCounter", 1);
     }
   });
 

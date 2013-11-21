@@ -60,6 +60,9 @@ window.Game =
       items:
         dataAsset: "items.json"
         sheet: "items.png"
+      zombie:
+        dataAsset: "zombie.json"
+        sheet: "zombie.png"
 
 
     # convert to array for Q.load
