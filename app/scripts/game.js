@@ -1037,7 +1037,7 @@
     },
     die: function() {
       var player;
-      player = this.stage.insert(new Q.Player({
+      Game.player = player = this.stage.insert(new Q.Player({
         x: this.p.savedPosition.x,
         y: this.p.savedPosition.y
       }));
