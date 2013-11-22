@@ -1204,6 +1204,7 @@
         text: "Bullets: ",
         label: "Bullets: " + Q.state.get("bullets"),
         size: 30,
+        family: "Ubuntu",
         x: 0,
         y: 30,
         color: "#000"
