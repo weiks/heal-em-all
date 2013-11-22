@@ -25,10 +25,12 @@ Q.Sprite.extend "Human",
       y: 0
       vx: 0
       z: 20
+      timeInvincible: 2
       sheet: "human"
       sprite: "human"
       type: Game.SPRITE_HUMAN
-      collisionMask: Game.SPRITE_TILES | Game.SPRITE_ENEMY
+      collisionMask: Game.SPRITE_TILES
+      sensor: true
 
     @add "2d, animation"
 
@@ -36,17 +38,23 @@ Q.Sprite.extend "Human",
     @play "stand"
 
     # events
-    @on "hit", @, "collision"
+    @on "sensor", @, "sensor"
 
-  collision: (col) ->
-    if col.obj.isA("Zombie")
+  step: (dt) ->
+    if @p.timeInvincible > 0
+      @p.timeInvincible = Math.max(@p.timeInvincible - dt, 0)
+
+  sensor: (obj) ->
+    if obj.isA("Zombie") && @p.timeInvincible == 0
+      # turn to zombie again
       @play("hit")
 
-      # turn to zombie again
       @destroy()
 
       randomBool = Math.floor(Math.random() * 2)
-      @stage.insert new Q.Zombie
+      zombie = @stage.insert new Q.Zombie
         x: @p.x
         y: @p.y
         startLeft: randomBool
+
+      zombie.p.wasHuman = true

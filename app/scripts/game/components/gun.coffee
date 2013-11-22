@@ -25,9 +25,12 @@ Q.component "gun",
 
         # fire
         @p.noOfBullets -= 1
-        Q.state.set "bullets", @p.noOfBullets
+
+        if @p.noOfBullets >= 0
+          Q.state.set "bullets", @p.noOfBullets
 
         if @p.noOfBullets > 0
+
           if @p.direction == "left"
             delta = -35
           else

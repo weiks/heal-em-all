@@ -27,7 +27,7 @@ Q.Sprite.extend "Zombie",
       sprite: "zombie"
       canSeeThePlayerTimeout: 0
       type: Game.SPRITE_ENEMY
-      collisionMask: Game.SPRITE_TILES | Game.SPRITE_PLAYER | Game.SPRITE_BULLET
+      collisionMask: Game.SPRITE_TILES | Game.SPRITE_PLAYER | Game.SPRITE_BULLET | Game.SPRITE_HUMAN
 
     Q.state.inc "enemiesCounter", 1
 
@@ -74,8 +74,9 @@ Q.Sprite.extend "Zombie",
   die: ->
     @destroy()
 
-    # replace zombie with human
-    @stage.insert new Q.Human(x: @p.x, y: @p.y)
+    if !@p.wasHuman
+      # replace zombie with human
+      @stage.insert new Q.Human(x: @p.x, y: @p.y)
 
     # update enemies counter
     Q.state.dec "enemiesCounter", 1

@@ -153,7 +153,9 @@
         if (this.p.nextFireTimeout === 0) {
           this.p.nextFireTimeout = 0.5;
           this.p.noOfBullets -= 1;
-          Q.state.set("bullets", this.p.noOfBullets);
+          if (this.p.noOfBullets >= 0) {
+            Q.state.set("bullets", this.p.noOfBullets);
+          }
           if (this.p.noOfBullets > 0) {
             if (this.p.direction === "left") {
               delta = -35;
@@ -196,7 +198,7 @@
         var dirX, ground, nextTile;
         this.canSeeThePlayer();
         if (this.canSeeThePlayerObj.status) {
-          this.p.canSeeThePlayerTimeout = 2;
+          this.p.canSeeThePlayerTimeout = 3;
           if ((this.canSeeThePlayerObj.left && this.p.vx > 0) || (this.canSeeThePlayerObj.right && this.p.vx < 0)) {
             this.p.vx = -this.p.vx;
           }
@@ -224,7 +226,7 @@
       canSeeThePlayer: function() {
         var isCloseFromLeft, isCloseFromRight, isTheSameY, lineOfSight, player;
         player = Game.player.p;
-        lineOfSight = 250;
+        lineOfSight = 350;
         this.canSeeThePlayerObj = {
           status: false
         };
@@ -347,7 +349,7 @@
         "Zombie", Q.tilePos(39, 27, {
           startLeft: true
         })
-      ], ["Zombie", Q.tilePos(39, 33)], ["Zombie", Q.tilePos(49, 9)], ["Zombie", Q.tilePos(49, 15)], [
+      ], ["Zombie", Q.tilePos(39, 33)], ["Zombie", Q.tilePos(49, 9)], ["Zombie", Q.tilePos(49, 15)], ["Zombie", Q.tilePos(51, 15)], [
         "Zombie", Q.tilePos(49, 27, {
           startLeft: true
         })
@@ -705,26 +707,34 @@
         y: 0,
         vx: 0,
         z: 20,
+        timeInvincible: 2,
         sheet: "human",
         sprite: "human",
         type: Game.SPRITE_HUMAN,
-        collisionMask: Game.SPRITE_TILES | Game.SPRITE_ENEMY
+        collisionMask: Game.SPRITE_TILES,
+        sensor: true
       });
       this.add("2d, animation");
       this.play("stand");
-      return this.on("hit", this, "collision");
+      return this.on("sensor", this, "sensor");
     },
-    collision: function(col) {
-      var randomBool;
-      if (col.obj.isA("Zombie")) {
+    step: function(dt) {
+      if (this.p.timeInvincible > 0) {
+        return this.p.timeInvincible = Math.max(this.p.timeInvincible - dt, 0);
+      }
+    },
+    sensor: function(obj) {
+      var randomBool, zombie;
+      if (obj.isA("Zombie") && this.p.timeInvincible === 0) {
         this.play("hit");
         this.destroy();
         randomBool = Math.floor(Math.random() * 2);
-        return this.stage.insert(new Q.Zombie({
+        zombie = this.stage.insert(new Q.Zombie({
           x: this.p.x,
           y: this.p.y,
           startLeft: randomBool
         }));
+        return zombie.p.wasHuman = true;
       }
     }
   });
@@ -909,7 +919,7 @@
         sprite: "zombie",
         canSeeThePlayerTimeout: 0,
         type: Game.SPRITE_ENEMY,
-        collisionMask: Game.SPRITE_TILES | Game.SPRITE_PLAYER | Game.SPRITE_BULLET
+        collisionMask: Game.SPRITE_TILES | Game.SPRITE_PLAYER | Game.SPRITE_BULLET | Game.SPRITE_HUMAN
       });
       Q.state.inc("enemiesCounter", 1);
       this.add("2d, animation, zombieAI");
@@ -946,10 +956,12 @@
     },
     die: function() {
       this.destroy();
-      this.stage.insert(new Q.Human({
-        x: this.p.x,
-        y: this.p.y
-      }));
+      if (!this.p.wasHuman) {
+        this.stage.insert(new Q.Human({
+          x: this.p.x,
+          y: this.p.y
+        }));
+      }
       return Q.state.dec("enemiesCounter", 1);
     }
   });

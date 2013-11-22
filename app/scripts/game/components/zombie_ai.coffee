@@ -19,7 +19,7 @@ Q.component "zombieAI",
 
       if @canSeeThePlayerObj.status
         # I see the player, I will remember that for X sec
-        @p.canSeeThePlayerTimeout = 2
+        @p.canSeeThePlayerTimeout = 3
 
         if (@canSeeThePlayerObj.left and @p.vx > 0) or (@canSeeThePlayerObj.right and @p.vx < 0)
           # enemy goes in wrong direction, change it
@@ -51,7 +51,7 @@ Q.component "zombieAI",
 
     canSeeThePlayer: ->
       player = Game.player.p
-      lineOfSight = 250
+      lineOfSight = 350
 
       @canSeeThePlayerObj =
         status: false

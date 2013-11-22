@@ -47,6 +47,7 @@ Q.scene "level1", (stage) ->
 
     ["Zombie", Q.tilePos(49, 9)]
     ["Zombie", Q.tilePos(49, 15)]
+    ["Zombie", Q.tilePos(51, 15)]
     ["Zombie", Q.tilePos(49, 27, {startLeft: true})]
     ["Zombie", Q.tilePos(49, 33)]
 
