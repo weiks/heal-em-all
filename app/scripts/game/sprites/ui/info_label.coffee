@@ -21,6 +21,9 @@ Q.UI.InfoLabel = Q.UI.Text.extend "UI.InfoLabel",
   gunFound: ->
     @p.label = "I found the gun, I can shoot pressing Z"
 
+  outOfBullets: ->
+    @p.label = "I'm out of ammo"
+
   keyFound: ->
     @p.label = "I found the key, now I need to find the the door"
 

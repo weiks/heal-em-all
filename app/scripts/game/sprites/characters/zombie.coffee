@@ -23,7 +23,7 @@ Q.Sprite.extend "Zombie",
       y: 0
       vx: 0
       z: 20
-      sheet: "zombie_new"
+      sheet: "zombie"
       sprite: "zombie"
       canSeeThePlayerTimeout: 0
       type: Game.SPRITE_ENEMY

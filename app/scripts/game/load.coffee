@@ -8,9 +8,9 @@ Q.load Game.assets.all,
       tileH: Game.assets.map.tileSize
 
     Q.compileSheets Game.assets.player.sheet, Game.assets.player.dataAsset
-    Q.compileSheets Game.assets.enemies.sheet, Game.assets.enemies.dataAsset
-    Q.compileSheets Game.assets.items.sheet, Game.assets.items.dataAsset
     Q.compileSheets Game.assets.zombie.sheet, Game.assets.zombie.dataAsset
+    Q.compileSheets Game.assets.human.sheet, Game.assets.human.dataAsset
+    Q.compileSheets Game.assets.items.sheet, Game.assets.items.dataAsset
 
     # start the stage
     Game.stageLevel()

@@ -3,10 +3,10 @@ Q = Game.Q
 # animations object
 Q.animations "player",
   stand:
-    frames: [4]
-    rate: 1/2
+    frames: [1]
+    rate: 1
   run:
-    frames: [4, 5, 6]
+    frames: [0, 1, 2, 1]
     rate: 1/4
   hit:
     frames: [0]
@@ -36,8 +36,8 @@ Q.Sprite.extend "Player",
 
     @add("2d, platformerControls, animation, gun")
 
-    @p.jumpSpeed = -680
-    @p.speed = 300
+    @p.jumpSpeed = -660
+    @p.speed = 330
     @p.savedPosition.x = @p.x
     @p.savedPosition.y = @p.y
 
@@ -94,8 +94,13 @@ Q.Sprite.extend "Player",
     else
       @play("stand")
 
+    # gun
+    if @gunStep?
+      @gunStep(dt)
+
+
   collision: (col) ->
-    if col.obj.isA("Enemy") && @p.timeInvincible == 0
+    if col.obj.isA("Zombie") && @p.timeInvincible == 0
       @updateLifePoints()
 
       # will be invincible for 1 second

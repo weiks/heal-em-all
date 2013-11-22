@@ -3,8 +3,8 @@
     "sx": 0,
     "sy": 0,
     "cols": 1,
-    "tilew": 60,
-    "tileh": 80,
-    "frames": 7
+    "tilew": 70,
+    "tileh": 140,
+    "frames": 3
   }
 }

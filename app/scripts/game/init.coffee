@@ -50,6 +50,15 @@ window.Game =
       player:
         dataAsset: "player.json"
         sheet: "player.png"
+      zombie:
+        dataAsset: "zombie.json"
+        sheet: "zombie.png"
+      human:
+        dataAsset: "human.json"
+        sheet: "human.png"
+      items:
+        dataAsset: "items.json"
+        sheet: "items.png"
       map:
         sheet: "map_tiles.png"
         bg: "bg.png"
@@ -57,16 +66,6 @@ window.Game =
         dataAsset: "level1.tmx"
       level2:
         dataAsset: "level2.tmx"
-      enemies:
-        dataAsset: "enemies.json"
-        sheet: "enemies.png"
-      items:
-        dataAsset: "items.json"
-        sheet: "items.png"
-      zombie:
-        dataAsset: "zombie.json"
-        sheet: "zombie.png"
-
 
     # convert to array for Q.load
     assetsAsArray = []
@@ -100,6 +99,7 @@ window.Game =
     @Q.state.reset
       enemiesCounter: 0
       lives: 0
+      bullets: 0
 
     @Q.clearStages()
     @Q.stageScene "level1",

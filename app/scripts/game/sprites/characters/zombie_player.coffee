@@ -3,19 +3,14 @@ Q = Game.Q
 # animations object
 Q.animations "zombiePlayer",
   stand:
-    frames: [4]
+    frames: [1]
     rate: 1
   run:
-    frames: [4, 3, 2]
-    rate: 1/4
-  hit:
-    frames: [0]
-    loop: false
-    rate: 1/2
-    next: "run"
+    frames: [0, 1, 2, 1]
+    rate: 0.4
   jump:
     frames: [2]
-    rate: 1/2
+    rate: 0.5
 
 # main object and logic
 Q.Sprite.extend "ZombiePlayer",
@@ -26,7 +21,7 @@ Q.Sprite.extend "ZombiePlayer",
       y: 0
       z: 100
       savedPosition: {}
-      sheet: "zombie5"
+      sheet: "zombie"
       sprite: "zombiePlayer"
       type: Game.SPRITE_ZOMBIE_PLAYER
       collisionMask: Game.SPRITE_TILES | Game.SPRITE_PLAYER_COLLECTIBLE
@@ -42,7 +37,6 @@ Q.Sprite.extend "ZombiePlayer",
     Game.infoLabel.zombieModeOnNext()
 
     # events
-    @on "bump.left, bump.right, bump.bottom, bump.top", @, "collision"
     @on "player.outOfMap", @, "die"
 
   step: (dt) ->
@@ -77,9 +71,6 @@ Q.Sprite.extend "ZombiePlayer",
       @play("run")
     else
       @play("stand")
-
-  collision: (col) ->
-    # if col.obj.isA("Enemy")
 
   savePosition: ->
     dirX = @p.vx/Math.abs(@p.vx)

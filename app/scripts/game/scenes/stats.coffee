@@ -18,6 +18,10 @@ Q.scene "stats", (stage) ->
   enemiesCounterLabel = container.insert new Q.UI.EnemiesCounter()
   enemiesCounterLabel.p.x = -container.p.w/2 + enemiesCounterLabel.p.w/2 + 160 # margin
 
+  # enemies counter
+  bulletsCounterLabel = container.insert new Q.UI.BulletsCounter()
+  bulletsCounterLabel.p.x = -container.p.w/2 + bulletsCounterLabel.p.w/2 + 160 # margin
+
   # game info/progress label
   Game.infoLabel = new Q.UI.InfoLabel
   container.insert Game.infoLabel

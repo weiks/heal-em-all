@@ -44,6 +44,18 @@
           dataAsset: "player.json",
           sheet: "player.png"
         },
+        zombie: {
+          dataAsset: "zombie.json",
+          sheet: "zombie.png"
+        },
+        human: {
+          dataAsset: "human.json",
+          sheet: "human.png"
+        },
+        items: {
+          dataAsset: "items.json",
+          sheet: "items.png"
+        },
         map: {
           sheet: "map_tiles.png",
           bg: "bg.png"
@@ -53,18 +65,6 @@
         },
         level2: {
           dataAsset: "level2.tmx"
-        },
-        enemies: {
-          dataAsset: "enemies.json",
-          sheet: "enemies.png"
-        },
-        items: {
-          dataAsset: "items.json",
-          sheet: "items.png"
-        },
-        zombie: {
-          dataAsset: "zombie.json",
-          sheet: "zombie.png"
         }
       };
       assetsAsArray = [];
@@ -98,7 +98,8 @@
     stageLevel: function() {
       this.Q.state.reset({
         enemiesCounter: 0,
-        lives: 0
+        lives: 0,
+        bullets: 0
       });
       this.Q.clearStages();
       this.Q.stageScene("level1", {
@@ -131,19 +132,43 @@
 
   Q.component("gun", {
     added: function() {
-      return Q.input.on("fire", this.entity, "fireGun");
+      var p;
+      Q.input.on("fire", this.entity, "fireGun");
+      p = this.entity.p;
+      p.noOfBullets = 12;
+      Q.state.set("bullets", p.noOfBullets);
+      return p.nextFireTimeout = 0;
     },
     destroyed: function() {
       return Q.input.off("fire", this.entity);
     },
     extend: {
+      gunStep: function(dt) {
+        if (this.p.nextFireTimeout > 0) {
+          return this.p.nextFireTimeout = Math.max(this.p.nextFireTimeout - dt, 0);
+        }
+      },
       fireGun: function() {
-        var bullet;
-        return bullet = this.stage.insert(new Q.Bullet({
-          x: this.p.x,
-          y: this.p.y,
-          direction: this.p.direction
-        }));
+        var bullet, delta;
+        if (this.p.nextFireTimeout === 0) {
+          this.p.nextFireTimeout = 0.5;
+          this.p.noOfBullets -= 1;
+          Q.state.set("bullets", this.p.noOfBullets);
+          if (this.p.noOfBullets > 0) {
+            if (this.p.direction === "left") {
+              delta = -35;
+            } else {
+              delta = 35;
+            }
+            return bullet = this.stage.insert(new Q.Bullet({
+              x: this.p.x + delta,
+              y: this.p.y + 12,
+              direction: this.p.direction
+            }));
+          } else {
+            return Game.infoLabel.outOfBullets();
+          }
+        }
       }
     }
   });
@@ -231,9 +256,9 @@
       tileH: Game.assets.map.tileSize
     });
     Q.compileSheets(Game.assets.player.sheet, Game.assets.player.dataAsset);
-    Q.compileSheets(Game.assets.enemies.sheet, Game.assets.enemies.dataAsset);
-    Q.compileSheets(Game.assets.items.sheet, Game.assets.items.dataAsset);
     Q.compileSheets(Game.assets.zombie.sheet, Game.assets.zombie.dataAsset);
+    Q.compileSheets(Game.assets.human.sheet, Game.assets.human.dataAsset);
+    Q.compileSheets(Game.assets.items.sheet, Game.assets.items.dataAsset);
     return Game.stageLevel();
   }, {
     progressCallback: function(loaded, total) {
@@ -314,66 +339,29 @@
     stage.add("viewport");
     Game.setCameraTo(stage, player);
     enemies = [
-      [
-        "Enemy", Q.tilePos(39, 9, {
-          sheet: "zombie4"
+      ["Zombie", Q.tilePos(39, 9)], [
+        "Zombie", Q.tilePos(39, 15, {
+          startLeft: true
         })
-      ], [
-        "Enemy", Q.tilePos(39, 15, {
-          startLeft: true,
-          sheet: "zombie5"
+      ], ["Zombie", Q.tilePos(39, 21)], [
+        "Zombie", Q.tilePos(39, 27, {
+          startLeft: true
         })
-      ], [
-        "Enemy", Q.tilePos(39, 21, {
-          sheet: "zombie3"
-        })
-      ], [
-        "Enemy", Q.tilePos(39, 27, {
-          startLeft: true,
-          sheet: "zombie2"
-        })
-      ], [
-        "Enemy", Q.tilePos(39, 33, {
-          sheet: "zombie1"
-        })
-      ], [
-        "Enemy", Q.tilePos(49, 9, {
-          sheet: "zombie3"
-        })
-      ], [
-        "Enemy", Q.tilePos(49, 15, {
-          sheet: "zombie2"
-        })
-      ], [
+      ], ["Zombie", Q.tilePos(39, 33)], ["Zombie", Q.tilePos(49, 9)], ["Zombie", Q.tilePos(49, 15)], [
         "Zombie", Q.tilePos(49, 27, {
           startLeft: true
         })
-      ], [
-        "Enemy", Q.tilePos(49, 33, {
-          sheet: "zombie4"
+      ], ["Zombie", Q.tilePos(49, 33)], [
+        "Zombie", Q.tilePos(60, 9, {
+          startLeft: true
         })
-      ], [
-        "Enemy", Q.tilePos(60, 9, {
-          startLeft: true,
-          sheet: "zombie5"
+      ], ["Zombie", Q.tilePos(60, 15)], [
+        "Zombie", Q.tilePos(60, 21, {
+          startLeft: true
         })
-      ], [
-        "Enemy", Q.tilePos(60, 15, {
-          sheet: "zombie1"
-        })
-      ], [
-        "Enemy", Q.tilePos(60, 21, {
-          startLeft: true,
-          sheet: "zombie4"
-        })
-      ], [
-        "Enemy", Q.tilePos(60, 27, {
-          sheet: "zombie3"
-        })
-      ], [
-        "Enemy", Q.tilePos(60, 33, {
-          startLeft: true,
-          sheet: "zombie2"
+      ], ["Zombie", Q.tilePos(60, 27)], [
+        "Zombie", Q.tilePos(60, 33, {
+          startLeft: true
         })
       ]
     ];
@@ -444,66 +432,29 @@
     stage.add("viewport");
     Game.setCameraTo(stage, player);
     enemies = [
-      [
-        "Enemy", Q.tilePos(39, 9, {
-          sheet: "zombie4"
+      ["Zombie", Q.tilePos(39, 9)], [
+        "Zombie", Q.tilePos(39, 15, {
+          startLeft: true
         })
-      ], [
-        "Enemy", Q.tilePos(39, 15, {
-          startLeft: true,
-          sheet: "zombie5"
+      ], ["Zombie", Q.tilePos(39, 21)], [
+        "Zombie", Q.tilePos(39, 27, {
+          startLeft: true
         })
-      ], [
-        "Enemy", Q.tilePos(39, 21, {
-          sheet: "zombie3"
-        })
-      ], [
-        "Enemy", Q.tilePos(39, 27, {
-          startLeft: true,
-          sheet: "zombie2"
-        })
-      ], [
-        "Enemy", Q.tilePos(39, 33, {
-          sheet: "zombie1"
-        })
-      ], [
-        "Enemy", Q.tilePos(49, 9, {
-          sheet: "zombie3"
-        })
-      ], [
-        "Enemy", Q.tilePos(49, 15, {
-          sheet: "zombie2"
-        })
-      ], [
+      ], ["Zombie", Q.tilePos(39, 33)], ["Zombie", Q.tilePos(49, 9)], ["Zombie", Q.tilePos(49, 15)], [
         "Zombie", Q.tilePos(49, 27, {
           startLeft: true
         })
-      ], [
-        "Enemy", Q.tilePos(49, 33, {
-          sheet: "zombie4"
+      ], ["Zombie", Q.tilePos(49, 33)], [
+        "Zombie", Q.tilePos(60, 9, {
+          startLeft: true
         })
-      ], [
-        "Enemy", Q.tilePos(60, 9, {
-          startLeft: true,
-          sheet: "zombie5"
+      ], ["Zombie", Q.tilePos(60, 15)], [
+        "Zombie", Q.tilePos(60, 21, {
+          startLeft: true
         })
-      ], [
-        "Enemy", Q.tilePos(60, 15, {
-          sheet: "zombie1"
-        })
-      ], [
-        "Enemy", Q.tilePos(60, 21, {
-          startLeft: true,
-          sheet: "zombie4"
-        })
-      ], [
-        "Enemy", Q.tilePos(60, 27, {
-          sheet: "zombie3"
-        })
-      ], [
-        "Enemy", Q.tilePos(60, 33, {
-          startLeft: true,
-          sheet: "zombie2"
+      ], ["Zombie", Q.tilePos(60, 27)], [
+        "Zombie", Q.tilePos(60, 33, {
+          startLeft: true
         })
       ]
     ];
@@ -586,7 +537,7 @@
   Q = Game.Q;
 
   Q.scene("stats", function(stage) {
-    var button, container, enemiesCounterLabel, isPaused, lifesLabel, pausedScreen;
+    var bulletsCounterLabel, button, container, enemiesCounterLabel, isPaused, lifesLabel, pausedScreen;
     container = stage.insert(new Q.UI.Container({
       x: Q.width / 2,
       y: 20,
@@ -598,6 +549,8 @@
     lifesLabel.p.x = -container.p.w / 2 + lifesLabel.p.w / 2 + 20;
     enemiesCounterLabel = container.insert(new Q.UI.EnemiesCounter());
     enemiesCounterLabel.p.x = -container.p.w / 2 + enemiesCounterLabel.p.w / 2 + 160;
+    bulletsCounterLabel = container.insert(new Q.UI.BulletsCounter());
+    bulletsCounterLabel.p.x = -container.p.w / 2 + bulletsCounterLabel.p.w / 2 + 160;
     Game.infoLabel = new Q.UI.InfoLabel;
     container.insert(Game.infoLabel);
     button = container.insert(new Q.UI.Button({
@@ -681,10 +634,10 @@
       this._super(p, {
         color: "red",
         range: Q.width / 2,
-        w: 5,
-        h: 5,
+        w: 8,
+        h: 8,
         speed: 500,
-        gravity: 1,
+        gravity: 0,
         type: Game.SPRITE_BULLET,
         collisionMask: Game.SPRITE_TILES | Game.SPRITE_ENEMY
       });
@@ -724,86 +677,6 @@
 
   Q = Game.Q;
 
-  Q.animations("enemy", {
-    stand: {
-      frames: [4],
-      rate: 1
-    },
-    run: {
-      frames: [4, 3, 2],
-      rate: 1 / 4
-    },
-    hit: {
-      frames: [0],
-      loop: false,
-      rate: 1 / 2,
-      next: "run"
-    }
-  });
-
-  Q.Sprite.extend("Enemy", {
-    init: function(p) {
-      this._super(p, {
-        lifePoints: 1,
-        x: 0,
-        y: 0,
-        vx: 0,
-        z: 20,
-        sheet: "zombie1",
-        sprite: "enemy",
-        canSeeThePlayerTimeout: 0,
-        type: Game.SPRITE_ENEMY,
-        collisionMask: Game.SPRITE_TILES | Game.SPRITE_PLAYER | Game.SPRITE_BULLET
-      });
-      Q.state.inc("enemiesCounter", 1);
-      this.add("2d, animation, zombieAI");
-      this.on("hit", this, "collision");
-      this.on("bump.right", this, "hitFromRight");
-      return this.on("bump.left", this, "hitFromLeft");
-    },
-    collision: function(col) {
-      if (col.obj.isA("Bullet")) {
-        this.play("hit");
-        return this.decreaseLifePoints();
-      }
-    },
-    hitFromRight: function(col) {
-      return this.p.vx = col.impact;
-    },
-    hitFromLeft: function(col) {
-      return this.p.vx = -col.impact;
-    },
-    step: function(dt) {
-      if (this.zombieStep != null) {
-        this.zombieStep(dt);
-      }
-      if (this.p.y > Game.map.p.h) {
-        return this.die();
-      }
-    },
-    decreaseLifePoints: function() {
-      this.p.lifePoints -= 1;
-      if (this.p.lifePoints <= 0) {
-        return this.die();
-      }
-    },
-    die: function() {
-      this.destroy();
-      this.stage.insert(new Q.Human({
-        x: this.p.x,
-        y: this.p.y
-      }));
-      return Q.state.dec("enemiesCounter", 1);
-    }
-  });
-
-}).call(this);
-
-(function() {
-  var Q;
-
-  Q = Game.Q;
-
   Q.animations("human", {
     stand: {
       frames: [4],
@@ -832,7 +705,7 @@
         y: 0,
         vx: 0,
         z: 20,
-        sheet: "player",
+        sheet: "human",
         sprite: "human",
         type: Game.SPRITE_HUMAN,
         collisionMask: Game.SPRITE_TILES | Game.SPRITE_ENEMY
@@ -842,16 +715,14 @@
       return this.on("hit", this, "collision");
     },
     collision: function(col) {
-      var random1to5, randomBool;
-      if (col.obj.isA("Enemy")) {
+      var randomBool;
+      if (col.obj.isA("Zombie")) {
         this.play("hit");
         this.destroy();
-        random1to5 = Math.floor(Math.random() * 5) + 1;
         randomBool = Math.floor(Math.random() * 2);
-        return this.stage.insert(new Q.Enemy({
+        return this.stage.insert(new Q.Zombie({
           x: this.p.x,
           y: this.p.y,
-          sheet: "zombie" + random1to5,
           startLeft: randomBool
         }));
       }
@@ -867,11 +738,11 @@
 
   Q.animations("player", {
     stand: {
-      frames: [4],
-      rate: 1 / 2
+      frames: [1],
+      rate: 1
     },
     run: {
-      frames: [4, 5, 6],
+      frames: [0, 1, 2, 1],
       rate: 1 / 4
     },
     hit: {
@@ -903,8 +774,8 @@
         collisionMask: Game.SPRITE_TILES | Game.SPRITE_ENEMY | Game.SPRITE_PLAYER_COLLECTIBLE
       });
       this.add("2d, platformerControls, animation, gun");
-      this.p.jumpSpeed = -680;
-      this.p.speed = 300;
+      this.p.jumpSpeed = -660;
+      this.p.speed = 330;
       this.p.savedPosition.x = this.p.x;
       this.p.savedPosition.y = this.p.y;
       Q.state.set("lives", this.p.lifePoints);
@@ -947,15 +818,18 @@
         this.trigger("player.outOfMap");
       }
       if (this.p.vy !== 0) {
-        return this.play("jump");
+        this.play("jump");
       } else if (this.p.vx !== 0) {
-        return this.play("run");
+        this.play("run");
       } else {
-        return this.play("stand");
+        this.play("stand");
+      }
+      if (this.gunStep != null) {
+        return this.gunStep(dt);
       }
     },
     collision: function(col) {
-      if (col.obj.isA("Enemy") && this.p.timeInvincible === 0) {
+      if (col.obj.isA("Zombie") && this.p.timeInvincible === 0) {
         this.updateLifePoints();
         return this.p.timeInvincible = 1;
       }
@@ -1030,7 +904,7 @@
         y: 0,
         vx: 0,
         z: 20,
-        sheet: "zombie_new",
+        sheet: "zombie",
         sprite: "zombie",
         canSeeThePlayerTimeout: 0,
         type: Game.SPRITE_ENEMY,
@@ -1088,22 +962,16 @@
 
   Q.animations("zombiePlayer", {
     stand: {
-      frames: [4],
+      frames: [1],
       rate: 1
     },
     run: {
-      frames: [4, 3, 2],
-      rate: 1 / 4
-    },
-    hit: {
-      frames: [0],
-      loop: false,
-      rate: 1 / 2,
-      next: "run"
+      frames: [0, 1, 2, 1],
+      rate: 0.4
     },
     jump: {
       frames: [2],
-      rate: 1 / 2
+      rate: 0.5
     }
   });
 
@@ -1115,7 +983,7 @@
         y: 0,
         z: 100,
         savedPosition: {},
-        sheet: "zombie5",
+        sheet: "zombie",
         sprite: "zombiePlayer",
         type: Game.SPRITE_ZOMBIE_PLAYER,
         collisionMask: Game.SPRITE_TILES | Game.SPRITE_PLAYER_COLLECTIBLE
@@ -1126,7 +994,6 @@
       this.p.savedPosition.x = this.p.x;
       this.p.savedPosition.y = this.p.y;
       Game.infoLabel.zombieModeOnNext();
-      this.on("bump.left, bump.right, bump.bottom, bump.top", this, "collision");
       return this.on("player.outOfMap", this, "die");
     },
     step: function(dt) {
@@ -1160,7 +1027,6 @@
         return this.play("stand");
       }
     },
-    collision: function(col) {},
     savePosition: function() {
       var dirX, ground;
       dirX = this.p.vx / Math.abs(this.p.vx);
@@ -1331,6 +1197,30 @@
 
   Q = Game.Q;
 
+  Q.UI.BulletsCounter = Q.UI.Text.extend("UI.BulletsCounter", {
+    init: function(p) {
+      this._super(p, {
+        text: "Bullets: ",
+        label: "Bullets: " + Q.state.get("bullets"),
+        size: 30,
+        x: 0,
+        y: 30,
+        color: "#000"
+      });
+      return Q.state.on("change.bullets", this, "updateLabel");
+    },
+    updateLabel: function(bullets) {
+      return this.p.label = this.p.text + bullets;
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
   Q.UI.EnemiesCounter = Q.UI.Text.extend("UI.EnemiesCounter", {
     init: function(p) {
       this._super(p, {
@@ -1376,6 +1266,9 @@
     },
     gunFound: function() {
       return this.p.label = "I found the gun, I can shoot pressing Z";
+    },
+    outOfBullets: function() {
+      return this.p.label = "I'm out of ammo";
     },
     keyFound: function() {
       return this.p.label = "I found the key, now I need to find the the door";

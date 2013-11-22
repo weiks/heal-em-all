@@ -5,10 +5,10 @@ Q.Sprite.extend "Bullet",
     @_super p,
       color: "red"
       range: Q.width/2
-      w: 5
-      h: 5
+      w: 8
+      h: 8
       speed: 500
-      gravity: 1
+      gravity: 0
       type: Game.SPRITE_BULLET
       collisionMask: Game.SPRITE_TILES | Game.SPRITE_ENEMY
 

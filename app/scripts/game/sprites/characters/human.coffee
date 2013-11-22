@@ -25,7 +25,7 @@ Q.Sprite.extend "Human",
       y: 0
       vx: 0
       z: 20
-      sheet: "player"
+      sheet: "human"
       sprite: "human"
       type: Game.SPRITE_HUMAN
       collisionMask: Game.SPRITE_TILES | Game.SPRITE_ENEMY
@@ -39,15 +39,14 @@ Q.Sprite.extend "Human",
     @on "hit", @, "collision"
 
   collision: (col) ->
-    if col.obj.isA("Enemy")
+    if col.obj.isA("Zombie")
       @play("hit")
 
       # turn to zombie again
       @destroy()
-      random1to5 = Math.floor(Math.random() * 5) + 1
+
       randomBool = Math.floor(Math.random() * 2)
-      @stage.insert new Q.Enemy
+      @stage.insert new Q.Zombie
         x: @p.x
         y: @p.y
-        sheet: "zombie" + random1to5
         startLeft: randomBool
