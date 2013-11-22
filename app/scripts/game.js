@@ -779,6 +779,7 @@
       this.p.savedPosition.x = this.p.x;
       this.p.savedPosition.y = this.p.y;
       Q.state.set("lives", this.p.lifePoints);
+      this.p.points = [[-35, -55], [35, -55], [35, 70], [-35, 70]];
       this.on("bump.left, bump.right, bump.bottom, bump.top", this, "collision");
       return this.on("player.outOfMap", this, "restore");
     },

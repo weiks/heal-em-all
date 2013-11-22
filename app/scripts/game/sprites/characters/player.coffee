@@ -43,6 +43,13 @@ Q.Sprite.extend "Player",
 
     Q.state.set "lives", @p.lifePoints
 
+    @p.points = [
+      [-35, -55 ],
+      [ 35, -55 ],
+      [ 35,  70 ],
+      [-35,  70 ]
+    ]
+
     # events
     @on "bump.left, bump.right, bump.bottom, bump.top", @, "collision"
     @on "player.outOfMap", @, "restore"
