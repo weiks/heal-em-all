@@ -28,10 +28,11 @@ Q.scene "stats", (stage) ->
 
 
   # pause button
-  button = container.insert new Q.UI.Button
-    x: container.p.w/2 - 40
+  pauseButton = container.insert new Q.UI.Button
+    x: container.p.w/2 - 80
     y: 0
-    w: 80
+    w: 120
+    h: 60
     fill: "#CCCCCC"
     label: "Pause"
     keyActionName: "pause" # button that will trigger click event
@@ -44,17 +45,47 @@ Q.scene "stats", (stage) ->
     h: Q.height
     fill: "rgba(0,0,0,0.5)"
 
-  button.on 'click', ->
+  pauseButton.on 'click', ->
     if !isPaused
       Q.stage().pause()
-      button.p.label = "Unpause"
+      Q.audio.stop()
+      pauseButton.p.label = "Unpause"
       isPaused = true
 
       stage.insert pausedScreen
 
     else
       Q.stage().unpause()
-      button.p.label = "Pause"
+      if !isMuted
+        Game.playCurrentAudio()
+
+      pauseButton.p.label = "Pause"
       isPaused = false
 
       stage.remove pausedScreen
+
+  audioButton = container.insert new Q.UI.Button
+    x: container.p.w/2 - 80
+    y: 80
+    w: 120
+    h: 60
+    fill: "#CCCCCC"
+    label: "Sound on"
+    keyActionName: "mute" # button that will trigger click event
+
+  isMuted = false
+
+  audioButton.on 'click', ->
+    if !isMuted
+      Q.audio.stop()
+      audioButton.p.label = "Sound off"
+      isMuted = true
+
+    else
+      Game.playCurrentAudio()
+      audioButton.p.label = "Sound on"
+      isMuted = false
+
+
+Game.playCurrentAudio = ->
+  console.log "play music"

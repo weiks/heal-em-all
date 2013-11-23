@@ -37,6 +37,7 @@ Q.Sprite.extend "ZombiePlayer",
     Game.infoLabel.zombieModeOnNext()
 
     # audio
+    Q.audio.stop Game.audio.playerBg
     Q.audio.play Game.audio.zombieMode,
       loop: true
 

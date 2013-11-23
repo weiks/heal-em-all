@@ -50,6 +50,10 @@ Q.Sprite.extend "Player",
       [-35,  70 ]
     ]
 
+    # audio
+    Q.audio.play Game.audio.playerBg,
+      loop: true
+
     # events
     @on "bump.left, bump.right, bump.bottom, bump.top", @, "collision"
     @on "player.outOfMap", @, "restore"

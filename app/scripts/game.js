@@ -70,7 +70,8 @@
         }
       };
       this.audio = {
-        zombieMode: "zombie_mode.mp3"
+        zombieMode: "zombie_mode.mp3",
+        playerBg: "player_bg.mp3"
       };
       assetsAsArray = [];
       this.objValueToArray(this.assets, assetsAsArray);
@@ -546,7 +547,7 @@
   Q = Game.Q;
 
   Q.scene("stats", function(stage) {
-    var bulletsCounterLabel, button, container, enemiesCounterLabel, isPaused, lifesLabel, pausedScreen;
+    var audioButton, bulletsCounterLabel, container, enemiesCounterLabel, isMuted, isPaused, lifesLabel, pauseButton, pausedScreen;
     container = stage.insert(new Q.UI.Container({
       x: Q.width / 2,
       y: 20,
@@ -562,10 +563,11 @@
     bulletsCounterLabel.p.x = -container.p.w / 2 + bulletsCounterLabel.p.w / 2 + 160;
     Game.infoLabel = new Q.UI.InfoLabel;
     container.insert(Game.infoLabel);
-    button = container.insert(new Q.UI.Button({
-      x: container.p.w / 2 - 40,
+    pauseButton = container.insert(new Q.UI.Button({
+      x: container.p.w / 2 - 80,
       y: 0,
-      w: 80,
+      w: 120,
+      h: 60,
       fill: "#CCCCCC",
       label: "Pause",
       keyActionName: "pause"
@@ -578,20 +580,49 @@
       h: Q.height,
       fill: "rgba(0,0,0,0.5)"
     });
-    return button.on('click', function() {
+    pauseButton.on('click', function() {
       if (!isPaused) {
         Q.stage().pause();
-        button.p.label = "Unpause";
+        Q.audio.stop();
+        pauseButton.p.label = "Unpause";
         isPaused = true;
         return stage.insert(pausedScreen);
       } else {
         Q.stage().unpause();
-        button.p.label = "Pause";
+        if (!isMuted) {
+          Game.playCurrentAudio();
+        }
+        pauseButton.p.label = "Pause";
         isPaused = false;
         return stage.remove(pausedScreen);
       }
     });
+    audioButton = container.insert(new Q.UI.Button({
+      x: container.p.w / 2 - 80,
+      y: 80,
+      w: 120,
+      h: 60,
+      fill: "#CCCCCC",
+      label: "Sound on",
+      keyActionName: "mute"
+    }));
+    isMuted = false;
+    return audioButton.on('click', function() {
+      if (!isMuted) {
+        Q.audio.stop();
+        audioButton.p.label = "Sound off";
+        return isMuted = true;
+      } else {
+        Game.playCurrentAudio();
+        audioButton.p.label = "Sound on";
+        return isMuted = false;
+      }
+    });
   });
+
+  Game.playCurrentAudio = function() {
+    return console.log("play music");
+  };
 
 }).call(this);
 
@@ -797,6 +828,9 @@
       this.p.savedPosition.y = this.p.y;
       Q.state.set("lives", this.p.lifePoints);
       this.p.points = [[-35, -55], [35, -55], [35, 70], [-35, 70]];
+      Q.audio.play(Game.audio.playerBg, {
+        loop: true
+      });
       this.on("bump.left, bump.right, bump.bottom, bump.top", this, "collision");
       return this.on("player.outOfMap", this, "restore");
     },
@@ -1014,6 +1048,7 @@
       this.p.savedPosition.x = this.p.x;
       this.p.savedPosition.y = this.p.y;
       Game.infoLabel.zombieModeOnNext();
+      Q.audio.stop(Game.audio.playerBg);
       Q.audio.play(Game.audio.zombieMode, {
         loop: true
       });
