@@ -869,10 +869,6 @@
       if (this.p.direction === "right") {
         this.p.flip = "x";
       }
-      if (this.p.y > Game.map.p.h) {
-        this.updateLifePoints();
-        this.trigger("player.outOfMap");
-      }
       if (this.p.x > Game.map.p.w) {
         this.p.x = Game.map.p.w;
       }
@@ -894,6 +890,11 @@
       }
       if (this.p.willBeDead && this.p.vy < 1100) {
         this.updateLifePoints();
+        this.p.willBeDead = false;
+      }
+      if (this.p.y > Game.map.p.h) {
+        this.updateLifePoints();
+        this.trigger("player.outOfMap");
         this.p.willBeDead = false;
       }
       if (this.p.vy !== 0) {
@@ -923,7 +924,8 @@
       }
     },
     updateLifePoints: function(newLives) {
-      var zombiePlayer;
+      var zombiePlayer,
+        _this = this;
       if (newLives != null) {
         this.p.lifePoints += newLives;
       } else {
@@ -934,8 +936,20 @@
         if (this.p.lifePoints <= 0) {
           Game.infoLabel.zombieModeOn();
           zombiePlayer = this.stage.insert(new Q.ZombiePlayer({
-            x: this.p.x,
-            y: this.p.y
+            x: (function() {
+              if (_this.p.y > Game.map.p.h) {
+                return _this.p.savedPosition.x;
+              } else {
+                return _this.p.x;
+              }
+            })(),
+            y: (function() {
+              if (_this.p.y > Game.map.p.h) {
+                return _this.p.savedPosition.y;
+              } else {
+                return _this.p.y;
+              }
+            })()
           }));
           Game.setCameraTo(this.stage, zombiePlayer);
           this.destroy();

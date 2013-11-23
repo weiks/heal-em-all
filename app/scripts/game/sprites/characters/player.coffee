@@ -65,11 +65,6 @@ Q.Sprite.extend "Player",
     if @p.direction == "right"
       @p.flip = "x"
 
-    # check if out of map
-    if @p.y > Game.map.p.h
-      @updateLifePoints()
-      @trigger "player.outOfMap"
-
     # do not allow to get out of level
     if @p.x > Game.map.p.w
       @p.x = Game.map.p.w
@@ -95,6 +90,12 @@ Q.Sprite.extend "Player",
 
     if @p.willBeDead && @p.vy < 1100
       @updateLifePoints()
+      @p.willBeDead = false
+
+    # check if out of map
+    if @p.y > Game.map.p.h
+      @updateLifePoints()
+      @trigger "player.outOfMap"
       @p.willBeDead = false
 
     # animations
@@ -144,8 +145,17 @@ Q.Sprite.extend "Player",
         Game.infoLabel.zombieModeOn()
 
         zombiePlayer = @stage.insert new Q.ZombiePlayer
-          x: @p.x
-          y: @p.y
+          x: do =>
+            if @p.y > Game.map.p.h
+              return @p.savedPosition.x
+            else
+              return @p.x
+
+          y: do =>
+            if @p.y > Game.map.p.h
+              return @p.savedPosition.y
+            else
+              return @p.y
 
         Game.setCameraTo(@stage, zombiePlayer)
 
