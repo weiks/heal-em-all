@@ -145,6 +145,7 @@
 
   Q.AudioManager = {
     collection: [],
+    muted: false,
     add: function(audio, options) {
       var item;
       item = {
@@ -154,7 +155,9 @@
       if ((options != null ? options.loop : void 0) === true) {
         this.collection.push(item);
       }
-      return Q.audio.play(item.audio, item.options);
+      if (!this.muted) {
+        return Q.audio.play(item.audio, item.options);
+      }
     },
     remove: function(audio) {
       var index, indexToRemove, item, _i, _len, _ref;
@@ -181,6 +184,14 @@
     },
     stopAll: function() {
       return Q.audio.stop();
+    },
+    mute: function() {
+      this.muted = true;
+      return this.stopAll();
+    },
+    unmute: function() {
+      this.muted = false;
+      return this.playAll();
     }
   };
 
@@ -615,7 +626,7 @@
   Q = Game.Q;
 
   Q.scene("stats", function(stage) {
-    var audioButton, bulletsCounterLabel, container, enemiesCounterLabel, isMuted, isPaused, lifesLabel, pauseButton, pausedScreen;
+    var audioButton, bulletsCounterLabel, container, enemiesCounterLabel, lifesLabel, pauseButton;
     container = stage.insert(new Q.UI.Container({
       x: Q.width / 2,
       y: 20,
@@ -631,61 +642,10 @@
     bulletsCounterLabel.p.x = -container.p.w / 2 + bulletsCounterLabel.p.w / 2 + 160;
     Game.infoLabel = new Q.UI.InfoLabel;
     container.insert(Game.infoLabel);
-    pauseButton = container.insert(new Q.UI.Button({
-      x: container.p.w / 2 - 80,
-      y: 0,
-      w: 120,
-      h: 60,
-      fill: "#CCCCCC",
-      label: "Pause",
-      keyActionName: "pause"
-    }));
-    isPaused = false;
-    pausedScreen = new Q.UI.Container({
-      x: Q.width / 2,
-      y: Q.height / 2,
-      w: Q.width,
-      h: Q.height,
-      fill: "rgba(0,0,0,0.5)"
-    });
-    pauseButton.on('click', function() {
-      if (!isPaused) {
-        Q.stage().pause();
-        Q.AudioManager.stopAll();
-        pauseButton.p.label = "Unpause";
-        isPaused = true;
-        return stage.insert(pausedScreen);
-      } else {
-        Q.stage().unpause();
-        if (!isMuted) {
-          Q.AudioManager.playAll();
-        }
-        pauseButton.p.label = "Pause";
-        isPaused = false;
-        return stage.remove(pausedScreen);
-      }
-    });
-    audioButton = container.insert(new Q.UI.Button({
-      x: container.p.w / 2 - 80,
-      y: 80,
-      w: 120,
-      h: 60,
-      fill: "#CCCCCC",
-      label: "Sound on",
-      keyActionName: "mute"
-    }));
-    isMuted = false;
-    return audioButton.on('click', function() {
-      if (!isMuted) {
-        Q.AudioManager.stopAll();
-        audioButton.p.label = "Sound off";
-        return isMuted = true;
-      } else {
-        Q.AudioManager.playAll();
-        audioButton.p.label = "Sound on";
-        return isMuted = false;
-      }
-    });
+    pauseButton = container.insert(new Q.UI.PauseButton);
+    pauseButton.p.x = container.p.w / 2 - 80;
+    audioButton = container.insert(new Q.UI.AudioButton);
+    return audioButton.p.x = container.p.w / 2 - 80;
   });
 
 }).call(this);
@@ -1324,6 +1284,41 @@
 
   Q = Game.Q;
 
+  Q.UI.AudioButton = Q.UI.Button.extend("UI.AudioButton", {
+    init: function(p) {
+      var _this = this;
+      this._super(p, {
+        x: 0,
+        y: 80,
+        w: 120,
+        h: 60,
+        type: Q.SPRITE_UI | Q.SPRITE_DEFAULT,
+        fill: "#CCCCCC",
+        label: "Sound on",
+        keyActionName: "mute"
+      });
+      Game.isMuted = false;
+      return this.on('click', function() {
+        if (!Game.isMuted) {
+          Q.AudioManager.mute();
+          _this.p.label = "Sound off";
+          return Game.isMuted = true;
+        } else {
+          Q.AudioManager.unmute();
+          _this.p.label = "Sound on";
+          return Game.isMuted = false;
+        }
+      });
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
   Q.UI.BulletsCounter = Q.UI.Text.extend("UI.BulletsCounter", {
     init: function(p) {
       this._super(p, {
@@ -1445,6 +1440,54 @@
     },
     updateLabel: function(lives) {
       return this.p.label = this.p.text + lives;
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
+  Q.UI.PauseButton = Q.UI.Button.extend("UI.PauseButton", {
+    init: function(p) {
+      var _this = this;
+      this._super(p, {
+        x: 0,
+        y: 0,
+        w: 120,
+        h: 60,
+        type: Q.SPRITE_UI | Q.SPRITE_DEFAULT,
+        fill: "#CCCCCC",
+        label: "Pause",
+        isPaused: false,
+        keyActionName: "pause"
+      });
+      this.pausedScreen = new Q.UI.Container({
+        x: Q.width / 2,
+        y: Q.height / 2,
+        w: Q.width,
+        h: Q.height,
+        fill: "rgba(0,0,0,0.5)"
+      });
+      return this.on('click', function() {
+        if (!_this.isPaused) {
+          Q.stage().pause();
+          Q.AudioManager.stopAll();
+          _this.p.label = "Unpause";
+          _this.isPaused = true;
+          return _this.stage.insert(_this.pausedScreen);
+        } else {
+          Q.stage().unpause();
+          if (!Game.isMuted) {
+            Q.AudioManager.playAll();
+          }
+          _this.p.label = "Pause";
+          _this.isPaused = false;
+          return _this.stage.remove(_this.pausedScreen);
+        }
+      });
     }
   });
 

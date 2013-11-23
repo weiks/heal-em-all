@@ -2,6 +2,7 @@ Q = Game.Q
 
 Q.AudioManager =
   collection: []
+  muted: false
 
   add: (audio, options) ->
     item =
@@ -11,7 +12,8 @@ Q.AudioManager =
     if options?.loop == true
       @collection.push item
 
-    Q.audio.play item.audio, item.options
+    if !@muted
+      Q.audio.play item.audio, item.options
 
   remove: (audio) ->
     indexToRemove = null
@@ -29,3 +31,11 @@ Q.AudioManager =
 
   stopAll: ->
     Q.audio.stop()
+
+  mute: ->
+    @muted = true
+    @stopAll()
+
+  unmute: ->
+    @muted = false
+    @playAll()

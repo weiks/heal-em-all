@@ -4905,11 +4905,11 @@ Quintus.UI = function(Q) {
 
 
   Q.UI.Button = Q.UI.Container.extend("UI.Button", {
-    init: function(p,callback) {
-      this._super(Q._defaults(p,{
+    init: function(p, defaultProps, callback) {
+      this._super(Q._defaults(p||{},defaultProps),{
         type: Q.SPRITE_UI | Q.SPRITE_DEFAULT,
         keyActionName: null
-      }));
+      });
       if(this.p.label && (!this.p.w || !this.p.h)) {
         Q.ctx.save();
         this.setFont(Q.ctx);
