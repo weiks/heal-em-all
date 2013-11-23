@@ -17,6 +17,8 @@ Q.Sprite.extend "Gun",
     if obj.isA("Player")
       obj.add("gun")
       Game.infoLabel.gunFound()
+
+      Q.AudioManager.add Game.audio.collected
       @destroy()
 
 

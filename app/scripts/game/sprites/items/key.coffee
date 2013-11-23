@@ -17,4 +17,6 @@ Q.Sprite.extend "Key",
     if obj.isA("Player")
       obj.p.hasKey = true
       Game.infoLabel.keyFound()
+
+      Q.AudioManager.add Game.audio.collected
       @destroy()

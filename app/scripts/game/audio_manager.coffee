@@ -18,7 +18,6 @@ Q.AudioManager =
 
     for item, index in @collection
       if item.audio == audio
-        console.log item, index
         indexToRemove = index
         Q.audio.stop(item.audio)
 

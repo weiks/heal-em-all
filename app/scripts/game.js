@@ -72,7 +72,9 @@
       this.audio = {
         zombieMode: "zombie_mode.mp3",
         playerBg: "player_bg.mp3",
-        zombieNotice: "zombie_notice.mp3"
+        zombieNotice: "zombie_notice.mp3",
+        gunShot: "gun_shot.mp3",
+        collected: "collected.mp3"
       };
       assetsAsArray = [];
       this.objValueToArray(this.assets, assetsAsArray);
@@ -159,7 +161,6 @@
       for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
         item = _ref[index];
         if (item.audio === audio) {
-          console.log(item, index);
           indexToRemove = index;
           Q.audio.stop(item.audio);
         }
@@ -220,6 +221,7 @@
             } else {
               delta = 35;
             }
+            Q.AudioManager.add(Game.audio.gunShot);
             return bullet = this.stage.insert(new Q.Bullet({
               x: this.p.x + delta,
               y: this.p.y + 12,
@@ -736,7 +738,7 @@
         range: Q.width / 2,
         w: 8,
         h: 8,
-        speed: 500,
+        speed: 700,
         gravity: 0,
         type: Game.SPRITE_BULLET,
         collisionMask: Game.SPRITE_TILES | Game.SPRITE_ENEMY
@@ -1248,6 +1250,7 @@
       if (obj.isA("Player")) {
         obj.add("gun");
         Game.infoLabel.gunFound();
+        Q.AudioManager.add(Game.audio.collected);
         return this.destroy();
       }
     }
@@ -1276,6 +1279,7 @@
       if (obj.isA("Player")) {
         obj.updateLifePoints(1);
         Game.infoLabel.extraLifeFound();
+        Q.AudioManager.add(Game.audio.collected);
         return this.destroy();
       }
     }
@@ -1304,6 +1308,7 @@
       if (obj.isA("Player")) {
         obj.p.hasKey = true;
         Game.infoLabel.keyFound();
+        Q.AudioManager.add(Game.audio.collected);
         return this.destroy();
       }
     }
