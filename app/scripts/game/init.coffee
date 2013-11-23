@@ -75,6 +75,8 @@ window.Game =
       zombieNotice: "zombie_notice.mp3"
       gunShot: "gun_shot.mp3"
       collected: "collected.mp3"
+      playerHit: "player_hit.mp3"
+      humanCreated: "human_created.mp3"
 
     # convert to array for Q.load
     assetsAsArray = []

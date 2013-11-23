@@ -74,7 +74,9 @@
         playerBg: "player_bg.mp3",
         zombieNotice: "zombie_notice.mp3",
         gunShot: "gun_shot.mp3",
-        collected: "collected.mp3"
+        collected: "collected.mp3",
+        playerHit: "player_hit.mp3",
+        humanCreated: "human_created.mp3"
       };
       assetsAsArray = [];
       this.objValueToArray(this.assets, assetsAsArray);
@@ -816,6 +818,7 @@
       });
       this.add("2d, animation");
       this.play("stand");
+      Q.AudioManager.add(Game.audio.humanCreated);
       return this.on("sensor", this, "sensor");
     },
     step: function(dt) {
@@ -929,7 +932,6 @@
       if (this.p.willBeDead && this.p.vy < 1100) {
         this.updateLifePoints();
         this.p.willBeDead = false;
-        this.trigger("player.outOfMap");
       }
       if (this.p.vy !== 0) {
         this.play("jump");
@@ -965,6 +967,7 @@
         this.p.lifePoints -= 1;
         Game.infoLabel.lifeLost();
         this.play("hit", 1);
+        Q.AudioManager.add(Game.audio.playerHit);
         if (this.p.lifePoints <= 0) {
           Game.infoLabel.zombieModeOn();
           zombiePlayer = this.stage.insert(new Q.ZombiePlayer({

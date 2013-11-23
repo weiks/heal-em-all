@@ -95,7 +95,6 @@ Q.Sprite.extend "Player",
     if @p.willBeDead && @p.vy < 1100
       @updateLifePoints()
       @p.willBeDead = false
-      @trigger "player.outOfMap"
 
     # animations
     if @p.vy != 0
@@ -133,6 +132,7 @@ Q.Sprite.extend "Player",
       @p.lifePoints -= 1
       Game.infoLabel.lifeLost()
       @play("hit", 1)
+      Q.AudioManager.add Game.audio.playerHit
 
       if @p.lifePoints <= 0
         # @destroy()

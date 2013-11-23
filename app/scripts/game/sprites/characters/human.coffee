@@ -37,6 +37,9 @@ Q.Sprite.extend "Human",
     # animations
     @play "stand"
 
+    # audio
+    Q.AudioManager.add Game.audio.humanCreated
+
     # events
     @on "sensor", @, "sensor"
 
