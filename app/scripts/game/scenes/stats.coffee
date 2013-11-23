@@ -48,7 +48,7 @@ Q.scene "stats", (stage) ->
   pauseButton.on 'click', ->
     if !isPaused
       Q.stage().pause()
-      Q.audio.stop()
+      Q.AudioManager.stopAll()
       pauseButton.p.label = "Unpause"
       isPaused = true
 
@@ -57,7 +57,7 @@ Q.scene "stats", (stage) ->
     else
       Q.stage().unpause()
       if !isMuted
-        Game.playCurrentAudio()
+        Q.AudioManager.playAll()
 
       pauseButton.p.label = "Pause"
       isPaused = false
@@ -77,15 +77,13 @@ Q.scene "stats", (stage) ->
 
   audioButton.on 'click', ->
     if !isMuted
-      Q.audio.stop()
+      Q.AudioManager.stopAll()
       audioButton.p.label = "Sound off"
       isMuted = true
 
     else
-      Game.playCurrentAudio()
+      Q.AudioManager.playAll()
       audioButton.p.label = "Sound on"
       isMuted = false
 
 
-Game.playCurrentAudio = ->
-  console.log "play music"

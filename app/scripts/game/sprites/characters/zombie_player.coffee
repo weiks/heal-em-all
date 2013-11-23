@@ -37,8 +37,8 @@ Q.Sprite.extend "ZombiePlayer",
     Game.infoLabel.zombieModeOnNext()
 
     # audio
-    Q.audio.stop Game.audio.playerBg
-    Q.audio.play Game.audio.zombieMode,
+    Q.AudioManager.remove Game.audio.playerBg
+    Q.AudioManager.add Game.audio.zombieMode,
       loop: true
 
     # events
@@ -95,5 +95,5 @@ Q.Sprite.extend "ZombiePlayer",
 
     Game.infoLabel.zombieModeOff()
 
-    Q.audio.stop Game.audio.zombieMode
+    Q.AudioManager.remove Game.audio.zombieMode
     @destroy()

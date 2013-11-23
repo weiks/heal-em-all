@@ -139,6 +139,55 @@
 
   Q = Game.Q;
 
+  Q.AudioManager = {
+    collection: [],
+    add: function(audio, options) {
+      var item;
+      item = {
+        audio: audio,
+        options: options
+      };
+      if ((options != null ? options.loop : void 0) === true) {
+        this.collection.push(item);
+      }
+      return Q.audio.play(item.audio, item.options);
+    },
+    remove: function(audio) {
+      var index, indexToRemove, item, _i, _len, _ref;
+      indexToRemove = null;
+      _ref = this.collection;
+      for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
+        item = _ref[index];
+        if (item.audio === audio) {
+          console.log(item, index);
+          indexToRemove = index;
+          Q.audio.stop(item.audio);
+        }
+      }
+      return this.collection.splice(indexToRemove, 1);
+    },
+    playAll: function() {
+      var item, _i, _len, _ref, _results;
+      _ref = this.collection;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        item = _ref[_i];
+        _results.push(Q.audio.play(item.audio, item.options));
+      }
+      return _results;
+    },
+    stopAll: function() {
+      return Q.audio.stop();
+    }
+  };
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
   Q.component("gun", {
     added: function() {
       var p;
@@ -211,8 +260,7 @@
           this.p.canSeeThePlayerTimeout = 3;
           if (this.canSeeThePlayerObj.playAudio) {
             if (this.p.audioTimeout === 0) {
-              Q.audio.stop(Game.audio.zombieNotice);
-              Q.audio.play(Game.audio.zombieNotice);
+              Q.AudioManager.add(Game.audio.zombieNotice);
               this.p.audioTimeout = 10;
             }
           }
@@ -599,14 +647,14 @@
     pauseButton.on('click', function() {
       if (!isPaused) {
         Q.stage().pause();
-        Q.audio.stop();
+        Q.AudioManager.stopAll();
         pauseButton.p.label = "Unpause";
         isPaused = true;
         return stage.insert(pausedScreen);
       } else {
         Q.stage().unpause();
         if (!isMuted) {
-          Game.playCurrentAudio();
+          Q.AudioManager.playAll();
         }
         pauseButton.p.label = "Pause";
         isPaused = false;
@@ -625,20 +673,16 @@
     isMuted = false;
     return audioButton.on('click', function() {
       if (!isMuted) {
-        Q.audio.stop();
+        Q.AudioManager.stopAll();
         audioButton.p.label = "Sound off";
         return isMuted = true;
       } else {
-        Game.playCurrentAudio();
+        Q.AudioManager.playAll();
         audioButton.p.label = "Sound on";
         return isMuted = false;
       }
     });
   });
-
-  Game.playCurrentAudio = function() {
-    return console.log("play music");
-  };
 
 }).call(this);
 
@@ -844,7 +888,7 @@
       this.p.savedPosition.y = this.p.y;
       Q.state.set("lives", this.p.lifePoints);
       this.p.points = [[-35, -55], [35, -55], [35, 70], [-35, 70]];
-      Q.audio.play(Game.audio.playerBg, {
+      Q.AudioManager.add(Game.audio.playerBg, {
         loop: true
       });
       this.on("bump.left, bump.right, bump.bottom, bump.top", this, "collision");
@@ -1064,8 +1108,8 @@
       this.p.savedPosition.x = this.p.x;
       this.p.savedPosition.y = this.p.y;
       Game.infoLabel.zombieModeOnNext();
-      Q.audio.stop(Game.audio.playerBg);
-      Q.audio.play(Game.audio.zombieMode, {
+      Q.AudioManager.remove(Game.audio.playerBg);
+      Q.AudioManager.add(Game.audio.zombieMode, {
         loop: true
       });
       return this.on("player.outOfMap", this, "die");
@@ -1118,7 +1162,7 @@
       }));
       Game.setCameraTo(this.stage, player);
       Game.infoLabel.zombieModeOff();
-      Q.audio.stop(Game.audio.zombieMode);
+      Q.AudioManager.remove(Game.audio.zombieMode);
       return this.destroy();
     }
   });

@@ -25,8 +25,7 @@ Q.component "zombieAI",
 
         if @canSeeThePlayerObj.playAudio
           if @p.audioTimeout == 0
-            Q.audio.stop Game.audio.zombieNotice
-            Q.audio.play Game.audio.zombieNotice
+            Q.AudioManager.add Game.audio.zombieNotice
             @p.audioTimeout = 10
 
         if (@canSeeThePlayerObj.left and @p.vx > 0) or (@canSeeThePlayerObj.right and @p.vx < 0)

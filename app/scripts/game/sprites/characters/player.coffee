@@ -51,7 +51,7 @@ Q.Sprite.extend "Player",
     ]
 
     # audio
-    Q.audio.play Game.audio.playerBg,
+    Q.AudioManager.add Game.audio.playerBg,
       loop: true
 
     # events
