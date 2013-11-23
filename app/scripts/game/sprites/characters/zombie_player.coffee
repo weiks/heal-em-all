@@ -87,6 +87,8 @@ Q.Sprite.extend "ZombiePlayer",
 
   die: ->
     # zombie mode ends
+    Q.state.set "lives", 3
+
     Game.player = player = @stage.insert new Q.Player
       x: @p.savedPosition.x
       y: @p.savedPosition.y

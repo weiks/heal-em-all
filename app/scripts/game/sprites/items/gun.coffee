@@ -15,6 +15,7 @@ Q.Sprite.extend "Gun",
 
   sensor: (obj) ->
     if obj.isA("Player")
+      Q.state.set "hasGun", true
       obj.add("gun")
       Game.infoLabel.gunFound()
 

@@ -111,8 +111,10 @@
     stageLevel: function() {
       this.Q.state.reset({
         enemiesCounter: 0,
-        lives: 0,
-        bullets: 0
+        lives: 3,
+        bullets: 12,
+        hasKey: false,
+        hasGun: false
       });
       this.Q.clearStages();
       this.Q.stageScene("level1", {
@@ -207,8 +209,7 @@
       var p;
       Q.input.on("fire", this.entity, "fireGun");
       p = this.entity.p;
-      p.noOfBullets = 12;
-      Q.state.set("bullets", p.noOfBullets);
+      p.noOfBullets = Q.state.get("bullets");
       return p.nextFireTimeout = 0;
     },
     destroyed: function() {
@@ -833,7 +834,7 @@
   Q.Sprite.extend("Player", {
     init: function(p) {
       this._super(p, {
-        lifePoints: 3,
+        lifePoints: Q.state.get("lives"),
         timeInvincible: 0,
         timeToNextSave: 0,
         x: 0,
@@ -846,12 +847,14 @@
         type: Game.SPRITE_PLAYER,
         collisionMask: Game.SPRITE_TILES | Game.SPRITE_ENEMY | Game.SPRITE_PLAYER_COLLECTIBLE
       });
-      this.add("2d, platformerControls, animation, gun");
+      this.add("2d, platformerControls, animation");
+      if (Q.state.get("hasGun")) {
+        this.add("gun");
+      }
       this.p.jumpSpeed = -660;
       this.p.speed = 330;
       this.p.savedPosition.x = this.p.x;
       this.p.savedPosition.y = this.p.y;
-      Q.state.set("lives", this.p.lifePoints);
       this.p.points = [[-35, -55], [35, -55], [35, 70], [-35, 70]];
       Q.AudioManager.add(Game.audio.playerBg, {
         loop: true
@@ -1121,6 +1124,7 @@
     },
     die: function() {
       var player;
+      Q.state.set("lives", 3);
       Game.player = player = this.stage.insert(new Q.Player({
         x: this.p.savedPosition.x,
         y: this.p.savedPosition.y
@@ -1154,8 +1158,8 @@
     },
     sensor: function(obj) {
       if (obj.isA("Player")) {
-        if (obj.p.hasKey && !this.p.opened) {
-          obj.p.hasKey = false;
+        if (Q.state.get("hasKey" && !this.p.opened)) {
+          Q.state.set("hasKey", false);
           this.p.opened = true;
           this.p.sheet = "door_open";
           return Game.infoLabel.doorOpen();
@@ -1211,6 +1215,7 @@
     },
     sensor: function(obj) {
       if (obj.isA("Player")) {
+        Q.state.set("hasGun", true);
         obj.add("gun");
         Game.infoLabel.gunFound();
         Q.AudioManager.add(Game.audio.collected);
@@ -1269,7 +1274,7 @@
     },
     sensor: function(obj) {
       if (obj.isA("Player")) {
-        obj.p.hasKey = true;
+        Q.state.set("hasKey", true);
         Game.infoLabel.keyFound();
         Q.AudioManager.add(Game.audio.collected);
         return this.destroy();

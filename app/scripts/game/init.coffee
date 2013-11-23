@@ -115,8 +115,10 @@ window.Game =
   stageLevel: ->
     @Q.state.reset
       enemiesCounter: 0
-      lives: 0
-      bullets: 0
+      lives: 3
+      bullets: 12
+      hasKey: false
+      hasGun: false
 
     @Q.clearStages()
     @Q.stageScene "level1",

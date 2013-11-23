@@ -15,7 +15,7 @@ Q.Sprite.extend "Key",
 
   sensor: (obj) ->
     if obj.isA("Player")
-      obj.p.hasKey = true
+      Q.state.set "hasKey", true
       Game.infoLabel.keyFound()
 
       Q.AudioManager.add Game.audio.collected

@@ -21,7 +21,7 @@ Q.animations "player",
 Q.Sprite.extend "Player",
   init: (p) ->
     @_super p,
-      lifePoints: 3
+      lifePoints: Q.state.get "lives"
       timeInvincible: 0
       timeToNextSave: 0
       x: 0
@@ -34,14 +34,15 @@ Q.Sprite.extend "Player",
       type: Game.SPRITE_PLAYER
       collisionMask: Game.SPRITE_TILES | Game.SPRITE_ENEMY | Game.SPRITE_PLAYER_COLLECTIBLE
 
-    @add("2d, platformerControls, animation, gun")
+    @add("2d, platformerControls, animation")
+
+    if Q.state.get "hasGun"
+      @add("gun")
 
     @p.jumpSpeed = -660
     @p.speed = 330
     @p.savedPosition.x = @p.x
     @p.savedPosition.y = @p.y
-
-    Q.state.set "lives", @p.lifePoints
 
     @p.points = [
       [-35, -55 ],

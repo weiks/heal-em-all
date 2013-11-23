@@ -16,9 +16,9 @@ Q.Sprite.extend "Door",
 
   sensor: (obj) ->
     if obj.isA("Player")
-      if obj.p.hasKey && !@p.opened
+      if Q.state.get "hasKey" && !@p.opened
         # remove the key and open the door
-        obj.p.hasKey = false
+        Q.state.set "hasKey", false
         @p.opened = true
         @p.sheet = "door_open"
         Game.infoLabel.doorOpen()

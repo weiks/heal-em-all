@@ -5,8 +5,7 @@ Q.component "gun",
     Q.input.on("fire", @entity, "fireGun")
     p = @entity.p
 
-    p.noOfBullets = 12
-    Q.state.set "bullets", p.noOfBullets
+    p.noOfBullets = Q.state.get "bullets"
 
     # do not allow to fire in series
     p.nextFireTimeout = 0
