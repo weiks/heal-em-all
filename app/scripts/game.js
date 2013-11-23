@@ -71,7 +71,8 @@
       };
       this.audio = {
         zombieMode: "zombie_mode.mp3",
-        playerBg: "player_bg.mp3"
+        playerBg: "player_bg.mp3",
+        zombieNotice: "zombie_notice.mp3"
       };
       assetsAsArray = [];
       this.objValueToArray(this.assets, assetsAsArray);
@@ -199,6 +200,7 @@
       } else {
         p.vx = -60;
       }
+      p.audioTimeout = 0;
       return this.entity.play("run");
     },
     extend: {
@@ -207,12 +209,20 @@
         this.canSeeThePlayer();
         if (this.canSeeThePlayerObj.status) {
           this.p.canSeeThePlayerTimeout = 3;
+          if (this.canSeeThePlayerObj.playAudio) {
+            if (this.p.audioTimeout === 0) {
+              Q.audio.stop(Game.audio.zombieNotice);
+              Q.audio.play(Game.audio.zombieNotice);
+              this.p.audioTimeout = 10;
+            }
+          }
           if ((this.canSeeThePlayerObj.left && this.p.vx > 0) || (this.canSeeThePlayerObj.right && this.p.vx < 0)) {
             this.p.vx = -this.p.vx;
           }
         } else {
           this.p.canSeeThePlayerTimeout = Math.max(this.p.canSeeThePlayerTimeout - dt, 0);
         }
+        this.p.audioTimeout = Math.max(this.p.audioTimeout - dt, 0);
         dirX = this.p.vx / Math.abs(this.p.vx);
         ground = Q.stage().locate(this.p.x, this.p.y + this.p.h / 2 + 1, Game.SPRITE_TILES);
         nextTile = Q.stage().locate(this.p.x + dirX * this.p.w / 2 + dirX, this.p.y + this.p.h / 2 + 1, Game.SPRITE_TILES);
@@ -232,12 +242,17 @@
         }
       },
       canSeeThePlayer: function() {
-        var isCloseFromLeft, isCloseFromRight, isTheSameY, lineOfSight, player;
+        var isCloseFromLeft, isCloseFromRight, isTheSameY, lineOfSight, oldObj, player;
         player = Game.player.p;
         lineOfSight = 350;
+        oldObj = this.canSeeThePlayerObj;
         this.canSeeThePlayerObj = {
+          playAudio: true,
           status: false
         };
+        if ((oldObj != null ? oldObj.status : void 0) === true) {
+          this.canSeeThePlayerObj.playAudio = false;
+        }
         if (Game.player.isDestroyed != null) {
           return;
         }
@@ -248,6 +263,7 @@
           this.canSeeThePlayerObj.status = true;
         } else {
           this.canSeeThePlayerObj.status = false;
+          this.canSeeThePlayerObj.playAudio = true;
         }
       }
     }

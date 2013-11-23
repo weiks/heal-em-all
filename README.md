@@ -15,3 +15,5 @@ Great thanks to authors of these projects!
 
 -   [Quintus JavaScript game engine](http://html5quintus.com/)
 -   [grunt.js](http://gruntjs.com/)
+
+Audio downloaded from [OpenGameArt](http://opengameart.org/)

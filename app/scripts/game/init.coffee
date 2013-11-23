@@ -72,6 +72,7 @@ window.Game =
     @audio =
       zombieMode: "zombie_mode.mp3"
       playerBg: "player_bg.mp3"
+      zombieNotice: "zombie_notice.mp3"
 
     # convert to array for Q.load
     assetsAsArray = []

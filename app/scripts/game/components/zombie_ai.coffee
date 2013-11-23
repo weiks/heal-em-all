@@ -9,6 +9,8 @@ Q.component "zombieAI",
     else
       p.vx = -60
 
+    p.audioTimeout = 0
+
     # animations
     @entity.play "run"
 
@@ -21,12 +23,21 @@ Q.component "zombieAI",
         # I see the player, I will remember that for X sec
         @p.canSeeThePlayerTimeout = 3
 
+        if @canSeeThePlayerObj.playAudio
+          if @p.audioTimeout == 0
+            Q.audio.stop Game.audio.zombieNotice
+            Q.audio.play Game.audio.zombieNotice
+            @p.audioTimeout = 10
+
         if (@canSeeThePlayerObj.left and @p.vx > 0) or (@canSeeThePlayerObj.right and @p.vx < 0)
           # enemy goes in wrong direction, change it
           @p.vx = -@p.vx
       else
         # run timeout
         @p.canSeeThePlayerTimeout = Math.max(@p.canSeeThePlayerTimeout - dt, 0)
+
+      # count always
+      @p.audioTimeout = Math.max(@p.audioTimeout - dt, 0)
 
       # locate gap and turn back
       dirX = @p.vx/Math.abs(@p.vx)
@@ -53,8 +64,14 @@ Q.component "zombieAI",
       player = Game.player.p
       lineOfSight = 350
 
+      oldObj = @canSeeThePlayerObj
+
       @canSeeThePlayerObj =
+        playAudio: true
         status: false
+
+      if oldObj?.status == true
+        @canSeeThePlayerObj.playAudio = false
 
       if Game.player.isDestroyed?
         return
@@ -70,5 +87,6 @@ Q.component "zombieAI",
         @canSeeThePlayerObj.status = true
       else
         @canSeeThePlayerObj.status = false
+        @canSeeThePlayerObj.playAudio = true
 
       return

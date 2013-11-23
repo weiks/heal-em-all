@@ -1,0 +1,10 @@
+- gun shoot
+- collect item
+- door open
+- success level
+- failed level/dead player
+
+ok - noticed by zombie
+
+- hit by zombie
+- zombie hit by bullet
