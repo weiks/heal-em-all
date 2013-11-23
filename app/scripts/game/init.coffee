@@ -4,12 +4,13 @@ window.Game =
     # engine instance
     @Q = Q = Quintus
       development: true
+      audioSupported: [ 'ogg', 'mp3' ]
 
     # Q.debug = true
     # Q.debugFill = true
 
     # main setup
-    Q.include "Sprites, Scenes, Input, Touch, UI, 2D, Anim"
+    Q.include "Sprites, Scenes, Input, Touch, UI, 2D, Anim, Audio"
     Q.setup
       width: 640
       height: 320
@@ -17,6 +18,7 @@ window.Game =
       upsampleWidth: 640
       upsampleHeight: 320
     Q.controls().touch() # add true for joypad
+    Q.enableSound();
 
     # used for collision detection
     @SPRITE_NONE = 0
@@ -67,14 +69,23 @@ window.Game =
       level2:
         dataAsset: "level2.tmx"
 
+    @audio =
+      zombieMode: "zombie_mode.mp3"
+
     # convert to array for Q.load
     assetsAsArray = []
     @objValueToArray(@assets, assetsAsArray)
 
     # now we can add metadata
     @assets.map.sheetName = "tiles"
-    @assets.all = assetsAsArray
     @assets.map.tileSize = 70
+
+    # convert @audio to array
+    audioAsArray = []
+    @objValueToArray(@audio, audioAsArray)
+
+    # merge assets and audio for Q.load
+    @assets.all = assetsAsArray.concat(audioAsArray)
 
   # helper to conver obj to array
   objValueToArray: (obj, array) ->

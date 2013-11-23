@@ -3,9 +3,10 @@
     init: function() {
       var Q;
       this.Q = Q = Quintus({
-        development: true
+        development: true,
+        audioSupported: ['ogg', 'mp3']
       });
-      Q.include("Sprites, Scenes, Input, Touch, UI, 2D, Anim");
+      Q.include("Sprites, Scenes, Input, Touch, UI, 2D, Anim, Audio");
       Q.setup({
         width: 640,
         height: 320,
@@ -14,6 +15,7 @@
         upsampleHeight: 320
       });
       Q.controls().touch();
+      Q.enableSound();
       this.SPRITE_NONE = 0;
       this.SPRITE_PLAYER = 1;
       this.SPRITE_TILES = 2;
@@ -38,7 +40,7 @@
       };
     },
     prepareAssets: function() {
-      var assetsAsArray;
+      var assetsAsArray, audioAsArray;
       this.assets = {
         player: {
           dataAsset: "player.json",
@@ -67,11 +69,16 @@
           dataAsset: "level2.tmx"
         }
       };
+      this.audio = {
+        zombieMode: "zombie_mode.mp3"
+      };
       assetsAsArray = [];
       this.objValueToArray(this.assets, assetsAsArray);
       this.assets.map.sheetName = "tiles";
-      this.assets.all = assetsAsArray;
-      return this.assets.map.tileSize = 70;
+      this.assets.map.tileSize = 70;
+      audioAsArray = [];
+      this.objValueToArray(this.audio, audioAsArray);
+      return this.assets.all = assetsAsArray.concat(audioAsArray);
     },
     objValueToArray: function(obj, array) {
       var key, value, _results;
@@ -1007,6 +1014,9 @@
       this.p.savedPosition.x = this.p.x;
       this.p.savedPosition.y = this.p.y;
       Game.infoLabel.zombieModeOnNext();
+      Q.audio.play(Game.audio.zombieMode, {
+        loop: true
+      });
       return this.on("player.outOfMap", this, "die");
     },
     step: function(dt) {
@@ -1030,7 +1040,7 @@
       }
       if (this.p.timeToNextSave === 0) {
         this.savePosition();
-        this.p.timeToNextSave = 2;
+        this.p.timeToNextSave = 4;
       }
       if (this.p.vy !== 0) {
         return this.play("jump");
@@ -1057,6 +1067,7 @@
       }));
       Game.setCameraTo(this.stage, player);
       Game.infoLabel.zombieModeOff();
+      Q.audio.stop(Game.audio.zombieMode);
       return this.destroy();
     }
   });

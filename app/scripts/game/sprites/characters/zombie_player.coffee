@@ -36,6 +36,10 @@ Q.Sprite.extend "ZombiePlayer",
     # Q.state.set "lives", @p.lifePoints
     Game.infoLabel.zombieModeOnNext()
 
+    # audio
+    Q.audio.play Game.audio.zombieMode,
+      loop: true
+
     # events
     @on "player.outOfMap", @, "die"
 
@@ -62,7 +66,7 @@ Q.Sprite.extend "ZombiePlayer",
 
     if @p.timeToNextSave == 0
       @savePosition()
-      @p.timeToNextSave = 2
+      @p.timeToNextSave = 4
 
     # animations
     if @p.vy != 0
@@ -90,4 +94,5 @@ Q.Sprite.extend "ZombiePlayer",
 
     Game.infoLabel.zombieModeOff()
 
+    Q.audio.stop Game.audio.zombieMode
     @destroy()
