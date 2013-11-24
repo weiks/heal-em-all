@@ -311,10 +311,7 @@
         if (!nextTile && ground && !this.canSeeThePlayerObj.status && this.p.canSeeThePlayerTimeout === 0) {
           this.p.vx = -this.p.vx;
         }
-        this.flip();
-        if (this.p.y > Game.map.p.h) {
-          return this.die();
-        }
+        return this.flip();
       },
       flip: function() {
         if (this.p.vx > 0) {
@@ -460,7 +457,7 @@
   Q = Game.Q;
 
   Q.scene("level2", function(stage) {
-    var background, enemies, items, map, player;
+    var background, enemies, items, map, player, random, randomItems;
     Game.map = map = new Q.TileLayer({
       type: Game.SPRITE_TILES,
       layerIndex: 0,
@@ -496,7 +493,17 @@
       ], ["Zombie", Q.tilePos(21, 12)]
     ];
     stage.loadAssets(enemies);
-    items = [["Key", Q.tilePos(14.5, 3)], ["Door", Q.tilePos(27, 9)], ["ExitSign", Q.tilePos(26, 9)], ["Gun", Q.tilePos(14.5, 9)], ["Heart", Q.tilePos(14.5, 15)]];
+    randomItems = [
+      {
+        health: Q.tilePos(14.5, 15),
+        key: Q.tilePos(14.5, 3)
+      }, {
+        health: Q.tilePos(14.5, 3),
+        key: Q.tilePos(14.5, 15)
+      }
+    ];
+    random = Math.floor(Math.random() * 2);
+    items = [["Key", randomItems[random].key], ["Door", Q.tilePos(27, 9)], ["ExitSign", Q.tilePos(26, 9)], ["Gun", Q.tilePos(14.5, 9)], ["Heart", randomItems[random].health]];
     return stage.loadAssets(items);
   });
 
@@ -1091,7 +1098,7 @@
         this.zombieStep(dt);
       }
       if (this.p.y > Game.map.p.h) {
-        return this.die();
+        return this.die(false);
       }
     },
     decreaseLifePoints: function() {
@@ -1100,9 +1107,12 @@
         return this.die();
       }
     },
-    die: function() {
+    die: function(turnToHuman) {
+      if (turnToHuman == null) {
+        turnToHuman = true;
+      }
       this.destroy();
-      if (!this.p.wasHuman) {
+      if (!this.p.wasHuman && turnToHuman) {
         this.stage.insert(new Q.Human({
           x: this.p.x,
           y: this.p.y

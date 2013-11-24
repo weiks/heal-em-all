@@ -63,7 +63,7 @@ Q.Sprite.extend "Zombie",
       @zombieStep(dt)
 
     if @p.y > Game.map.p.h
-      @die()
+      @die(false)
 
   decreaseLifePoints: ->
     @p.lifePoints -= 1
@@ -71,10 +71,10 @@ Q.Sprite.extend "Zombie",
     if @p.lifePoints <= 0
       @die()
 
-  die: ->
+  die: (turnToHuman = true)->
     @destroy()
 
-    if !@p.wasHuman
+    if !@p.wasHuman && turnToHuman
       # replace zombie with human
       @stage.insert new Q.Human(x: @p.x, y: @p.y)
 

@@ -44,12 +44,22 @@ Q.scene "level2", (stage) ->
   stage.loadAssets(enemies)
 
   # items
+  randomItems = [
+    health: Q.tilePos(14.5, 15)
+    key: Q.tilePos(14.5, 3)
+  ,
+    health: Q.tilePos(14.5, 3)
+    key: Q.tilePos(14.5, 15)
+  ]
+
+  random = Math.floor(Math.random() * 2)
+
   items = [
-    ["Key", Q.tilePos(14.5, 3)]
+    ["Key", randomItems[random].key]
     ["Door", Q.tilePos(27, 9)]
     ["ExitSign", Q.tilePos(26, 9)]
     ["Gun", Q.tilePos(14.5, 9)]
-    ["Heart", Q.tilePos(14.5, 15)]
+    ["Heart", randomItems[random].health]
   ]
 
   stage.loadAssets(items)

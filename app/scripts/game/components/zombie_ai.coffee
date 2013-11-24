@@ -50,9 +50,6 @@ Q.component "zombieAI",
       # set the correct direction of sprite
       @flip()
 
-      if @p.y > Game.map.p.h
-        @die()
-
     flip: ->
       if(@p.vx > 0)
         @p.flip = "x"
