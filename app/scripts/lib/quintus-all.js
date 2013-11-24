@@ -2677,7 +2677,7 @@ Quintus.Input = function(Q) {
       function getKey(touch) {
         var pos = Q.input.touchLocation(touch);
         for(var i=0,len=opts.controls.length;i<len;i++) {
-          if(pos.x < opts.unit * (i+1)) {
+          if(pos.x < opts.unit * (i+1) && pos.y > (Q.height - opts.unit)) {
             return opts.controls[i][0];
           }
         }
