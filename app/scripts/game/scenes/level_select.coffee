@@ -48,7 +48,7 @@ Q.scene "levelSelect", (stage) ->
   stage.insert new Q.UI.Text
     x: Q.width/2
     y: marginY/2
-    label: "Here everything begins"
+    label: "Everything begins here!"
     size: 30
     color: "#fff"
     family: "Ubuntu"
