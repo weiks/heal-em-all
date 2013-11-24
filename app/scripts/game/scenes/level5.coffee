@@ -1,6 +1,6 @@
 Q = Game.Q
 
-Q.scene "level4", (stage) ->
+Q.scene "level5", (stage) ->
 
   # bg image
   # stage.insert new Q.Background()
@@ -9,7 +9,7 @@ Q.scene "level4", (stage) ->
   Game.map = map = new Q.TileLayer
     type: Game.SPRITE_TILES
     layerIndex: 0
-    dataAsset: Game.assets.level4.dataAsset
+    dataAsset: Game.assets.level5.dataAsset
     sheet: Game.assets.map.sheetName
     tileW: Game.assets.map.tileSize
     tileH: Game.assets.map.tileSize
@@ -21,7 +21,7 @@ Q.scene "level4", (stage) ->
   background = new Q.TileLayer
     layerIndex: 1,
     type: Game.SPRITE_NONE
-    dataAsset: Game.assets.level4.dataAsset
+    dataAsset: Game.assets.level5.dataAsset
     sheet: Game.assets.map.sheetName
     tileW: Game.assets.map.tileSize
     tileH: Game.assets.map.tileSize
@@ -44,13 +44,17 @@ Q.scene "level4", (stage) ->
     ["Zombie", Q.tilePos(27, 20)]
 
     ["Zombie", Q.tilePos(38, 9)]
-    ["Zombie", Q.tilePos(39, 33)]
+    ["Zombie", Q.tilePos(39, 15, {startLeft: true})]
+    ["Zombie", Q.tilePos(39, 27)]
+    ["Zombie", Q.tilePos(39, 33, {startLeft: true})]
 
     ["Zombie", Q.tilePos(50, 15)]
     ["Zombie", Q.tilePos(49, 27, {startLeft: true})]
 
     ["Zombie", Q.tilePos(61, 9)]
-    ["Zombie", Q.tilePos(60, 33)]
+    ["Zombie", Q.tilePos(60, 15, {startLeft: true})]
+    ["Zombie", Q.tilePos(60, 27)]
+    ["Zombie", Q.tilePos(60, 33, {startLeft: true})]
 
     ["Zombie", Q.tilePos(72, 21)]
 

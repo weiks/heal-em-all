@@ -1,6 +1,6 @@
 Q = Game.Q
 
-Q.scene "level4", (stage) ->
+Q.scene "level6", (stage) ->
 
   # bg image
   # stage.insert new Q.Background()
@@ -9,7 +9,7 @@ Q.scene "level4", (stage) ->
   Game.map = map = new Q.TileLayer
     type: Game.SPRITE_TILES
     layerIndex: 0
-    dataAsset: Game.assets.level4.dataAsset
+    dataAsset: Game.assets.level6.dataAsset
     sheet: Game.assets.map.sheetName
     tileW: Game.assets.map.tileSize
     tileH: Game.assets.map.tileSize
@@ -21,7 +21,7 @@ Q.scene "level4", (stage) ->
   background = new Q.TileLayer
     layerIndex: 1,
     type: Game.SPRITE_NONE
-    dataAsset: Game.assets.level4.dataAsset
+    dataAsset: Game.assets.level6.dataAsset
     sheet: Game.assets.map.sheetName
     tileW: Game.assets.map.tileSize
     tileH: Game.assets.map.tileSize
@@ -89,10 +89,10 @@ Q.scene "level4", (stage) ->
   ]
 
   gunPositions = [
-    Q.tilePos(38, 15)
-    Q.tilePos(62, 15)
-    Q.tilePos(37, 27)
-    Q.tilePos(62, 27)
+    Q.tilePos(36, 15)
+    Q.tilePos(63, 15)
+    Q.tilePos(36, 27)
+    Q.tilePos(63, 27)
   ]
 
   random = Math.floor(Math.random() * 4)
