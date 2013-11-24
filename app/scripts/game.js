@@ -8,8 +8,6 @@
       });
       Q.include("Sprites, Scenes, Input, Touch, UI, 2D, Anim, Audio");
       Q.setup({
-        width: 640,
-        height: 320,
         maximize: true,
         upsampleWidth: 640,
         upsampleHeight: 320
@@ -108,7 +106,10 @@
       stats.domElement.style.top = '40px';
       return document.body.appendChild(stats.domElement);
     },
-    stageLevel: function() {
+    stageLevel: function(number) {
+      if (number == null) {
+        number = 1;
+      }
       this.Q.state.reset({
         enemiesCounter: 0,
         lives: 3,
@@ -116,8 +117,9 @@
         hasKey: false,
         hasGun: false
       });
+      this.Q.input.touchControls();
       this.Q.clearStages();
-      this.Q.stageScene("level1", {
+      this.Q.stageScene("level" + number, {
         sort: true
       });
       this.Q.stageScene("stats", 1);
@@ -147,7 +149,7 @@
 
   Q.AudioManager = {
     collection: [],
-    muted: false,
+    muted: true,
     add: function(audio, options) {
       var item;
       item = {
@@ -349,7 +351,7 @@
     Q.compileSheets(Game.assets.zombie.sheet, Game.assets.zombie.dataAsset);
     Q.compileSheets(Game.assets.human.sheet, Game.assets.human.dataAsset);
     Q.compileSheets(Game.assets.items.sheet, Game.assets.items.dataAsset);
-    return Game.stageLevel();
+    return Q.stageScene("levelSelect");
   }, {
     progressCallback: function(loaded, total) {
       var container, element;
@@ -580,6 +582,57 @@
     random = Math.floor(Math.random() * 4);
     items = [["Key", doorKeyPositions[random].key], ["Door", doorKeyPositions[random].door], ["ExitSign", doorKeyPositions[random].sign], ["Gun", gunPositions[random]], ["Heart", doorKeyPositions[random].heart1], ["Heart", doorKeyPositions[random].heart2], ["Heart", Q.tilePos(4.5, 5.9)], ["Heart", Q.tilePos(7.5, 38.9)], ["Heart", Q.tilePos(94.5, 6.9)], ["Heart", Q.tilePos(92.5, 36.9)]];
     return stage.loadAssets(items);
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
+  Q.scene("levelSelect", function(stage) {
+    var columnInP, columnWidth, columnsNo, gutterX, gutterXinP, gutterY, gutterYinP, h, item, marginX, marginXinP, marginY, marginYinP, rowHeight, w, x, y, _i;
+    marginXinP = 10;
+    marginYinP = 20;
+    gutterXinP = 8;
+    gutterYinP = 8;
+    columnsNo = 3;
+    columnInP = (100 - (marginXinP * 2) - (columnsNo - 1) * gutterXinP) / columnsNo;
+    marginX = Q.width * marginXinP * 0.01;
+    gutterX = Q.width * gutterXinP * 0.01;
+    columnWidth = Q.width * columnInP * 0.01;
+    marginY = Q.height * marginYinP * 0.01;
+    gutterY = Q.height * gutterYinP * 0.01;
+    rowHeight = Q.height * 0.20;
+    x = marginX + columnWidth / 2;
+    y = marginY + rowHeight / 2;
+    w = columnWidth;
+    h = rowHeight;
+    for (item = _i = 0; _i <= 5; item = ++_i) {
+      if (item % columnsNo === 0) {
+        x = marginX + columnWidth / 2;
+        if (item > 0) {
+          y += rowHeight + gutterY;
+        }
+      }
+      stage.insert(new Q.UI.LevelButton({
+        level: item + 1,
+        x: x,
+        y: y,
+        w: w,
+        h: h
+      }));
+      x += columnWidth + gutterX;
+    }
+    return stage.insert(new Q.UI.Text({
+      x: Q.width / 2,
+      y: marginY / 2,
+      label: "Here everything begins",
+      size: 30,
+      color: "#fff",
+      family: "Ubuntu"
+    }));
   });
 
 }).call(this);
@@ -1435,6 +1488,27 @@
     },
     zombieModeOff: function() {
       return this.p.label = "Ok, back to businness";
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
+  Q.UI.LevelButton = Q.UI.Button.extend("UI.LevelButton", {
+    init: function(p) {
+      var _this = this;
+      this._super(p, {
+        type: Q.SPRITE_UI | Q.SPRITE_DEFAULT,
+        fill: "#CCCCCC"
+      });
+      this.p.label = this.p.level;
+      return this.on('click', function() {
+        return Game.stageLevel(_this.p.level);
+      });
     }
   });
 

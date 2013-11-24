@@ -3020,7 +3020,7 @@ Quintus.Input = function(Q) {
       });
       Q.input.joypadControls();
     } else {
-      Q.input.touchControls();
+      // Q.input.touchControls();
     }
 
     return Q;

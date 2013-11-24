@@ -12,9 +12,10 @@ Q.load Game.assets.all,
     Q.compileSheets Game.assets.human.sheet, Game.assets.human.dataAsset
     Q.compileSheets Game.assets.items.sheet, Game.assets.items.dataAsset
 
-    # start the stage
-    Game.stageLevel()
+    # first stage
+    Q.stageScene "levelSelect"
     # Q.stageScene "start", 2
+
   , {
     progressCallback: (loaded, total) ->
       element = document.getElementById("loading-progress")

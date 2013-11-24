@@ -12,13 +12,13 @@ window.Game =
     # main setup
     Q.include "Sprites, Scenes, Input, Touch, UI, 2D, Anim, Audio"
     Q.setup
-      width: 640
-      height: 320
+      # width: 640
+      # height: 320
       maximize: true
       upsampleWidth: 640
       upsampleHeight: 320
-    Q.controls().touch() # add true for joypad
-    Q.enableSound();
+    Q.controls().touch() # touch on screen buttons are rendered when level initialized
+    Q.enableSound()
 
     # used for collision detection
     @SPRITE_NONE = 0
@@ -112,7 +112,7 @@ window.Game =
 
     document.body.appendChild( stats.domElement )
 
-  stageLevel: ->
+  stageLevel: (number = 1) ->
     @Q.state.reset
       enemiesCounter: 0
       lives: 3
@@ -120,8 +120,10 @@ window.Game =
       hasKey: false
       hasGun: false
 
+    @Q.input.touchControls() # render onscreen touch buttons
+
     @Q.clearStages()
-    @Q.stageScene "level1",
+    @Q.stageScene "level" + number,
       sort: true
     @Q.stageScene "stats", 1
 
