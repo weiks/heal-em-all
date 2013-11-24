@@ -779,18 +779,42 @@
     Game.setCameraTo(stage, player);
     enemies = [
       ["Zombie", Q.tilePos(17, 15)], [
-        "Zombie", Q.tilePos(16, 27, {
+        "Zombie", Q.tilePos(16, 21, {
           startLeft: true
         })
-      ], ["Zombie", Q.tilePos(27, 20)], ["Zombie", Q.tilePos(38, 9)], ["Zombie", Q.tilePos(39, 33)], ["Zombie", Q.tilePos(50, 15)], [
-        "Zombie", Q.tilePos(49, 27, {
+      ], ["Zombie", Q.tilePos(17, 27)], [
+        "Zombie", Q.tilePos(27, 9, {
           startLeft: true
         })
-      ], ["Zombie", Q.tilePos(61, 9)], ["Zombie", Q.tilePos(60, 33)], ["Zombie", Q.tilePos(72, 21)], [
-        "Zombie", Q.tilePos(82, 15, {
+      ], ["Zombie", Q.tilePos(28, 15)], [
+        "Zombie", Q.tilePos(27, 27, {
           startLeft: true
         })
-      ], ["Zombie", Q.tilePos(81, 27)]
+      ], ["Zombie", Q.tilePos(28, 33)], ["Zombie", Q.tilePos(38, 9)], [
+        "Zombie", Q.tilePos(39, 21, {
+          startLeft: true
+        })
+      ], ["Zombie", Q.tilePos(39, 33)], ["Zombie", Q.tilePos(50, 9)], [
+        "Zombie", Q.tilePos(49, 15, {
+          startLeft: true
+        })
+      ], ["Zombie", Q.tilePos(50, 27)], [
+        "Zombie", Q.tilePos(49, 33, {
+          startLeft: true
+        })
+      ], ["Zombie", Q.tilePos(61, 9)], [
+        "Zombie", Q.tilePos(60, 21, {
+          startLeft: true
+        })
+      ], ["Zombie", Q.tilePos(60, 33)], ["Zombie", Q.tilePos(72, 9)], [
+        "Zombie", Q.tilePos(71, 15, {
+          startLeft: true
+        })
+      ], ["Zombie", Q.tilePos(72, 21)], [
+        "Zombie", Q.tilePos(71, 27, {
+          startLeft: true
+        })
+      ], ["Zombie", Q.tilePos(72, 33)], ["Zombie", Q.tilePos(80, 15)], ["Zombie", Q.tilePos(85, 27)]
     ];
     stage.loadAssets(enemies);
     doorKeyPositions = [
@@ -820,7 +844,7 @@
         heart2: Q.tilePos(49.5, 2.9)
       }
     ];
-    gunPositions = [Q.tilePos(36, 15), Q.tilePos(63, 15), Q.tilePos(36, 27), Q.tilePos(63, 27)];
+    gunPositions = [Q.tilePos(27.5, 9), Q.tilePos(27.5, 33), Q.tilePos(71.5, 9), Q.tilePos(71.5, 33)];
     random = Math.floor(Math.random() * 4);
     items = [["Key", doorKeyPositions[random].key], ["Door", doorKeyPositions[random].door], ["ExitSign", doorKeyPositions[random].sign], ["Gun", gunPositions[random]], ["Heart", doorKeyPositions[random].heart1], ["Heart", doorKeyPositions[random].heart2], ["Heart", Q.tilePos(4.5, 5.9)], ["Heart", Q.tilePos(7.5, 38.9)], ["Heart", Q.tilePos(94.5, 6.9)], ["Heart", Q.tilePos(92.5, 36.9)]];
     return stage.loadAssets(items);
