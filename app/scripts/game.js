@@ -65,6 +65,18 @@
         },
         level2: {
           dataAsset: "level2.tmx"
+        },
+        level3: {
+          dataAsset: "level3.tmx"
+        },
+        level4: {
+          dataAsset: "level4.tmx"
+        },
+        level5: {
+          dataAsset: "level5.tmx"
+        },
+        level6: {
+          dataAsset: "level6.tmx"
         }
       };
       this.audio = {
@@ -125,6 +137,10 @@
       this.Q.stageScene("stats", 1);
       return Game.infoLabel.intro();
     },
+    stageLevelSelectScreen: function() {
+      this.Q.clearStages();
+      return this.Q.stageScene("levelSelect");
+    },
     setCameraTo: function(stage, toFollowObj) {
       return stage.follow(toFollowObj, {
         x: true,
@@ -149,7 +165,7 @@
 
   Q.AudioManager = {
     collection: [],
-    muted: true,
+    muted: false,
     add: function(audio, options) {
       var item;
       item = {
@@ -351,7 +367,7 @@
     Q.compileSheets(Game.assets.zombie.sheet, Game.assets.zombie.dataAsset);
     Q.compileSheets(Game.assets.human.sheet, Game.assets.human.dataAsset);
     Q.compileSheets(Game.assets.items.sheet, Game.assets.items.dataAsset);
-    return Q.stageScene("levelSelect");
+    return Game.stageLevelSelectScreen();
   }, {
     progressCallback: function(loaded, total) {
       var container, element;
@@ -393,7 +409,7 @@
       label: stage.options.label
     }));
     button.on("click", function(e) {
-      return Game.stageLevel();
+      return Game.stageLevelSelectScreen();
     });
     return container.fit(20);
   });
@@ -406,7 +422,7 @@
   Q = Game.Q;
 
   Q.scene("level1", function(stage) {
-    var background, doorKeyPositions, enemies, gunPositions, items, map, player, random;
+    var background, enemies, items, map, player;
     Game.map = map = new Q.TileLayer({
       type: Game.SPRITE_TILES,
       layerIndex: 0,
@@ -427,67 +443,12 @@
       z: 1
     });
     stage.insert(background);
-    Game.player = player = stage.insert(new Q.Player(Q.tilePos(49.5, 21)));
+    Game.player = player = stage.insert(new Q.Player(Q.tilePos(3.5, 9)));
     stage.add("viewport");
     Game.setCameraTo(stage, player);
-    enemies = [
-      ["Zombie", Q.tilePos(39, 9)], [
-        "Zombie", Q.tilePos(39, 15, {
-          startLeft: true
-        })
-      ], ["Zombie", Q.tilePos(39, 21)], [
-        "Zombie", Q.tilePos(39, 27, {
-          startLeft: true
-        })
-      ], ["Zombie", Q.tilePos(39, 33)], ["Zombie", Q.tilePos(49, 9)], ["Zombie", Q.tilePos(49, 15)], ["Zombie", Q.tilePos(51, 15)], [
-        "Zombie", Q.tilePos(49, 27, {
-          startLeft: true
-        })
-      ], ["Zombie", Q.tilePos(49, 33)], [
-        "Zombie", Q.tilePos(60, 9, {
-          startLeft: true
-        })
-      ], ["Zombie", Q.tilePos(60, 15)], [
-        "Zombie", Q.tilePos(60, 21, {
-          startLeft: true
-        })
-      ], ["Zombie", Q.tilePos(60, 27)], [
-        "Zombie", Q.tilePos(60, 33, {
-          startLeft: true
-        })
-      ]
-    ];
+    enemies = [["Zombie", Q.tilePos(14, 9)]];
     stage.loadAssets(enemies);
-    doorKeyPositions = [
-      {
-        door: Q.tilePos(50, 2.65),
-        sign: Q.tilePos(48, 3),
-        key: Q.tilePos(49.5, 38.8),
-        heart1: Q.tilePos(5, 20.9),
-        heart2: Q.tilePos(94, 20.9)
-      }, {
-        door: Q.tilePos(49, 38.65),
-        sign: Q.tilePos(51, 39),
-        key: Q.tilePos(49.5, 2.8),
-        heart1: Q.tilePos(5, 20.9),
-        heart2: Q.tilePos(94, 20.9)
-      }, {
-        door: Q.tilePos(4, 20.65),
-        sign: Q.tilePos(6, 21),
-        key: Q.tilePos(94, 20.8),
-        heart1: Q.tilePos(49.5, 38.9),
-        heart2: Q.tilePos(49.5, 2.9)
-      }, {
-        door: Q.tilePos(95, 20.65),
-        sign: Q.tilePos(93, 21),
-        key: Q.tilePos(5, 20.8),
-        heart1: Q.tilePos(49.5, 38.9),
-        heart2: Q.tilePos(49.5, 2.9)
-      }
-    ];
-    gunPositions = [Q.tilePos(36, 15), Q.tilePos(63, 15), Q.tilePos(36, 27), Q.tilePos(63, 27)];
-    random = Math.floor(Math.random() * 4);
-    items = [["Key", doorKeyPositions[random].key], ["Door", doorKeyPositions[random].door], ["ExitSign", doorKeyPositions[random].sign], ["Gun", gunPositions[random]], ["Heart", doorKeyPositions[random].heart1], ["Heart", doorKeyPositions[random].heart2], ["Heart", Q.tilePos(4.5, 5.9)], ["Heart", Q.tilePos(7.5, 38.9)], ["Heart", Q.tilePos(94.5, 6.9)], ["Heart", Q.tilePos(92.5, 36.9)]];
+    items = [["Key", Q.tilePos(14.5, 9)], ["Door", Q.tilePos(27, 9)], ["ExitSign", Q.tilePos(24, 9)], ["Heart", Q.tilePos(14.5, 3)], ["Heart", Q.tilePos(14.5, 15)]];
     return stage.loadAssets(items);
   });
 
@@ -499,7 +460,7 @@
   Q = Game.Q;
 
   Q.scene("level2", function(stage) {
-    var background, doorKeyPositions, enemies, gunPositions, items, map, player, random;
+    var background, enemies, items, map, player;
     Game.map = map = new Q.TileLayer({
       type: Game.SPRITE_TILES,
       layerIndex: 0,
@@ -514,6 +475,54 @@
       layerIndex: 1,
       type: Game.SPRITE_NONE,
       dataAsset: Game.assets.level2.dataAsset,
+      sheet: Game.assets.map.sheetName,
+      tileW: Game.assets.map.tileSize,
+      tileH: Game.assets.map.tileSize,
+      z: 1
+    });
+    stage.insert(background);
+    Game.player = player = stage.insert(new Q.Player(Q.tilePos(2.5, 9)));
+    stage.add("viewport");
+    Game.setCameraTo(stage, player);
+    enemies = [
+      ["Zombie", Q.tilePos(9, 6)], [
+        "Zombie", Q.tilePos(8, 12, {
+          startLeft: true
+        })
+      ], [
+        "Zombie", Q.tilePos(20, 6, {
+          startLeft: true
+        })
+      ], ["Zombie", Q.tilePos(21, 12)]
+    ];
+    stage.loadAssets(enemies);
+    items = [["Key", Q.tilePos(14.5, 3)], ["Door", Q.tilePos(27, 9)], ["ExitSign", Q.tilePos(26, 9)], ["Gun", Q.tilePos(14.5, 9)], ["Heart", Q.tilePos(14.5, 15)]];
+    return stage.loadAssets(items);
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
+  Q.scene("level4", function(stage) {
+    var background, doorKeyPositions, enemies, gunPositions, items, map, player, random;
+    Game.map = map = new Q.TileLayer({
+      type: Game.SPRITE_TILES,
+      layerIndex: 0,
+      dataAsset: Game.assets.level4.dataAsset,
+      sheet: Game.assets.map.sheetName,
+      tileW: Game.assets.map.tileSize,
+      tileH: Game.assets.map.tileSize,
+      z: 2
+    });
+    stage.collisionLayer(map);
+    background = new Q.TileLayer({
+      layerIndex: 1,
+      type: Game.SPRITE_NONE,
+      dataAsset: Game.assets.level4.dataAsset,
       sheet: Game.assets.map.sheetName,
       tileW: Game.assets.map.tileSize,
       tileH: Game.assets.map.tileSize,
@@ -625,7 +634,7 @@
       }));
       x += columnWidth + gutterX;
     }
-    return stage.insert(new Q.UI.Text({
+    stage.insert(new Q.UI.Text({
       x: Q.width / 2,
       y: marginY / 2,
       label: "Here everything begins",
@@ -633,6 +642,7 @@
       color: "#fff",
       family: "Ubuntu"
     }));
+    return Q.AudioManager.stopAll();
   });
 
 }).call(this);
@@ -1225,7 +1235,7 @@
     },
     sensor: function(obj) {
       if (obj.isA("Player")) {
-        if (Q.state.get("hasKey" && !this.p.opened)) {
+        if ((Q.state.get("hasKey")) && !this.p.opened) {
           Q.state.set("hasKey", false);
           this.p.opened = true;
           this.p.sheet = "door_open";

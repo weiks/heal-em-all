@@ -21,7 +21,7 @@ Q.scene "end", (stage) ->
     label: stage.options.label
 
   button.on "click", (e) ->
-    Game.stageLevel()
+    Game.stageLevelSelectScreen()
 
   # Expand the container to visibily fit it's contents
   container.fit(20)

@@ -2,7 +2,7 @@ Q = Game.Q
 
 Q.AudioManager =
   collection: []
-  muted: true
+  muted: false
 
   add: (audio, options) ->
     item =

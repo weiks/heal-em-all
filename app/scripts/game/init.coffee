@@ -68,6 +68,15 @@ window.Game =
         dataAsset: "level1.tmx"
       level2:
         dataAsset: "level2.tmx"
+      level3:
+        dataAsset: "level3.tmx"
+      level4:
+        dataAsset: "level4.tmx"
+      level5:
+        dataAsset: "level5.tmx"
+      level6:
+        dataAsset: "level6.tmx"
+
 
     @audio =
       zombieMode: "zombie_mode.mp3"
@@ -129,6 +138,12 @@ window.Game =
 
     # the story
     Game.infoLabel.intro()
+
+  stageLevelSelectScreen: ->
+    @Q.clearStages()
+    @Q.stageScene "levelSelect"
+
+    # TODO remove onscreen touch controls
 
   setCameraTo: (stage, toFollowObj) ->
     stage.follow toFollowObj,

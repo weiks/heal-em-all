@@ -13,7 +13,7 @@ Q.load Game.assets.all,
     Q.compileSheets Game.assets.items.sheet, Game.assets.items.dataAsset
 
     # first stage
-    Q.stageScene "levelSelect"
+    Game.stageLevelSelectScreen()
     # Q.stageScene "start", 2
 
   , {

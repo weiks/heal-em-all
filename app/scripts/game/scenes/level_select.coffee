@@ -53,3 +53,6 @@ Q.scene "levelSelect", (stage) ->
     color: "#fff"
     family: "Ubuntu"
 
+  # audio
+  Q.AudioManager.stopAll()
+
