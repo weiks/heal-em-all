@@ -14,6 +14,7 @@ Q.scene "end", (stage) ->
     fill: "#CCCCCC"
     label: "Play Again"
     keyActionName: "confirm"
+    type: Q.SPRITE_UI | Q.SPRITE_DEFAULT
 
   label = container.insert new Q.UI.Text
     x:10

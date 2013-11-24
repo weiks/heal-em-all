@@ -398,7 +398,8 @@
       y: 0,
       fill: "#CCCCCC",
       label: "Play Again",
-      keyActionName: "confirm"
+      keyActionName: "confirm",
+      type: Q.SPRITE_UI | Q.SPRITE_DEFAULT
     }));
     label = container.insert(new Q.UI.Text({
       x: 10,
@@ -544,7 +545,7 @@
         "Zombie", Q.tilePos(9, 17, {
           startLeft: true
         })
-      ], ["Zombie", Q.tilePos(18, 6)], ["Zombie", Q.tilePos(19, 23)], ["Zombie", Q.tilePos(31, 6)], ["Zombie", Q.tilePos(30, 23)], ["Zombie", Q.tilePos(41, 11)], [
+      ], ["Zombie", Q.tilePos(18, 5)], ["Zombie", Q.tilePos(19, 23)], ["Zombie", Q.tilePos(31, 5)], ["Zombie", Q.tilePos(30, 23)], ["Zombie", Q.tilePos(41, 11)], [
         "Zombie", Q.tilePos(42, 17, {
           startLeft: true
         })
@@ -563,7 +564,7 @@
       }
     ];
     random = Math.floor(Math.random() * 2);
-    items = [["Key", randomItems[random].key], ["Door", randomItems[random].door], ["ExitSign", randomItems[random].exitSign], ["Gun", Q.tilePos(24.5, 3)], ["Heart", Q.tilePos(8, 6)], ["Heart", Q.tilePos(41.5, 6)], ["Heart", Q.tilePos(24.5, 26)]];
+    items = [["Key", randomItems[random].key], ["Door", randomItems[random].door], ["ExitSign", randomItems[random].exitSign], ["Gun", Q.tilePos(24.5, 2)], ["Heart", Q.tilePos(8, 5)], ["Heart", Q.tilePos(41.5, 5)], ["Heart", Q.tilePos(24.5, 26)]];
     return stage.loadAssets(items);
   });
 

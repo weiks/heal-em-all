@@ -38,10 +38,10 @@ Q.scene "level3", (stage) ->
     ["Zombie", Q.tilePos(8, 11)]
     ["Zombie", Q.tilePos(9, 17, {startLeft: true})]
 
-    ["Zombie", Q.tilePos(18, 6)]
+    ["Zombie", Q.tilePos(18, 5)]
     ["Zombie", Q.tilePos(19, 23)]
 
-    ["Zombie", Q.tilePos(31, 6)]
+    ["Zombie", Q.tilePos(31, 5)]
     ["Zombie", Q.tilePos(30, 23)]
 
     ["Zombie", Q.tilePos(41, 11)]
@@ -67,9 +67,9 @@ Q.scene "level3", (stage) ->
     ["Key", randomItems[random].key]
     ["Door", randomItems[random].door]
     ["ExitSign", randomItems[random].exitSign]
-    ["Gun", Q.tilePos(24.5, 3)]
-    ["Heart", Q.tilePos(8, 6)]
-    ["Heart", Q.tilePos(41.5, 6)]
+    ["Gun", Q.tilePos(24.5, 2)]
+    ["Heart", Q.tilePos(8, 5)]
+    ["Heart", Q.tilePos(41.5, 5)]
     ["Heart", Q.tilePos(24.5, 26)]
   ]
 
