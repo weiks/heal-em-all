@@ -147,8 +147,20 @@ window.Game =
     # TODO remove onscreen touch controls
 
   stageEndLevelScreen: ->
+    levelSummary =
+      zombies:
+        healed: 10
+        available: 12
+      health:
+        collected: 2
+        available: 4
+      bullets:
+        waisted: 2
+        available: 12
+      zombieModeFound: true
+
     @Q.clearStages()
-    @Q.stageScene "end"
+    @Q.stageScene "end", levelSummary
 
   stageStartScreen: ->
 

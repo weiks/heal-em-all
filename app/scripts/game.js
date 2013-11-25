@@ -139,8 +139,24 @@
       return this.Q.stageScene("levelSelect");
     },
     stageEndLevelScreen: function() {
+      var levelSummary;
+      levelSummary = {
+        zombies: {
+          healed: 10,
+          available: 12
+        },
+        health: {
+          collected: 2,
+          available: 4
+        },
+        bullets: {
+          waisted: 2,
+          available: 12
+        },
+        zombieModeFound: true
+      };
       this.Q.clearStages();
-      return this.Q.stageScene("end");
+      return this.Q.stageScene("end", levelSummary);
     },
     stageStartScreen: function() {},
     setCameraTo: function(stage, toFollowObj) {
@@ -388,31 +404,68 @@
   Q = Game.Q;
 
   Q.scene("end", function(stage) {
-    var button, container, label;
-    container = stage.insert(new Q.UI.Container({
+    var button, marginY;
+    marginY = Q.height * 0.2;
+    Q.AudioManager.stopAll();
+    stage.insert(new Q.UI.Text({
       x: Q.width / 2,
-      y: Q.height / 2,
-      w: Q.width,
-      h: Q.height,
-      fill: "rgba(0,0,0,0.5)"
+      y: marginY / 2,
+      label: "Well done! Let's see the level summary:",
+      size: 30,
+      color: "#fff",
+      family: "Ubuntu"
     }));
-    button = container.insert(new Q.UI.Button({
-      x: 0,
-      y: 0,
+    if (stage.options.health) {
+      stage.insert(new Q.UI.Text({
+        x: Q.width / 2,
+        y: marginY / 2 + 100,
+        label: "Health collected: " + stage.options.health.collected + "/" + stage.options.health.available,
+        size: 30,
+        color: "#fff",
+        family: "Ubuntu"
+      }));
+    }
+    if (stage.options.zombies) {
+      stage.insert(new Q.UI.Text({
+        x: Q.width / 2,
+        y: marginY / 2 + 150,
+        label: "Zombies healed: " + stage.options.zombies.healed + "/" + stage.options.zombies.available,
+        size: 30,
+        color: "#fff",
+        family: "Ubuntu"
+      }));
+    }
+    if (stage.options.bullets) {
+      stage.insert(new Q.UI.Text({
+        x: Q.width / 2,
+        y: marginY / 2 + 200,
+        label: "Bullets waisted: " + stage.options.bullets.waisted + "/" + stage.options.bullets.available,
+        size: 30,
+        color: "#fff",
+        family: "Ubuntu"
+      }));
+    }
+    if (stage.options.zombieModeFound != null) {
+      stage.insert(new Q.UI.Text({
+        x: Q.width / 2,
+        y: marginY / 2 + 250,
+        label: "Zombie Mode: " + (stage.options.zombieModeFound ? "done" : "not found"),
+        size: 30,
+        color: "#fff",
+        family: "Ubuntu"
+      }));
+    }
+    button = stage.insert(new Q.UI.Button({
+      x: Q.width / 2,
+      y: marginY / 2 + 350,
       fill: "#CCCCCC",
       label: "Play Next",
       keyActionName: "confirm",
       type: Q.SPRITE_UI | Q.SPRITE_DEFAULT
     }));
-    label = container.insert(new Q.UI.Text({
-      x: 10,
-      y: -10 - button.p.h,
-      label: "You did it!"
-    }));
     button.on("click", function(e) {
       return Game.stageLevelSelectScreen();
     });
-    container.fit(20);
     if (Q.state.get("currentLevel") >= Game.availableLevel) {
       Game.availableLevel = Q.state.get("currentLevel") + 1;
       return localStorage.setItem(Game.storageKey, Game.availableLevel);
