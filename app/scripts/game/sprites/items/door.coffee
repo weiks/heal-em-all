@@ -28,7 +28,9 @@ Q.Sprite.extend "Door",
 
       else if @p.opened and (Q.inputs['up'] or Q.inputs['action'])
         # enter the door
+        obj.destroy()
+
+        # level end screen
         Q.stageScene "end", 2,
           label: "You Won!"
-        obj.destroy()
 

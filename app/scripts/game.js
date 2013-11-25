@@ -14,6 +14,7 @@
       });
       Q.controls().touch();
       Q.enableSound();
+      Game.availableLevel = 1;
       this.SPRITE_NONE = 0;
       this.SPRITE_PLAYER = 1;
       this.SPRITE_TILES = 2;
@@ -111,22 +112,25 @@
       return document.body.appendChild(stats.domElement);
     },
     stageLevel: function(number) {
+      var Q;
       if (number == null) {
         number = 1;
       }
-      this.Q.state.reset({
+      Q = this.Q;
+      Q.state.reset({
         enemiesCounter: 0,
         lives: 3,
         bullets: 12,
         hasKey: false,
-        hasGun: false
+        hasGun: false,
+        currentLevel: number
       });
-      this.Q.input.touchControls();
-      this.Q.clearStages();
-      this.Q.stageScene("level" + number, {
+      Q.input.touchControls();
+      Q.clearStages();
+      Q.stageScene("level" + number, {
         sort: true
       });
-      this.Q.stageScene("stats", 1);
+      Q.stageScene("stats", 1);
       return Game.infoLabel.intro();
     },
     stageLevelSelectScreen: function() {
@@ -402,7 +406,10 @@
     button.on("click", function(e) {
       return Game.stageLevelSelectScreen();
     });
-    return container.fit(20);
+    container.fit(20);
+    if (Q.state.get("currentLevel") >= Game.availableLevel) {
+      return Game.availableLevel = Q.state.get("currentLevel") + 1;
+    }
   });
 
 }).call(this);
@@ -852,7 +859,7 @@
   Q = Game.Q;
 
   Q.scene("levelSelect", function(stage) {
-    var columnInP, columnWidth, columnsNo, gutterX, gutterXinP, gutterY, gutterYinP, h, item, marginX, marginXinP, marginY, marginYinP, rowHeight, w, x, y, _i;
+    var columnInP, columnWidth, columnsNo, enabled, gutterX, gutterXinP, gutterY, gutterYinP, h, item, marginX, marginXinP, marginY, marginYinP, rowHeight, w, x, y, _i;
     marginXinP = 10;
     marginYinP = 20;
     gutterXinP = 8;
@@ -876,12 +883,14 @@
           y += rowHeight + gutterY;
         }
       }
+      enabled = item + 1 <= Game.availableLevel ? true : false;
       stage.insert(new Q.UI.LevelButton({
         level: item + 1,
         x: x,
         y: y,
         w: w,
-        h: h
+        h: h,
+        enabled: enabled
       }));
       x += columnWidth + gutterX;
     }
@@ -1537,10 +1546,10 @@
         } else if (!this.p.opened) {
           return Game.infoLabel.keyNeeded();
         } else if (this.p.opened && (Q.inputs['up'] || Q.inputs['action'])) {
-          Q.stageScene("end", 2, {
+          obj.destroy();
+          return Q.stageScene("end", 2, {
             label: "You Won!"
           });
-          return obj.destroy();
         }
       }
     }
@@ -1807,11 +1816,16 @@
       var _this = this;
       this._super(p, {
         type: Q.SPRITE_UI | Q.SPRITE_DEFAULT,
-        fill: "#CCCCCC"
+        fill: "#EEE"
       });
       this.p.label = this.p.level;
+      if (this.p.enabled === false) {
+        this.p.fill = "#CCC";
+      }
       return this.on('click', function() {
-        return Game.stageLevel(_this.p.level);
+        if (_this.p.enabled) {
+          return Game.stageLevel(_this.p.level);
+        }
       });
     }
   });

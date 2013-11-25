@@ -20,6 +20,10 @@ window.Game =
     Q.controls().touch() # touch on screen buttons are rendered when level initialized
     Q.enableSound()
 
+    # game progress
+    # TODO read from localStorage or set to 1
+    Game.availableLevel = 1
+
     # used for collision detection
     @SPRITE_NONE = 0
     @SPRITE_PLAYER = 1
@@ -116,19 +120,22 @@ window.Game =
     document.body.appendChild( stats.domElement )
 
   stageLevel: (number = 1) ->
-    @Q.state.reset
+    Q = @Q
+
+    Q.state.reset
       enemiesCounter: 0
       lives: 3
       bullets: 12
       hasKey: false
       hasGun: false
+      currentLevel: number # used to save the progress
 
-    @Q.input.touchControls() # render onscreen touch buttons
+    Q.input.touchControls() # render onscreen touch buttons
 
-    @Q.clearStages()
-    @Q.stageScene "level" + number,
+    Q.clearStages()
+    Q.stageScene "level" + number,
       sort: true
-    @Q.stageScene "stats", 1
+    Q.stageScene "stats", 1
 
     # the story
     Game.infoLabel.intro()

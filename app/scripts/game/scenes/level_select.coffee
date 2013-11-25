@@ -35,12 +35,15 @@ Q.scene "levelSelect", (stage) ->
       if item > 0
         y += rowHeight + gutterY
 
+    enabled = if item + 1 <= Game.availableLevel then true else false
+
     stage.insert new Q.UI.LevelButton
       level: item + 1
       x: x
       y: y
       w: w
       h: h
+      enabled: enabled
 
     x += columnWidth + gutterX
 

@@ -17,7 +17,7 @@ Q.scene "end", (stage) ->
     type: Q.SPRITE_UI | Q.SPRITE_DEFAULT
 
   label = container.insert new Q.UI.Text
-    x:10
+    x: 10
     y: -10 - button.p.h
     label: stage.options.label
 
@@ -26,3 +26,8 @@ Q.scene "end", (stage) ->
 
   # Expand the container to visibily fit it's contents
   container.fit(20)
+
+  # progress in game
+  if Q.state.get("currentLevel") >= Game.availableLevel
+    Game.availableLevel = Q.state.get("currentLevel") + 1
+    # TODO save to localStorage
