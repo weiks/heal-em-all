@@ -1065,8 +1065,8 @@
       rate: 1 / 3
     },
     outro: {
-      frames: [3, 2, 1],
-      rate: 0.7,
+      frames: [3, 2, 1, 0],
+      rate: 0.8,
       loop: false,
       trigger: "outro"
     }
