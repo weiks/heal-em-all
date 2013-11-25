@@ -20,3 +20,5 @@ Q.Sprite.extend "Heart",
 
       Q.AudioManager.add Game.audio.collected
       @destroy()
+
+      Game.currentLevelData.health.collected += 1

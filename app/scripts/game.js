@@ -126,6 +126,21 @@
         hasGun: false,
         currentLevel: number
       });
+      Game.currentLevelData = {
+        zombies: {
+          healed: 0,
+          available: 0
+        },
+        health: {
+          collected: 0,
+          available: 0
+        },
+        bullets: {
+          waisted: 0,
+          available: Q.state.get("bullets")
+        },
+        zombieModeFound: false
+      };
       Q.input.touchControls();
       Q.clearStages();
       Q.stageScene("level" + number, {
@@ -139,24 +154,8 @@
       return this.Q.stageScene("levelSelect");
     },
     stageEndLevelScreen: function() {
-      var levelSummary;
-      levelSummary = {
-        zombies: {
-          healed: 10,
-          available: 12
-        },
-        health: {
-          collected: 2,
-          available: 4
-        },
-        bullets: {
-          waisted: 2,
-          available: 12
-        },
-        zombieModeFound: true
-      };
       this.Q.clearStages();
-      return this.Q.stageScene("end", levelSummary);
+      return this.Q.stageScene("end", Game.currentLevelData);
     },
     stageStartScreen: function() {},
     setCameraTo: function(stage, toFollowObj) {
@@ -507,7 +506,9 @@
     enemies = [["Zombie", Q.tilePos(14, 9)]];
     stage.loadAssets(enemies);
     items = [["Key", Q.tilePos(14.5, 9)], ["Door", Q.tilePos(27, 9)], ["ExitSign", Q.tilePos(24, 9)], ["Heart", Q.tilePos(14.5, 3)], ["Heart", Q.tilePos(14.5, 15)]];
-    return stage.loadAssets(items);
+    stage.loadAssets(items);
+    Game.currentLevelData.health.available = stage.lists.Heart.length;
+    return Game.currentLevelData.zombies.available = stage.lists.Zombie.length;
   });
 
 }).call(this);
@@ -565,7 +566,9 @@
     ];
     random = Math.floor(Math.random() * 2);
     items = [["Key", randomItems[random].key], ["Door", Q.tilePos(27, 9)], ["ExitSign", Q.tilePos(26, 9)], ["Gun", Q.tilePos(14.5, 9)], ["Heart", randomItems[random].health]];
-    return stage.loadAssets(items);
+    stage.loadAssets(items);
+    Game.currentLevelData.health.available = stage.lists.Heart.length;
+    return Game.currentLevelData.zombies.available = stage.lists.Zombie.length;
   });
 
 }).call(this);
@@ -625,7 +628,9 @@
     ];
     random = Math.floor(Math.random() * 2);
     items = [["Key", randomItems[random].key], ["Door", randomItems[random].door], ["ExitSign", randomItems[random].exitSign], ["Gun", Q.tilePos(24.5, 2)], ["Heart", Q.tilePos(8, 5)], ["Heart", Q.tilePos(41.5, 5)], ["Heart", Q.tilePos(24.5, 26)]];
-    return stage.loadAssets(items);
+    stage.loadAssets(items);
+    Game.currentLevelData.health.available = stage.lists.Heart.length;
+    return Game.currentLevelData.zombies.available = stage.lists.Zombie.length;
   });
 
 }).call(this);
@@ -706,7 +711,9 @@
     gunPositions = [Q.tilePos(38, 15), Q.tilePos(62, 15), Q.tilePos(37, 27), Q.tilePos(62, 27)];
     random = Math.floor(Math.random() * 4);
     items = [["Key", doorKeyPositions[random].key], ["Door", doorKeyPositions[random].door], ["ExitSign", doorKeyPositions[random].sign], ["Gun", gunPositions[random]], ["Heart", doorKeyPositions[random].heart1], ["Heart", doorKeyPositions[random].heart2], ["Heart", Q.tilePos(4.5, 5.9)], ["Heart", Q.tilePos(7.5, 38.9)], ["Heart", Q.tilePos(94.5, 6.9)], ["Heart", Q.tilePos(92.5, 36.9)]];
-    return stage.loadAssets(items);
+    stage.loadAssets(items);
+    Game.currentLevelData.health.available = stage.lists.Heart.length;
+    return Game.currentLevelData.zombies.available = stage.lists.Zombie.length;
   });
 
 }).call(this);
@@ -803,7 +810,9 @@
     gunPositions = [Q.tilePos(38, 15), Q.tilePos(62, 15), Q.tilePos(37, 27), Q.tilePos(62, 27)];
     random = Math.floor(Math.random() * 4);
     items = [["Key", doorKeyPositions[random].key], ["Door", doorKeyPositions[random].door], ["ExitSign", doorKeyPositions[random].sign], ["Gun", gunPositions[random]], ["Heart", doorKeyPositions[random].heart1], ["Heart", doorKeyPositions[random].heart2], ["Heart", Q.tilePos(4.5, 5.9)], ["Heart", Q.tilePos(7.5, 38.9)], ["Heart", Q.tilePos(94.5, 6.9)], ["Heart", Q.tilePos(92.5, 36.9)]];
-    return stage.loadAssets(items);
+    stage.loadAssets(items);
+    Game.currentLevelData.health.available = stage.lists.Heart.length;
+    return Game.currentLevelData.zombies.available = stage.lists.Zombie.length;
   });
 
 }).call(this);
@@ -908,7 +917,9 @@
     gunPositions = [Q.tilePos(27.5, 9), Q.tilePos(27.5, 33), Q.tilePos(71.5, 9), Q.tilePos(71.5, 33)];
     random = Math.floor(Math.random() * 4);
     items = [["Key", doorKeyPositions[random].key], ["Door", doorKeyPositions[random].door], ["ExitSign", doorKeyPositions[random].sign], ["Gun", gunPositions[random]], ["Heart", doorKeyPositions[random].heart1], ["Heart", doorKeyPositions[random].heart2], ["Heart", Q.tilePos(4.5, 5.9)], ["Heart", Q.tilePos(7.5, 38.9)], ["Heart", Q.tilePos(94.5, 6.9)], ["Heart", Q.tilePos(92.5, 36.9)]];
-    return stage.loadAssets(items);
+    stage.loadAssets(items);
+    Game.currentLevelData.health.available = stage.lists.Heart.length;
+    return Game.currentLevelData.zombies.available = stage.lists.Zombie.length;
   });
 
 }).call(this);
@@ -1105,15 +1116,23 @@
         this.p.vx = this.p.speed;
       }
       if (this.p.x > Game.map.width || this.p.x < 0) {
-        this.destroy();
+        this.die();
       }
       if (this.p.x > this.p.initialX + this.p.range || this.p.x < this.p.initialX - this.p.range) {
-        return this.destroy();
+        return this.die();
       }
     },
     collision: function(col) {
       this.p.x -= col.separate[0];
       this.p.y -= col.separate[1];
+      if (col.obj.isA("Zombie")) {
+        return this.destroy();
+      } else {
+        return this.die();
+      }
+    },
+    die: function() {
+      Game.currentLevelData.bullets.waisted += 1;
       return this.destroy();
     }
   });
@@ -1516,6 +1535,7 @@
       this.p.savedPosition.x = this.p.x;
       this.p.savedPosition.y = this.p.y;
       Game.infoLabel.zombieModeOnNext();
+      Game.currentLevelData.zombieModeFound = true;
       Q.AudioManager.remove(Game.audio.playerBg);
       Q.AudioManager.add(Game.audio.zombieMode, {
         loop: true
@@ -1607,6 +1627,7 @@
           return Game.infoLabel.keyNeeded();
         } else if (this.p.opened && (Q.inputs['up'] || Q.inputs['action'])) {
           obj.destroy();
+          Game.currentLevelData.zombies.healed = this.stage.lists.Human != null ? this.stage.lists.Human.length : 0;
           return Game.stageEndLevelScreen();
         }
       }
@@ -1686,7 +1707,8 @@
         obj.updateLifePoints(1);
         Game.infoLabel.extraLifeFound();
         Q.AudioManager.add(Game.audio.collected);
-        return this.destroy();
+        this.destroy();
+        return Game.currentLevelData.health.collected += 1;
       }
     }
   });

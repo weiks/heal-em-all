@@ -29,5 +29,9 @@ Q.Sprite.extend "Door",
       else if @p.opened and (Q.inputs['up'] or Q.inputs['action'])
         # enter the door
         obj.destroy()
+
+        # get game statistics
+        Game.currentLevelData.zombies.healed = if @stage.lists.Human? then @stage.lists.Human.length else 0
+
         Game.stageEndLevelScreen()
 

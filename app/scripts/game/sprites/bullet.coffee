@@ -30,13 +30,22 @@ Q.Sprite.extend "Bullet",
       @p.vx = @p.speed
 
     if @p.x > Game.map.width || @p.x < 0
-      @destroy()
+      @die()
 
     if @p.x > @p.initialX + @p.range or @p.x < @p.initialX - @p.range
-      @destroy()
+      @die()
 
   collision: (col) ->
     @p.x -= col.separate[0]
     @p.y -= col.separate[1]
+
+    # difference for level statistics
+    if col.obj.isA("Zombie")
+      @destroy()
+    else
+      @die()
+
+  die: ->
+    Game.currentLevelData.bullets.waisted += 1
     @destroy()
 

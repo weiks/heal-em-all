@@ -128,7 +128,19 @@ window.Game =
       bullets: 12
       hasKey: false
       hasGun: false
-      currentLevel: number # used to save the progress
+      currentLevel: number # for saving the progress
+
+    Game.currentLevelData = # for level summary
+      zombies:
+        healed: 0
+        available: 0
+      health:
+        collected: 0
+        available: 0
+      bullets:
+        waisted: 0
+        available: Q.state.get "bullets"
+      zombieModeFound: false
 
     Q.input.touchControls() # render onscreen touch buttons
 
@@ -147,20 +159,8 @@ window.Game =
     # TODO remove onscreen touch controls
 
   stageEndLevelScreen: ->
-    levelSummary =
-      zombies:
-        healed: 10
-        available: 12
-      health:
-        collected: 2
-        available: 4
-      bullets:
-        waisted: 2
-        available: 12
-      zombieModeFound: true
-
     @Q.clearStages()
-    @Q.stageScene "end", levelSummary
+    @Q.stageScene "end", Game.currentLevelData
 
   stageStartScreen: ->
 

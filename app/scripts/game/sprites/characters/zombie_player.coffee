@@ -33,8 +33,8 @@ Q.Sprite.extend "ZombiePlayer",
     @p.savedPosition.x = @p.x
     @p.savedPosition.y = @p.y
 
-    # Q.state.set "lives", @p.lifePoints
     Game.infoLabel.zombieModeOnNext()
+    Game.currentLevelData.zombieModeFound = true
 
     # audio
     Q.AudioManager.remove Game.audio.playerBg

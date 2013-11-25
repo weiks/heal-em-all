@@ -113,3 +113,6 @@ Q.scene "level4", (stage) ->
 
   stage.loadAssets(items)
 
+  # store level data for level summary
+  Game.currentLevelData.health.available = stage.lists.Heart.length
+  Game.currentLevelData.zombies.available = stage.lists.Zombie.length
