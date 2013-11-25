@@ -10,6 +10,7 @@ Q.component "gun",
     # animations
     p.sheet = "player_with_gun"
     p.sprite = "playerWithGun"
+    @entity.play("stand")
 
     # do not allow to fire in series
     p.nextFireTimeout = 0

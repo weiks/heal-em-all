@@ -222,6 +222,7 @@
       p.noOfBullets = Q.state.get("bullets");
       p.sheet = "player_with_gun";
       p.sprite = "playerWithGun";
+      this.entity.play("stand");
       return p.nextFireTimeout = 0;
     },
     destroyed: function() {
@@ -288,6 +289,7 @@
           if (this.canSeeThePlayerObj.playAudio) {
             if (this.p.audioTimeout === 0) {
               Q.AudioManager.add(Game.audio.zombieNotice);
+              this.play("attack", 10);
               this.p.audioTimeout = 10;
             }
           }
