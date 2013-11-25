@@ -21,8 +21,8 @@ window.Game =
     Q.enableSound()
 
     # game progress
-    # TODO read from localStorage or set to 1
-    Game.availableLevel = 1
+    Game.storageKey = "zombieGame:availableLevel"
+    Game.availableLevel = localStorage.getItem(Game.storageKey) || 1
 
     # used for collision detection
     @SPRITE_NONE = 0
@@ -145,6 +145,12 @@ window.Game =
     @Q.stageScene "levelSelect"
 
     # TODO remove onscreen touch controls
+
+  stageEndLevelScreen: ->
+    @Q.clearStages()
+    @Q.stageScene "end"
+
+  stageStartScreen: ->
 
   setCameraTo: (stage, toFollowObj) ->
     stage.follow toFollowObj,

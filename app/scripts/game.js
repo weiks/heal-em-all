@@ -14,7 +14,8 @@
       });
       Q.controls().touch();
       Q.enableSound();
-      Game.availableLevel = 1;
+      Game.storageKey = "zombieGame:availableLevel";
+      Game.availableLevel = localStorage.getItem(Game.storageKey) || 1;
       this.SPRITE_NONE = 0;
       this.SPRITE_PLAYER = 1;
       this.SPRITE_TILES = 2;
@@ -137,6 +138,11 @@
       this.Q.clearStages();
       return this.Q.stageScene("levelSelect");
     },
+    stageEndLevelScreen: function() {
+      this.Q.clearStages();
+      return this.Q.stageScene("end");
+    },
+    stageStartScreen: function() {},
     setCameraTo: function(stage, toFollowObj) {
       return stage.follow(toFollowObj, {
         x: true,
@@ -394,21 +400,22 @@
       x: 0,
       y: 0,
       fill: "#CCCCCC",
-      label: "Play Again",
+      label: "Play Next",
       keyActionName: "confirm",
       type: Q.SPRITE_UI | Q.SPRITE_DEFAULT
     }));
     label = container.insert(new Q.UI.Text({
       x: 10,
       y: -10 - button.p.h,
-      label: stage.options.label
+      label: "You did it!"
     }));
     button.on("click", function(e) {
       return Game.stageLevelSelectScreen();
     });
     container.fit(20);
     if (Q.state.get("currentLevel") >= Game.availableLevel) {
-      return Game.availableLevel = Q.state.get("currentLevel") + 1;
+      Game.availableLevel = Q.state.get("currentLevel") + 1;
+      return localStorage.setItem(Game.storageKey, Game.availableLevel);
     }
   });
 
@@ -1547,9 +1554,7 @@
           return Game.infoLabel.keyNeeded();
         } else if (this.p.opened && (Q.inputs['up'] || Q.inputs['action'])) {
           obj.destroy();
-          return Q.stageScene("end", 2, {
-            label: "You Won!"
-          });
+          return Game.stageEndLevelScreen();
         }
       }
     }

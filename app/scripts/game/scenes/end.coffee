@@ -12,14 +12,14 @@ Q.scene "end", (stage) ->
     x: 0
     y: 0
     fill: "#CCCCCC"
-    label: "Play Again"
+    label: "Play Next"
     keyActionName: "confirm"
     type: Q.SPRITE_UI | Q.SPRITE_DEFAULT
 
   label = container.insert new Q.UI.Text
     x: 10
     y: -10 - button.p.h
-    label: stage.options.label
+    label: "You did it!"
 
   button.on "click", (e) ->
     Game.stageLevelSelectScreen()
@@ -30,4 +30,4 @@ Q.scene "end", (stage) ->
   # progress in game
   if Q.state.get("currentLevel") >= Game.availableLevel
     Game.availableLevel = Q.state.get("currentLevel") + 1
-    # TODO save to localStorage
+    localStorage.setItem(Game.storageKey, Game.availableLevel)
