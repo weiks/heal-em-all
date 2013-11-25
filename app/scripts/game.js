@@ -254,14 +254,14 @@
           }
           if (this.p.noOfBullets > 0) {
             if (this.p.direction === "left") {
-              delta = -35;
+              delta = -15;
             } else {
-              delta = 35;
+              delta = 15;
             }
             Q.AudioManager.add(Game.audio.gunShot);
             return bullet = this.stage.insert(new Q.Bullet({
               x: this.p.x + delta,
-              y: this.p.y + 12,
+              y: this.p.y + 3,
               direction: this.p.direction
             }));
           } else {
@@ -1029,8 +1029,8 @@
       this._super(p, {
         color: "red",
         range: Q.width / 2,
-        w: 8,
-        h: 8,
+        w: 5,
+        h: 5,
         speed: 700,
         gravity: 0,
         type: Game.SPRITE_BULLET,

@@ -36,15 +36,15 @@ Q.component "gun",
         if @p.noOfBullets > 0
 
           if @p.direction == "left"
-            delta = -35
+            delta = -15
           else
-            delta = 35
+            delta = 15
 
           Q.AudioManager.add Game.audio.gunShot
 
           bullet = @stage.insert new Q.Bullet
             x: @p.x + delta
-            y: @p.y + 12
+            y: @p.y + 3
             direction: @p.direction
 
         else
