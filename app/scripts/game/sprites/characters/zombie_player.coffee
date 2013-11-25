@@ -6,11 +6,11 @@ Q.animations "zombiePlayer",
     frames: [1]
     rate: 1
   run:
-    frames: [0, 1, 2, 1]
-    rate: 0.4
+    frames: [0, 1, 2, 3]
+    rate: 1/3
   jump:
-    frames: [2]
-    rate: 0.5
+    frames: [0]
+    rate: 1
 
 # main object and logic
 Q.Sprite.extend "ZombiePlayer",
@@ -21,7 +21,7 @@ Q.Sprite.extend "ZombiePlayer",
       y: 0
       z: 100
       savedPosition: {}
-      sheet: "zombie"
+      sheet: "zombie_player"
       sprite: "zombiePlayer"
       type: Game.SPRITE_ZOMBIE_PLAYER
       collisionMask: Game.SPRITE_TILES | Game.SPRITE_PLAYER_COLLECTIBLE
@@ -46,9 +46,9 @@ Q.Sprite.extend "ZombiePlayer",
 
   step: (dt) ->
     if @p.direction == "left"
-      @p.flip = false
-    if @p.direction == "right"
       @p.flip = "x"
+    if @p.direction == "right"
+      @p.flip = false
 
     # check if out of map
     if @p.y > Game.map.p.h

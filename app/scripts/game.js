@@ -40,17 +40,9 @@
     prepareAssets: function() {
       var assetsAsArray, audioAsArray;
       this.assets = {
-        player: {
-          dataAsset: "player.json",
-          sheet: "player.png"
-        },
-        zombie: {
-          dataAsset: "zombie.json",
-          sheet: "zombie.png"
-        },
-        human: {
-          dataAsset: "human.json",
-          sheet: "human.png"
+        characters: {
+          dataAsset: "characters.json",
+          sheet: "characters.png"
         },
         items: {
           dataAsset: "items.json",
@@ -228,6 +220,8 @@
       Q.input.on("fire", this.entity, "fireGun");
       p = this.entity.p;
       p.noOfBullets = Q.state.get("bullets");
+      p.sheet = "player_with_gun";
+      p.sprite = "playerWithGun";
       return p.nextFireTimeout = 0;
     },
     destroyed: function() {
@@ -283,8 +277,7 @@
       } else {
         p.vx = -60;
       }
-      p.audioTimeout = 0;
-      return this.entity.play("run");
+      return p.audioTimeout = 0;
     },
     extend: {
       zombieStep: function(dt) {
@@ -315,9 +308,9 @@
       },
       flip: function() {
         if (this.p.vx > 0) {
-          return this.p.flip = "x";
-        } else {
           return this.p.flip = false;
+        } else {
+          return this.p.flip = "x";
         }
       },
       canSeeThePlayer: function() {
@@ -360,9 +353,7 @@
       tileW: Game.assets.map.tileSize,
       tileH: Game.assets.map.tileSize
     });
-    Q.compileSheets(Game.assets.player.sheet, Game.assets.player.dataAsset);
-    Q.compileSheets(Game.assets.zombie.sheet, Game.assets.zombie.dataAsset);
-    Q.compileSheets(Game.assets.human.sheet, Game.assets.human.dataAsset);
+    Q.compileSheets(Game.assets.characters.sheet, Game.assets.characters.dataAsset);
     Q.compileSheets(Game.assets.items.sheet, Game.assets.items.dataAsset);
     return Game.stageLevelSelectScreen();
   }, {
@@ -1064,23 +1055,20 @@
   Q = Game.Q;
 
   Q.animations("human", {
-    stand: {
-      frames: [4],
-      rate: 1 / 2
-    },
-    run: {
-      frames: [4, 5, 6],
-      rate: 1 / 4
-    },
-    hit: {
-      frames: [0],
-      loop: false,
-      rate: 1 / 2,
+    intro: {
+      frames: [0, 1, 2, 3],
+      rate: 0.7,
       next: "stand"
     },
-    jump: {
-      frames: [2],
-      rate: 1 / 2
+    stand: {
+      frames: [4, 5, 6],
+      rate: 1 / 3
+    },
+    outro: {
+      frames: [3, 2, 1],
+      rate: 0.7,
+      loop: false,
+      trigger: "outro"
     }
   });
 
@@ -1091,7 +1079,7 @@
         y: 0,
         vx: 0,
         z: 20,
-        timeInvincible: 2,
+        timeInvincible: 4,
         sheet: "human",
         sprite: "human",
         type: Game.SPRITE_HUMAN,
@@ -1099,9 +1087,10 @@
         sensor: true
       });
       this.add("2d, animation");
-      this.play("stand");
+      this.play("intro");
       Q.AudioManager.add(Game.audio.humanCreated);
-      return this.on("sensor", this, "sensor");
+      this.on("sensor", this, "sensor");
+      return this.on("outro", this, "die");
     },
     step: function(dt) {
       if (this.p.timeInvincible > 0) {
@@ -1109,18 +1098,21 @@
       }
     },
     sensor: function(obj) {
-      var randomBool, zombie;
       if (obj.isA("Zombie") && this.p.timeInvincible === 0) {
-        this.play("hit");
-        this.destroy();
-        randomBool = Math.floor(Math.random() * 2);
-        zombie = this.stage.insert(new Q.Zombie({
-          x: this.p.x,
-          y: this.p.y,
-          startLeft: randomBool
-        }));
-        return zombie.p.wasHuman = true;
+        obj.play("attack", 10);
+        return this.play("outro");
       }
+    },
+    die: function() {
+      var randomBool, zombie;
+      this.destroy();
+      randomBool = Math.floor(Math.random() * 2);
+      zombie = this.stage.insert(new Q.Zombie({
+        x: this.p.x,
+        y: this.p.y,
+        startLeft: randomBool
+      }));
+      return zombie.p.wasHuman = true;
     }
   });
 
@@ -1133,22 +1125,43 @@
 
   Q.animations("player", {
     stand: {
-      frames: [1],
+      frames: [2],
       rate: 1
     },
     run: {
-      frames: [0, 1, 2, 1],
+      frames: [0, 2, 4, 2],
       rate: 1 / 4
     },
     hit: {
-      frames: [0],
+      frames: [3],
       loop: false,
-      rate: 1 / 2,
+      rate: 1,
       next: "stand"
     },
     jump: {
+      frames: [1, 3, 5, 3],
+      rate: 1 / 3
+    }
+  });
+
+  Q.animations("playerWithGun", {
+    stand: {
       frames: [2],
-      rate: 1 / 2
+      rate: 1
+    },
+    run: {
+      frames: [0, 2, 4, 2],
+      rate: 1 / 4
+    },
+    hit: {
+      frames: [1],
+      loop: false,
+      rate: 1,
+      next: "stand"
+    },
+    jump: {
+      frames: [1],
+      rate: 1
     }
   });
 
@@ -1176,7 +1189,6 @@
       this.p.speed = 330;
       this.p.savedPosition.x = this.p.x;
       this.p.savedPosition.y = this.p.y;
-      this.p.points = [[-35, -55], [35, -55], [35, 70], [-35, 70]];
       Q.AudioManager.add(Game.audio.playerBg, {
         loop: true
       });
@@ -1185,10 +1197,12 @@
     },
     step: function(dt) {
       if (this.p.direction === "left") {
-        this.p.flip = false;
+        this.p.flip = "x";
+        this.p.points = [[-15, -50], [25, -50], [25, 50], [-15, 50]];
       }
       if (this.p.direction === "right") {
-        this.p.flip = "x";
+        this.p.flip = false;
+        this.p.points = [[-25, -50], [15, -50], [15, 50], [-25, 50]];
       }
       if (this.p.x > Game.map.p.w) {
         this.p.x = Game.map.p.w;
@@ -1232,6 +1246,7 @@
     collision: function(col) {
       if (col.obj.isA("Zombie") && this.p.timeInvincible === 0) {
         this.updateLifePoints();
+        col.obj.play("attack", 10);
         return this.p.timeInvincible = 1;
       }
     },
@@ -1296,17 +1311,29 @@
 
   Q.animations("zombie", {
     stand: {
-      frames: [1],
+      frames: [4],
       rate: 1
     },
     run: {
-      frames: [0, 1, 2, 1],
+      frames: [0, 4, 8, 12],
       rate: 0.4
     },
     hit: {
-      frames: [0],
+      frames: [13],
+      loop: false,
+      rate: 1,
+      next: "run"
+    },
+    attack: {
+      frames: [1, 5, 9, 13],
       loop: false,
       rate: 1 / 2,
+      next: "run"
+    },
+    fall: {
+      frames: [3, 7, 11, 15, 15, 15, 15],
+      rate: 1 / 5,
+      loop: false,
       next: "run"
     }
   });
@@ -1327,7 +1354,6 @@
       });
       Q.state.inc("enemiesCounter", 1);
       this.add("2d, animation, zombieAI");
-      this.p.points = [[-35, -55], [35, -55], [35, 70], [-35, 70]];
       this.on("hit", this, "collision");
       this.on("bump.right", this, "hitFromRight");
       return this.on("bump.left", this, "hitFromLeft");
@@ -1349,7 +1375,12 @@
         this.zombieStep(dt);
       }
       if (this.p.y > Game.map.p.h) {
-        return this.die(false);
+        this.die(false);
+      }
+      if (this.p.vy !== 0) {
+        return this.play("fall");
+      } else {
+        return this.play("run");
       }
     },
     decreaseLifePoints: function() {
@@ -1386,12 +1417,12 @@
       rate: 1
     },
     run: {
-      frames: [0, 1, 2, 1],
-      rate: 0.4
+      frames: [0, 1, 2, 3],
+      rate: 1 / 3
     },
     jump: {
-      frames: [2],
-      rate: 0.5
+      frames: [0],
+      rate: 1
     }
   });
 
@@ -1403,7 +1434,7 @@
         y: 0,
         z: 100,
         savedPosition: {},
-        sheet: "zombie",
+        sheet: "zombie_player",
         sprite: "zombiePlayer",
         type: Game.SPRITE_ZOMBIE_PLAYER,
         collisionMask: Game.SPRITE_TILES | Game.SPRITE_PLAYER_COLLECTIBLE
@@ -1422,10 +1453,10 @@
     },
     step: function(dt) {
       if (this.p.direction === "left") {
-        this.p.flip = false;
+        this.p.flip = "x";
       }
       if (this.p.direction === "right") {
-        this.p.flip = "x";
+        this.p.flip = false;
       }
       if (this.p.y > Game.map.p.h) {
         this.trigger("player.outOfMap");

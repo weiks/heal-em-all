@@ -7,14 +7,11 @@ Q.load Game.assets.all,
       tileW: Game.assets.map.tileSize
       tileH: Game.assets.map.tileSize
 
-    Q.compileSheets Game.assets.player.sheet, Game.assets.player.dataAsset
-    Q.compileSheets Game.assets.zombie.sheet, Game.assets.zombie.dataAsset
-    Q.compileSheets Game.assets.human.sheet, Game.assets.human.dataAsset
+    Q.compileSheets Game.assets.characters.sheet, Game.assets.characters.dataAsset
     Q.compileSheets Game.assets.items.sheet, Game.assets.items.dataAsset
 
     # first stage
     Game.stageLevelSelectScreen()
-    # Q.stageScene "start", 2
 
   , {
     progressCallback: (loaded, total) ->

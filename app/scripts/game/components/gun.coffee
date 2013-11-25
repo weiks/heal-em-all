@@ -7,6 +7,10 @@ Q.component "gun",
 
     p.noOfBullets = Q.state.get "bullets"
 
+    # animations
+    p.sheet = "player_with_gun"
+    p.sprite = "playerWithGun"
+
     # do not allow to fire in series
     p.nextFireTimeout = 0
 

@@ -3,19 +3,35 @@ Q = Game.Q
 # animations object
 Q.animations "player",
   stand:
-    frames: [1]
+    frames: [2]
     rate: 1
   run:
-    frames: [0, 1, 2, 1]
+    frames: [0, 2, 4, 2]
     rate: 1/4
   hit:
-    frames: [0]
+    frames: [3]
     loop: false
-    rate: 1/2
+    rate: 1
     next: "stand"
   jump:
+    frames: [1, 3, 5, 3]
+    rate: 1/3
+
+Q.animations "playerWithGun",
+  stand:
     frames: [2]
-    rate: 1/2
+    rate: 1
+  run:
+    frames: [0, 2, 4, 2]
+    rate: 1/4
+  hit:
+    frames: [1]
+    loop: false
+    rate: 1
+    next: "stand"
+  jump:
+    frames: [1]
+    rate: 1
 
 # player object and logic
 Q.Sprite.extend "Player",
@@ -44,13 +60,6 @@ Q.Sprite.extend "Player",
     @p.savedPosition.x = @p.x
     @p.savedPosition.y = @p.y
 
-    @p.points = [
-      [-35, -55 ],
-      [ 35, -55 ],
-      [ 35,  70 ],
-      [-35,  70 ]
-    ]
-
     # audio
     Q.AudioManager.add Game.audio.playerBg,
       loop: true
@@ -61,9 +70,21 @@ Q.Sprite.extend "Player",
 
   step: (dt) ->
     if @p.direction == "left"
-      @p.flip = false
-    if @p.direction == "right"
       @p.flip = "x"
+      @p.points = [
+        [-15, -50 ],
+        [ 25, -50 ],
+        [ 25,  50 ],
+        [-15,  50 ]
+      ]
+    if @p.direction == "right"
+      @p.flip = false
+      @p.points = [
+        [-25, -50 ],
+        [ 15, -50 ],
+        [ 15,  50 ],
+        [-25,  50 ]
+      ]
 
     # do not allow to get out of level
     if @p.x > Game.map.p.w
@@ -114,6 +135,8 @@ Q.Sprite.extend "Player",
   collision: (col) ->
     if col.obj.isA("Zombie") && @p.timeInvincible == 0
       @updateLifePoints()
+
+      col.obj.play("attack", 10)
 
       # will be invincible for 1 second
       @p.timeInvincible = 1

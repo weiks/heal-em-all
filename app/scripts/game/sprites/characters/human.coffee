@@ -2,20 +2,18 @@ Q = Game.Q
 
 # animations object
 Q.animations "human",
-  stand:
-    frames: [4]
-    rate: 1/2
-  run:
-    frames: [4, 5, 6]
-    rate: 1/4
-  hit:
-    frames: [0]
-    loop: false
-    rate: 1/2
+  intro:
+    frames: [0, 1, 2, 3]
+    rate: 0.7
     next: "stand"
-  jump:
-    frames: [2]
-    rate: 1/2
+  stand:
+    frames: [4, 5, 6]
+    rate: 1/3
+  outro:
+    frames: [3, 2, 1]
+    rate: 0.7
+    loop: false
+    trigger: "outro"
 
 # human object and logic
 Q.Sprite.extend "Human",
@@ -25,7 +23,7 @@ Q.Sprite.extend "Human",
       y: 0
       vx: 0
       z: 20
-      timeInvincible: 2
+      timeInvincible: 4
       sheet: "human"
       sprite: "human"
       type: Game.SPRITE_HUMAN
@@ -35,13 +33,14 @@ Q.Sprite.extend "Human",
     @add "2d, animation"
 
     # animations
-    @play "stand"
+    @play "intro"
 
     # audio
     Q.AudioManager.add Game.audio.humanCreated
 
     # events
     @on "sensor", @, "sensor"
+    @on "outro", @, "die"
 
   step: (dt) ->
     if @p.timeInvincible > 0
@@ -50,14 +49,16 @@ Q.Sprite.extend "Human",
   sensor: (obj) ->
     if obj.isA("Zombie") && @p.timeInvincible == 0
       # turn to zombie again
-      @play("hit")
+      obj.play("attack", 10)
+      @play("outro")
 
-      @destroy()
+  die: ->
+    @destroy()
 
-      randomBool = Math.floor(Math.random() * 2)
-      zombie = @stage.insert new Q.Zombie
-        x: @p.x
-        y: @p.y
-        startLeft: randomBool
+    randomBool = Math.floor(Math.random() * 2)
+    zombie = @stage.insert new Q.Zombie
+      x: @p.x
+      y: @p.y
+      startLeft: randomBool
 
-      zombie.p.wasHuman = true
+    zombie.p.wasHuman = true

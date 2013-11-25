@@ -49,15 +49,9 @@ window.Game =
   prepareAssets: ->
     # all assets, only file names
     @assets =
-      player:
-        dataAsset: "player.json"
-        sheet: "player.png"
-      zombie:
-        dataAsset: "zombie.json"
-        sheet: "zombie.png"
-      human:
-        dataAsset: "human.json"
-        sheet: "human.png"
+      characters:
+        dataAsset: "characters.json"
+        sheet: "characters.png"
       items:
         dataAsset: "items.json"
         sheet: "items.png"

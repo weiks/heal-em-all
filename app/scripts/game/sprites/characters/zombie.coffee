@@ -3,15 +3,25 @@ Q = Game.Q
 #
 Q.animations "zombie",
   stand:
-    frames: [1]
+    frames: [4]
     rate: 1
   run:
-    frames: [0, 1, 2, 1]
+    frames: [0, 4, 8, 12]
     rate: 0.4
   hit:
-    frames: [0]
+    frames: [13]
+    loop: false
+    rate: 1
+    next: "run"
+  attack:
+    frames: [1, 5, 9, 13]
     loop: false
     rate: 1/2
+    next: "run"
+  fall:
+    frames: [3, 7, 11, 15, 15, 15, 15]
+    rate: 1/5
+    loop: false
     next: "run"
 
 #
@@ -32,13 +42,6 @@ Q.Sprite.extend "Zombie",
     Q.state.inc "enemiesCounter", 1
 
     @add "2d, animation, zombieAI"
-
-    @p.points = [
-      [-35, -55 ],
-      [ 35, -55 ],
-      [ 35,  70 ],
-      [-35,  70 ]
-    ]
 
     # events
     @on "hit", @, "collision"
@@ -64,6 +67,12 @@ Q.Sprite.extend "Zombie",
 
     if @p.y > Game.map.p.h
       @die(false)
+
+    # animations
+    if @p.vy != 0
+      @play("fall")
+    else
+      @play("run")
 
   decreaseLifePoints: ->
     @p.lifePoints -= 1

@@ -11,9 +11,6 @@ Q.component "zombieAI",
 
     p.audioTimeout = 0
 
-    # animations
-    @entity.play "run"
-
   extend:
     zombieStep: (dt) ->
       # some AI - always try to catch player
@@ -52,9 +49,9 @@ Q.component "zombieAI",
 
     flip: ->
       if(@p.vx > 0)
-        @p.flip = "x"
-      else
         @p.flip = false
+      else
+        @p.flip = "x"
 
     canSeeThePlayer: ->
       player = Game.player.p
