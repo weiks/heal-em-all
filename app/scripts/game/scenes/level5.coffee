@@ -92,11 +92,12 @@ Q.scene "level5", (stage) ->
     heart2: Q.tilePos(49.5, 2.9)
   ]
 
+  bullets = 18
   gunPositions = [
-    Q.tilePos(38, 15)
-    Q.tilePos(62, 15)
-    Q.tilePos(37, 27)
-    Q.tilePos(62, 27)
+    Q.tilePos(38, 15, {bullets: bullets})
+    Q.tilePos(62, 15, {bullets: bullets})
+    Q.tilePos(37, 27, {bullets: bullets})
+    Q.tilePos(62, 27, {bullets: bullets})
   ]
 
   random = Math.floor(Math.random() * 4)

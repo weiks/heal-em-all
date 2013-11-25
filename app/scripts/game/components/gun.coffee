@@ -5,12 +5,14 @@ Q.component "gun",
     Q.input.on("fire", @entity, "fireGun")
     p = @entity.p
 
-    p.noOfBullets = Q.state.get "bullets"
-
     # animations
     p.sheet = "player_with_gun"
     p.sprite = "playerWithGun"
     @entity.play("stand")
+
+    # if component added not by collecting gun item
+    if Q.state.get("bullets") > 0
+      p.noOfBullets = Q.state.get("bullets")
 
     # do not allow to fire in series
     p.nextFireTimeout = 0
@@ -28,11 +30,6 @@ Q.component "gun",
         @p.nextFireTimeout = 0.5
 
         # fire
-        @p.noOfBullets -= 1
-
-        if @p.noOfBullets >= 0
-          Q.state.set "bullets", @p.noOfBullets
-
         if @p.noOfBullets > 0
 
           if @p.direction == "left"
@@ -46,7 +43,11 @@ Q.component "gun",
             x: @p.x + delta
             y: @p.y + 3
             direction: @p.direction
-
         else
           Game.infoLabel.outOfBullets()
 
+        # first fire, then update counter
+        @p.noOfBullets -= 1
+
+        if @p.noOfBullets >= 0
+          Q.state.set "bullets", @p.noOfBullets

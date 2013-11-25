@@ -125,7 +125,7 @@ window.Game =
     Q.state.reset
       enemiesCounter: 0
       lives: 3
-      bullets: 12
+      bullets: 0
       hasKey: false
       hasGun: false
       currentLevel: number # for saving the progress
@@ -139,7 +139,7 @@ window.Game =
         available: 0
       bullets:
         waisted: 0
-        available: Q.state.get "bullets"
+        available: 0
       zombieModeFound: false
 
     Q.input.touchControls() # render onscreen touch buttons

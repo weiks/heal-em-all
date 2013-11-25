@@ -9,6 +9,7 @@ Q.Sprite.extend "Gun",
       sheet: "gun"
       type: Game.SPRITE_PLAYER_COLLECTIBLE
       sensor: true
+      bullets: 6
 
     # events
     @on "sensor", @, "sensor"
@@ -18,6 +19,11 @@ Q.Sprite.extend "Gun",
       Q.state.set "hasGun", true
       obj.add("gun")
       Game.infoLabel.gunFound()
+
+      # number of bullets depends of the gun
+      obj.p.noOfBullets = @p.bullets
+      Q.state.set "bullets", @p.bullets
+      Game.currentLevelData.bullets.available = @p.bullets
 
       Q.AudioManager.add Game.audio.collected
       @destroy()

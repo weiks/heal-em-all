@@ -121,7 +121,7 @@
       Q.state.reset({
         enemiesCounter: 0,
         lives: 3,
-        bullets: 12,
+        bullets: 0,
         hasKey: false,
         hasGun: false,
         currentLevel: number
@@ -137,7 +137,7 @@
         },
         bullets: {
           waisted: 0,
-          available: Q.state.get("bullets")
+          available: 0
         },
         zombieModeFound: false
       };
@@ -244,10 +244,12 @@
       var p;
       Q.input.on("fire", this.entity, "fireGun");
       p = this.entity.p;
-      p.noOfBullets = Q.state.get("bullets");
       p.sheet = "player_with_gun";
       p.sprite = "playerWithGun";
       this.entity.play("stand");
+      if (Q.state.get("bullets") > 0) {
+        p.noOfBullets = Q.state.get("bullets");
+      }
       return p.nextFireTimeout = 0;
     },
     destroyed: function() {
@@ -263,10 +265,6 @@
         var bullet, delta;
         if (this.p.nextFireTimeout === 0) {
           this.p.nextFireTimeout = 0.5;
-          this.p.noOfBullets -= 1;
-          if (this.p.noOfBullets >= 0) {
-            Q.state.set("bullets", this.p.noOfBullets);
-          }
           if (this.p.noOfBullets > 0) {
             if (this.p.direction === "left") {
               delta = -15;
@@ -274,13 +272,17 @@
               delta = 15;
             }
             Q.AudioManager.add(Game.audio.gunShot);
-            return bullet = this.stage.insert(new Q.Bullet({
+            bullet = this.stage.insert(new Q.Bullet({
               x: this.p.x + delta,
               y: this.p.y + 3,
               direction: this.p.direction
             }));
           } else {
-            return Game.infoLabel.outOfBullets();
+            Game.infoLabel.outOfBullets();
+          }
+          this.p.noOfBullets -= 1;
+          if (this.p.noOfBullets >= 0) {
+            return Q.state.set("bullets", this.p.noOfBullets);
           }
         }
       }
@@ -565,7 +567,13 @@
       }
     ];
     random = Math.floor(Math.random() * 2);
-    items = [["Key", randomItems[random].key], ["Door", Q.tilePos(27, 9)], ["ExitSign", Q.tilePos(26, 9)], ["Gun", Q.tilePos(14.5, 9)], ["Heart", randomItems[random].health]];
+    items = [
+      ["Key", randomItems[random].key], ["Door", Q.tilePos(27, 9)], ["ExitSign", Q.tilePos(26, 9)], [
+        "Gun", Q.tilePos(14.5, 9, {
+          bullets: 6
+        })
+      ], ["Heart", randomItems[random].health]
+    ];
     stage.loadAssets(items);
     Game.currentLevelData.health.available = stage.lists.Heart.length;
     return Game.currentLevelData.zombies.available = stage.lists.Zombie.length;
@@ -627,7 +635,13 @@
       }
     ];
     random = Math.floor(Math.random() * 2);
-    items = [["Key", randomItems[random].key], ["Door", randomItems[random].door], ["ExitSign", randomItems[random].exitSign], ["Gun", Q.tilePos(24.5, 2)], ["Heart", Q.tilePos(8, 5)], ["Heart", Q.tilePos(41.5, 5)], ["Heart", Q.tilePos(24.5, 26)]];
+    items = [
+      ["Key", randomItems[random].key], ["Door", randomItems[random].door], ["ExitSign", randomItems[random].exitSign], [
+        "Gun", Q.tilePos(24.5, 2, {
+          bullets: 10
+        })
+      ], ["Heart", Q.tilePos(8, 5)], ["Heart", Q.tilePos(41.5, 5)], ["Heart", Q.tilePos(24.5, 26)]
+    ];
     stage.loadAssets(items);
     Game.currentLevelData.health.available = stage.lists.Heart.length;
     return Game.currentLevelData.zombies.available = stage.lists.Zombie.length;
@@ -641,7 +655,7 @@
   Q = Game.Q;
 
   Q.scene("level4", function(stage) {
-    var background, doorKeyPositions, enemies, gunPositions, items, map, player, random;
+    var background, bullets, doorKeyPositions, enemies, gunPositions, items, map, player, random;
     Game.map = map = new Q.TileLayer({
       type: Game.SPRITE_TILES,
       layerIndex: 0,
@@ -708,7 +722,18 @@
         heart2: Q.tilePos(49.5, 2.9)
       }
     ];
-    gunPositions = [Q.tilePos(38, 15), Q.tilePos(62, 15), Q.tilePos(37, 27), Q.tilePos(62, 27)];
+    bullets = 14;
+    gunPositions = [
+      Q.tilePos(38, 15, {
+        bullets: bullets
+      }), Q.tilePos(62, 15, {
+        bullets: bullets
+      }), Q.tilePos(37, 27, {
+        bullets: bullets
+      }), Q.tilePos(62, 27, {
+        bullets: bullets
+      })
+    ];
     random = Math.floor(Math.random() * 4);
     items = [["Key", doorKeyPositions[random].key], ["Door", doorKeyPositions[random].door], ["ExitSign", doorKeyPositions[random].sign], ["Gun", gunPositions[random]], ["Heart", doorKeyPositions[random].heart1], ["Heart", doorKeyPositions[random].heart2], ["Heart", Q.tilePos(4.5, 5.9)], ["Heart", Q.tilePos(7.5, 38.9)], ["Heart", Q.tilePos(94.5, 6.9)], ["Heart", Q.tilePos(92.5, 36.9)]];
     stage.loadAssets(items);
@@ -724,7 +749,7 @@
   Q = Game.Q;
 
   Q.scene("level5", function(stage) {
-    var background, doorKeyPositions, enemies, gunPositions, items, map, player, random;
+    var background, bullets, doorKeyPositions, enemies, gunPositions, items, map, player, random;
     Game.map = map = new Q.TileLayer({
       type: Game.SPRITE_TILES,
       layerIndex: 0,
@@ -807,7 +832,18 @@
         heart2: Q.tilePos(49.5, 2.9)
       }
     ];
-    gunPositions = [Q.tilePos(38, 15), Q.tilePos(62, 15), Q.tilePos(37, 27), Q.tilePos(62, 27)];
+    bullets = 18;
+    gunPositions = [
+      Q.tilePos(38, 15, {
+        bullets: bullets
+      }), Q.tilePos(62, 15, {
+        bullets: bullets
+      }), Q.tilePos(37, 27, {
+        bullets: bullets
+      }), Q.tilePos(62, 27, {
+        bullets: bullets
+      })
+    ];
     random = Math.floor(Math.random() * 4);
     items = [["Key", doorKeyPositions[random].key], ["Door", doorKeyPositions[random].door], ["ExitSign", doorKeyPositions[random].sign], ["Gun", gunPositions[random]], ["Heart", doorKeyPositions[random].heart1], ["Heart", doorKeyPositions[random].heart2], ["Heart", Q.tilePos(4.5, 5.9)], ["Heart", Q.tilePos(7.5, 38.9)], ["Heart", Q.tilePos(94.5, 6.9)], ["Heart", Q.tilePos(92.5, 36.9)]];
     stage.loadAssets(items);
@@ -823,7 +859,7 @@
   Q = Game.Q;
 
   Q.scene("level6", function(stage) {
-    var background, doorKeyPositions, enemies, gunPositions, items, map, player, random;
+    var background, bullets, doorKeyPositions, enemies, gunPositions, items, map, player, random;
     Game.map = map = new Q.TileLayer({
       type: Game.SPRITE_TILES,
       layerIndex: 0,
@@ -914,7 +950,18 @@
         heart2: Q.tilePos(49.5, 2.9)
       }
     ];
-    gunPositions = [Q.tilePos(27.5, 9), Q.tilePos(27.5, 33), Q.tilePos(71.5, 9), Q.tilePos(71.5, 33)];
+    bullets = 26;
+    gunPositions = [
+      Q.tilePos(27.5, 9, {
+        bullets: bullets
+      }), Q.tilePos(27.5, 33, {
+        bullets: bullets
+      }), Q.tilePos(71.5, 9, {
+        bullets: bullets
+      }), Q.tilePos(71.5, 33, {
+        bullets: bullets
+      })
+    ];
     random = Math.floor(Math.random() * 4);
     items = [["Key", doorKeyPositions[random].key], ["Door", doorKeyPositions[random].door], ["ExitSign", doorKeyPositions[random].sign], ["Gun", gunPositions[random]], ["Heart", doorKeyPositions[random].heart1], ["Heart", doorKeyPositions[random].heart2], ["Heart", Q.tilePos(4.5, 5.9)], ["Heart", Q.tilePos(7.5, 38.9)], ["Heart", Q.tilePos(94.5, 6.9)], ["Heart", Q.tilePos(92.5, 36.9)]];
     stage.loadAssets(items);
@@ -1668,7 +1715,8 @@
         z: 10,
         sheet: "gun",
         type: Game.SPRITE_PLAYER_COLLECTIBLE,
-        sensor: true
+        sensor: true,
+        bullets: 6
       });
       return this.on("sensor", this, "sensor");
     },
@@ -1677,6 +1725,9 @@
         Q.state.set("hasGun", true);
         obj.add("gun");
         Game.infoLabel.gunFound();
+        obj.p.noOfBullets = this.p.bullets;
+        Q.state.set("bullets", this.p.bullets);
+        Game.currentLevelData.bullets.available = this.p.bullets;
         Q.AudioManager.add(Game.audio.collected);
         return this.destroy();
       }

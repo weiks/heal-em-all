@@ -58,7 +58,7 @@ Q.scene "level2", (stage) ->
     ["Key", randomItems[random].key]
     ["Door", Q.tilePos(27, 9)]
     ["ExitSign", Q.tilePos(26, 9)]
-    ["Gun", Q.tilePos(14.5, 9)]
+    ["Gun", Q.tilePos(14.5, 9, {bullets: 6})]
     ["Heart", randomItems[random].health]
   ]
 
