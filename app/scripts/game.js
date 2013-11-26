@@ -154,11 +154,12 @@
         this.stageEndScreen();
         return;
       }
+      this.Q.input.disableTouchControls();
       this.Q.clearStages();
-      this.Q.stageScene("levelSelect");
-      return this.Q.input.disableTouchControls();
+      return this.Q.stageScene("levelSelect");
     },
     stageEndLevelScreen: function() {
+      this.Q.input.disableTouchControls();
       this.Q.clearStages();
       return this.Q.stageScene("levelSummary", Game.currentLevelData);
     },

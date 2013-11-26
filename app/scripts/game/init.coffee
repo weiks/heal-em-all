@@ -158,13 +158,14 @@ window.Game =
       @stageEndScreen()
       return
 
+    @Q.input.disableTouchControls()
+
     @Q.clearStages()
     @Q.stageScene "levelSelect"
 
-    # TODO remove onscreen touch controls
+  stageEndLevelScreen: ->
     @Q.input.disableTouchControls()
 
-  stageEndLevelScreen: ->
     @Q.clearStages()
     @Q.stageScene "levelSummary", Game.currentLevelData
 
