@@ -147,7 +147,7 @@ window.Game =
     Q.clearStages()
     Q.stageScene "level" + number,
       sort: true
-    Q.stageScene "stats", 1
+    Q.stageScene "hud", 1
 
     # the story
     Game.infoLabel.intro()
@@ -163,6 +163,8 @@ window.Game =
     @Q.stageScene "end", Game.currentLevelData
 
   stageStartScreen: ->
+    @Q.clearStages()
+    @Q.stageScene "start"
 
   setCameraTo: (stage, toFollowObj) ->
     stage.follow toFollowObj,

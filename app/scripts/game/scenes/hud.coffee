@@ -1,6 +1,6 @@
 Q = Game.Q
 
-Q.scene "stats", (stage) ->
+Q.scene "hud", (stage) ->
   container = stage.insert new Q.UI.Container
     x: Q.width/2,
     y: 20,

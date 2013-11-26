@@ -146,7 +146,7 @@
       Q.stageScene("level" + number, {
         sort: true
       });
-      Q.stageScene("stats", 1);
+      Q.stageScene("hud", 1);
       return Game.infoLabel.intro();
     },
     stageLevelSelectScreen: function() {
@@ -157,7 +157,10 @@
       this.Q.clearStages();
       return this.Q.stageScene("end", Game.currentLevelData);
     },
-    stageStartScreen: function() {},
+    stageStartScreen: function() {
+      this.Q.clearStages();
+      return this.Q.stageScene("start");
+    },
     setCameraTo: function(stage, toFollowObj) {
       return stage.follow(toFollowObj, {
         x: true,
@@ -384,7 +387,7 @@
     });
     Q.compileSheets(Game.assets.characters.sheet, Game.assets.characters.dataAsset);
     Q.compileSheets(Game.assets.items.sheet, Game.assets.items.dataAsset);
-    return Game.stageLevelSelectScreen();
+    return Game.stageStartScreen();
   }, {
     progressCallback: function(loaded, total) {
       var container, element;
@@ -480,6 +483,36 @@
 
   Q = Game.Q;
 
+  Q.scene("hud", function(stage) {
+    var audioButton, bulletsCounterLabel, container, enemiesCounterLabel, lifesLabel, pauseButton;
+    container = stage.insert(new Q.UI.Container({
+      x: Q.width / 2,
+      y: 20,
+      w: Q.width,
+      h: 40,
+      radius: 0
+    }));
+    lifesLabel = container.insert(new Q.UI.LivesCounter());
+    lifesLabel.p.x = -container.p.w / 2 + lifesLabel.p.w / 2 + 20;
+    enemiesCounterLabel = container.insert(new Q.UI.EnemiesCounter());
+    enemiesCounterLabel.p.x = -container.p.w / 2 + enemiesCounterLabel.p.w / 2 + 160;
+    bulletsCounterLabel = container.insert(new Q.UI.BulletsCounter());
+    bulletsCounterLabel.p.x = -container.p.w / 2 + bulletsCounterLabel.p.w / 2 + 160;
+    Game.infoLabel = new Q.UI.InfoLabel;
+    container.insert(Game.infoLabel);
+    pauseButton = container.insert(new Q.UI.PauseButton);
+    pauseButton.p.x = container.p.w / 2 - 80;
+    audioButton = container.insert(new Q.UI.AudioButton);
+    return audioButton.p.x = container.p.w / 2 - 80;
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
   Q.scene("level1", function(stage) {
     var background, enemies, items, map, player;
     Game.map = map = new Q.TileLayer({
@@ -507,7 +540,7 @@
     Game.setCameraTo(stage, player);
     enemies = [["Zombie", Q.tilePos(14, 9)]];
     stage.loadAssets(enemies);
-    items = [["Key", Q.tilePos(14.5, 9)], ["Door", Q.tilePos(27, 9)], ["ExitSign", Q.tilePos(24, 9)], ["Heart", Q.tilePos(14.5, 3)], ["Heart", Q.tilePos(14.5, 15)]];
+    items = [["Key", Q.tilePos(14.5, 9)], ["Door", Q.tilePos(27, 9)], ["Heart", Q.tilePos(14.5, 3)], ["Heart", Q.tilePos(14.5, 15)]];
     stage.loadAssets(items);
     Game.currentLevelData.health.available = stage.lists.Heart.length;
     return Game.currentLevelData.zombies.available = stage.lists.Zombie.length;
@@ -1031,63 +1064,36 @@
   Q = Game.Q;
 
   Q.scene("start", function(stage) {
-    var button, container, label;
-    container = stage.insert(new Q.UI.Container({
+    var button, marginY;
+    marginY = Q.height * 0.2;
+    Q.AudioManager.stopAll();
+    stage.insert(new Q.UI.Text({
       x: Q.width / 2,
-      y: Q.height / 2,
-      w: Q.width,
-      h: Q.height,
-      fill: "rgba(0,0,0,0.5)"
+      y: marginY / 2,
+      label: "Heal'em all | There's a cure for zombies",
+      size: 30,
+      color: "#fff",
+      family: "Ubuntu"
     }));
-    button = container.insert(new Q.UI.Button({
-      x: 0,
-      y: 0,
+    stage.insert(new Q.UI.Text({
+      x: Q.width / 2,
+      y: marginY / 2 + 100,
+      label: "jakas grafika, autorzy, sterowanie, moze jakis kontakt? twitter?",
+      size: 30,
+      color: "#fff",
+      family: "Ubuntu"
+    }));
+    button = stage.insert(new Q.UI.Button({
+      x: Q.width / 2,
+      y: marginY / 2 + 350,
       fill: "#CCCCCC",
-      label: "Let's Play",
-      keyActionName: "confirm"
+      label: "Click to continue",
+      keyActionName: "confirm",
+      type: Q.SPRITE_UI | Q.SPRITE_DEFAULT
     }));
-    label = container.insert(new Q.UI.Text({
-      x: 10,
-      y: -50 - button.p.h,
-      color: "white",
-      label: "Another Zombie Game"
-    }));
-    Game.player.del("platformerControls");
-    button.on("click", function(e) {
-      Q.clearStage(2);
-      return Game.player.add("platformerControls");
+    return button.on("click", function(e) {
+      return Game.stageLevelSelectScreen();
     });
-    return container.fit(40);
-  });
-
-}).call(this);
-
-(function() {
-  var Q;
-
-  Q = Game.Q;
-
-  Q.scene("stats", function(stage) {
-    var audioButton, bulletsCounterLabel, container, enemiesCounterLabel, lifesLabel, pauseButton;
-    container = stage.insert(new Q.UI.Container({
-      x: Q.width / 2,
-      y: 20,
-      w: Q.width,
-      h: 40,
-      radius: 0
-    }));
-    lifesLabel = container.insert(new Q.UI.LivesCounter());
-    lifesLabel.p.x = -container.p.w / 2 + lifesLabel.p.w / 2 + 20;
-    enemiesCounterLabel = container.insert(new Q.UI.EnemiesCounter());
-    enemiesCounterLabel.p.x = -container.p.w / 2 + enemiesCounterLabel.p.w / 2 + 160;
-    bulletsCounterLabel = container.insert(new Q.UI.BulletsCounter());
-    bulletsCounterLabel.p.x = -container.p.w / 2 + bulletsCounterLabel.p.w / 2 + 160;
-    Game.infoLabel = new Q.UI.InfoLabel;
-    container.insert(Game.infoLabel);
-    pauseButton = container.insert(new Q.UI.PauseButton);
-    pauseButton.p.x = container.p.w / 2 - 80;
-    audioButton = container.insert(new Q.UI.AudioButton);
-    return audioButton.p.x = container.p.w / 2 - 80;
   });
 
 }).call(this);
