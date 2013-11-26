@@ -9,6 +9,15 @@ Q.Sprite.extend "Key",
       sheet: "key"
       type: Game.SPRITE_PLAYER_COLLECTIBLE
       sensor: true
+      # range: 6
+      # speed: 6
+      # gravity: 0
+
+    @p.y -= 15
+
+    # @add("2d")
+    # @p.initialY = @p.y
+    # @p.vy = @p.speed
 
     # events
     @on "sensor", @, "sensor"
@@ -20,3 +29,10 @@ Q.Sprite.extend "Key",
 
       Q.AudioManager.add Game.audio.collected
       @destroy()
+
+  # step: (dt) ->
+  #   if @p.initialY + @p.range < @p.y
+  #     @p.vy = -@p.speed
+
+  #   if @p.initialY - @p.range > @p.y
+  #     @p.vy = @p.speed

@@ -11,6 +11,8 @@ Q.Sprite.extend "Gun",
       sensor: true
       bullets: 6
 
+    @p.y -= 15
+
     # events
     @on "sensor", @, "sensor"
 

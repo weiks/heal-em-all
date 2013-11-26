@@ -540,7 +540,13 @@
     Game.setCameraTo(stage, player);
     enemies = [["Zombie", Q.tilePos(14, 9)]];
     stage.loadAssets(enemies);
-    items = [["Key", Q.tilePos(14.5, 9)], ["Door", Q.tilePos(27, 9)], ["Heart", Q.tilePos(14.5, 3)], ["Heart", Q.tilePos(14.5, 15)]];
+    items = [
+      ["Key", Q.tilePos(14.5, 9)], ["Door", Q.tilePos(27, 9)], [
+        "Gun", Q.tilePos(14.5, 3, {
+          bullets: 3
+        })
+      ], ["Heart", Q.tilePos(14.5, 15)]
+    ];
     stage.loadAssets(items);
     Game.currentLevelData.health.available = stage.lists.Heart.length;
     return Game.currentLevelData.zombies.available = stage.lists.Zombie.length;
@@ -1139,62 +1145,6 @@
 
   Q = Game.Q;
 
-  Q.Sprite.extend("Bullet", {
-    init: function(p) {
-      this._super(p, {
-        color: "red",
-        range: Q.width / 2,
-        w: 5,
-        h: 5,
-        speed: 700,
-        gravity: 0,
-        type: Game.SPRITE_BULLET,
-        collisionMask: Game.SPRITE_TILES | Game.SPRITE_ENEMY
-      });
-      this.add("2d");
-      this.p.initialX = this.p.x;
-      this.p.initialY = this.p.y;
-      return this.on("hit", this, "collision");
-    },
-    draw: function(ctx) {
-      ctx.fillStyle = this.p.color;
-      return ctx.fillRect(-this.p.cx, -this.p.cy, this.p.w, this.p.h);
-    },
-    step: function(dt) {
-      if (this.p.direction === "left") {
-        this.p.vx = -this.p.speed;
-      } else {
-        this.p.vx = this.p.speed;
-      }
-      if (this.p.x > Game.map.width || this.p.x < 0) {
-        this.die();
-      }
-      if (this.p.x > this.p.initialX + this.p.range || this.p.x < this.p.initialX - this.p.range) {
-        return this.die();
-      }
-    },
-    collision: function(col) {
-      this.p.x -= col.separate[0];
-      this.p.y -= col.separate[1];
-      if (col.obj.isA("Zombie")) {
-        return this.destroy();
-      } else {
-        return this.die();
-      }
-    },
-    die: function() {
-      Game.currentLevelData.bullets.waisted += 1;
-      return this.destroy();
-    }
-  });
-
-}).call(this);
-
-(function() {
-  var Q;
-
-  Q = Game.Q;
-
   Q.animations("human", {
     intro: {
       frames: [0, 1, 2, 3],
@@ -1654,6 +1604,62 @@
 
   Q = Game.Q;
 
+  Q.Sprite.extend("Bullet", {
+    init: function(p) {
+      this._super(p, {
+        color: "red",
+        range: Q.width / 2,
+        w: 5,
+        h: 5,
+        speed: 700,
+        gravity: 0,
+        type: Game.SPRITE_BULLET,
+        collisionMask: Game.SPRITE_TILES | Game.SPRITE_ENEMY
+      });
+      this.add("2d");
+      this.p.initialX = this.p.x;
+      this.p.initialY = this.p.y;
+      return this.on("hit", this, "collision");
+    },
+    draw: function(ctx) {
+      ctx.fillStyle = this.p.color;
+      return ctx.fillRect(-this.p.cx, -this.p.cy, this.p.w, this.p.h);
+    },
+    step: function(dt) {
+      if (this.p.direction === "left") {
+        this.p.vx = -this.p.speed;
+      } else {
+        this.p.vx = this.p.speed;
+      }
+      if (this.p.x > Game.map.width || this.p.x < 0) {
+        this.die();
+      }
+      if (this.p.x > this.p.initialX + this.p.range || this.p.x < this.p.initialX - this.p.range) {
+        return this.die();
+      }
+    },
+    collision: function(col) {
+      this.p.x -= col.separate[0];
+      this.p.y -= col.separate[1];
+      if (col.obj.isA("Zombie")) {
+        return this.destroy();
+      } else {
+        return this.die();
+      }
+    },
+    die: function() {
+      Game.currentLevelData.bullets.waisted += 1;
+      return this.destroy();
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
   Q.Sprite.extend("Door", {
     init: function(p) {
       this._super(p, {
@@ -1724,6 +1730,7 @@
         sensor: true,
         bullets: 6
       });
+      this.p.y -= 15;
       return this.on("sensor", this, "sensor");
     },
     sensor: function(obj) {
@@ -1757,6 +1764,7 @@
         type: Game.SPRITE_PLAYER_COLLECTIBLE,
         sensor: true
       });
+      this.p.y -= 15;
       return this.on("sensor", this, "sensor");
     },
     sensor: function(obj) {
@@ -1787,6 +1795,7 @@
         type: Game.SPRITE_PLAYER_COLLECTIBLE,
         sensor: true
       });
+      this.p.y -= 15;
       return this.on("sensor", this, "sensor");
     },
     sensor: function(obj) {

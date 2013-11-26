@@ -44,7 +44,7 @@ Q.scene "level1", (stage) ->
   items = [
     ["Key", Q.tilePos(14.5, 9)]
     ["Door", Q.tilePos(27, 9)]
-    ["Heart", Q.tilePos(14.5, 3)]
+    ["Gun", Q.tilePos(14.5, 3, {bullets: 3})]
     ["Heart", Q.tilePos(14.5, 15)]
   ]
 

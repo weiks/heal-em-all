@@ -10,6 +10,8 @@ Q.Sprite.extend "Heart",
       type: Game.SPRITE_PLAYER_COLLECTIBLE
       sensor: true
 
+    @p.y -= 15
+
     # events
     @on "sensor", @, "sensor"
 
