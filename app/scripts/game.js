@@ -1695,13 +1695,14 @@
 
   Q.Sprite.extend("ExitSign", {
     init: function(p) {
-      return this._super(p, {
+      this._super(p, {
         x: 0,
         y: 0,
         z: 10,
         sheet: "exit_sign",
         type: Game.SPRITE_NONE
       });
+      return this.p.y -= this.p.h / 2 - Game.assets.map.tileSize / 2;
     }
   });
 

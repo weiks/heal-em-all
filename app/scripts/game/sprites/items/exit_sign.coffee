@@ -9,3 +9,5 @@ Q.Sprite.extend "ExitSign",
       sheet: "exit_sign"
       type: Game.SPRITE_NONE
 
+    @p.y -= @p.h/2 - Game.assets.map.tileSize/2
+
