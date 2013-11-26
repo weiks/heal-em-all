@@ -153,18 +153,28 @@ window.Game =
     Game.infoLabel.intro()
 
   stageLevelSelectScreen: ->
+    # last level just finished
+    if @Q.state.get("currentLevel") == 6
+      @stageEndScreen()
+      return
+
     @Q.clearStages()
     @Q.stageScene "levelSelect"
 
     # TODO remove onscreen touch controls
+    @Q.input.disableTouchControls()
 
   stageEndLevelScreen: ->
     @Q.clearStages()
-    @Q.stageScene "end", Game.currentLevelData
+    @Q.stageScene "levelSummary", Game.currentLevelData
 
   stageStartScreen: ->
     @Q.clearStages()
     @Q.stageScene "start"
+
+  stageEndScreen: ->
+    @Q.clearStages()
+    @Q.stageScene "end"
 
   setCameraTo: (stage, toFollowObj) ->
     stage.follow toFollowObj,
