@@ -52,12 +52,10 @@ Q.scene "level3", (stage) ->
 
   # items
   randomItems = [
-    door: Q.tilePos(47, 14)
-    exitSign: Q.tilePos(46, 14)
+    door: Q.tilePos(46.5, 14)
     key: Q.tilePos(2.5, 14)
   ,
-    door: Q.tilePos(2, 14)
-    exitSign: Q.tilePos(3, 14)
+    door: Q.tilePos(2.5, 14)
     key: Q.tilePos(46.5, 14)
   ]
 

@@ -67,29 +67,29 @@ Q.scene "level5", (stage) ->
 
   # items
   doorKeyPositions = [
-    door: Q.tilePos(50, 2.65)
+    door: Q.tilePos(50, 3)
     sign: Q.tilePos(48, 3)
-    key: Q.tilePos(49.5, 38.8)
-    heart1: Q.tilePos(5, 20.9)
-    heart2: Q.tilePos(94, 20.9)
+    key: Q.tilePos(49.5, 39)
+    heart1: Q.tilePos(5, 21)
+    heart2: Q.tilePos(94, 21)
   ,
-    door: Q.tilePos(49, 38.65)
+    door: Q.tilePos(49, 39)
     sign: Q.tilePos(51, 39)
-    key: Q.tilePos(49.5, 2.8)
-    heart1: Q.tilePos(5, 20.9)
-    heart2: Q.tilePos(94, 20.9)
+    key: Q.tilePos(49.5, 3)
+    heart1: Q.tilePos(5, 21)
+    heart2: Q.tilePos(94, 21)
   ,
-    door: Q.tilePos(4, 20.65)
+    door: Q.tilePos(4, 21)
     sign: Q.tilePos(6, 21)
-    key: Q.tilePos(94, 20.8)
-    heart1: Q.tilePos(49.5, 38.9)
-    heart2: Q.tilePos(49.5, 2.9)
+    key: Q.tilePos(94, 21)
+    heart1: Q.tilePos(49.5, 39)
+    heart2: Q.tilePos(49.5, 3)
   ,
-    door: Q.tilePos(95, 20.65)
+    door: Q.tilePos(95, 21)
     sign: Q.tilePos(93, 21)
-    key: Q.tilePos(5, 20.8)
-    heart1: Q.tilePos(49.5, 38.9)
-    heart2: Q.tilePos(49.5, 2.9)
+    key: Q.tilePos(5, 21)
+    heart1: Q.tilePos(49.5, 39)
+    heart2: Q.tilePos(49.5, 3)
   ]
 
   bullets = 18
@@ -110,10 +110,10 @@ Q.scene "level5", (stage) ->
     ["Heart", doorKeyPositions[random].heart1]
     ["Heart", doorKeyPositions[random].heart2]
 
-    ["Heart", Q.tilePos(4.5, 5.9)]
-    ["Heart", Q.tilePos(7.5, 38.9)]
-    ["Heart", Q.tilePos(94.5, 6.9)]
-    ["Heart", Q.tilePos(92.5, 36.9)]
+    ["Heart", Q.tilePos(4.5, 6)]
+    ["Heart", Q.tilePos(7.5, 39)]
+    ["Heart", Q.tilePos(94.5, 7)]
+    ["Heart", Q.tilePos(92.5, 37)]
   ]
 
   stage.loadAssets(items)

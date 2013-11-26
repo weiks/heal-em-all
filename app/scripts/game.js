@@ -601,7 +601,7 @@
     ];
     random = Math.floor(Math.random() * 2);
     items = [
-      ["Key", randomItems[random].key], ["Door", Q.tilePos(27, 9)], ["ExitSign", Q.tilePos(26, 9)], [
+      ["Key", randomItems[random].key], ["Door", Q.tilePos(27, 9)], [
         "Gun", Q.tilePos(14.5, 9, {
           bullets: 6
         })
@@ -658,12 +658,10 @@
     stage.loadAssets(enemies);
     randomItems = [
       {
-        door: Q.tilePos(47, 14),
-        exitSign: Q.tilePos(46, 14),
+        door: Q.tilePos(46.5, 14),
         key: Q.tilePos(2.5, 14)
       }, {
-        door: Q.tilePos(2, 14),
-        exitSign: Q.tilePos(3, 14),
+        door: Q.tilePos(2.5, 14),
         key: Q.tilePos(46.5, 14)
       }
     ];
@@ -730,29 +728,29 @@
     stage.loadAssets(enemies);
     doorKeyPositions = [
       {
-        door: Q.tilePos(50, 2.65),
+        door: Q.tilePos(50, 3),
         sign: Q.tilePos(48, 3),
-        key: Q.tilePos(49.5, 38.8),
-        heart1: Q.tilePos(5, 20.9),
-        heart2: Q.tilePos(94, 20.9)
+        key: Q.tilePos(49.5, 39),
+        heart1: Q.tilePos(5, 21),
+        heart2: Q.tilePos(94, 21)
       }, {
-        door: Q.tilePos(49, 38.65),
+        door: Q.tilePos(49, 39),
         sign: Q.tilePos(51, 39),
-        key: Q.tilePos(49.5, 2.8),
-        heart1: Q.tilePos(5, 20.9),
-        heart2: Q.tilePos(94, 20.9)
+        key: Q.tilePos(49.5, 3),
+        heart1: Q.tilePos(5, 21),
+        heart2: Q.tilePos(94, 21)
       }, {
-        door: Q.tilePos(4, 20.65),
+        door: Q.tilePos(4, 21),
         sign: Q.tilePos(6, 21),
-        key: Q.tilePos(94, 20.8),
-        heart1: Q.tilePos(49.5, 38.9),
-        heart2: Q.tilePos(49.5, 2.9)
+        key: Q.tilePos(94, 21),
+        heart1: Q.tilePos(49.5, 39),
+        heart2: Q.tilePos(49.5, 3)
       }, {
-        door: Q.tilePos(95, 20.65),
+        door: Q.tilePos(95, 21),
         sign: Q.tilePos(93, 21),
-        key: Q.tilePos(5, 20.8),
-        heart1: Q.tilePos(49.5, 38.9),
-        heart2: Q.tilePos(49.5, 2.9)
+        key: Q.tilePos(5, 21),
+        heart1: Q.tilePos(49.5, 39),
+        heart2: Q.tilePos(49.5, 3)
       }
     ];
     bullets = 14;
@@ -768,7 +766,7 @@
       })
     ];
     random = Math.floor(Math.random() * 4);
-    items = [["Key", doorKeyPositions[random].key], ["Door", doorKeyPositions[random].door], ["ExitSign", doorKeyPositions[random].sign], ["Gun", gunPositions[random]], ["Heart", doorKeyPositions[random].heart1], ["Heart", doorKeyPositions[random].heart2], ["Heart", Q.tilePos(4.5, 5.9)], ["Heart", Q.tilePos(7.5, 38.9)], ["Heart", Q.tilePos(94.5, 6.9)], ["Heart", Q.tilePos(92.5, 36.9)]];
+    items = [["Key", doorKeyPositions[random].key], ["Door", doorKeyPositions[random].door], ["ExitSign", doorKeyPositions[random].sign], ["Gun", gunPositions[random]], ["Heart", doorKeyPositions[random].heart1], ["Heart", doorKeyPositions[random].heart2], ["Heart", Q.tilePos(4.5, 6)], ["Heart", Q.tilePos(7.5, 39)], ["Heart", Q.tilePos(94.5, 7)], ["Heart", Q.tilePos(92.5, 37)]];
     stage.loadAssets(items);
     Game.currentLevelData.health.available = stage.lists.Heart.length;
     return Game.currentLevelData.zombies.available = stage.lists.Zombie.length;
@@ -840,29 +838,29 @@
     stage.loadAssets(enemies);
     doorKeyPositions = [
       {
-        door: Q.tilePos(50, 2.65),
+        door: Q.tilePos(50, 3),
         sign: Q.tilePos(48, 3),
-        key: Q.tilePos(49.5, 38.8),
-        heart1: Q.tilePos(5, 20.9),
-        heart2: Q.tilePos(94, 20.9)
+        key: Q.tilePos(49.5, 39),
+        heart1: Q.tilePos(5, 21),
+        heart2: Q.tilePos(94, 21)
       }, {
-        door: Q.tilePos(49, 38.65),
+        door: Q.tilePos(49, 39),
         sign: Q.tilePos(51, 39),
-        key: Q.tilePos(49.5, 2.8),
-        heart1: Q.tilePos(5, 20.9),
-        heart2: Q.tilePos(94, 20.9)
+        key: Q.tilePos(49.5, 3),
+        heart1: Q.tilePos(5, 21),
+        heart2: Q.tilePos(94, 21)
       }, {
-        door: Q.tilePos(4, 20.65),
+        door: Q.tilePos(4, 21),
         sign: Q.tilePos(6, 21),
-        key: Q.tilePos(94, 20.8),
-        heart1: Q.tilePos(49.5, 38.9),
-        heart2: Q.tilePos(49.5, 2.9)
+        key: Q.tilePos(94, 21),
+        heart1: Q.tilePos(49.5, 39),
+        heart2: Q.tilePos(49.5, 3)
       }, {
-        door: Q.tilePos(95, 20.65),
+        door: Q.tilePos(95, 21),
         sign: Q.tilePos(93, 21),
-        key: Q.tilePos(5, 20.8),
-        heart1: Q.tilePos(49.5, 38.9),
-        heart2: Q.tilePos(49.5, 2.9)
+        key: Q.tilePos(5, 21),
+        heart1: Q.tilePos(49.5, 39),
+        heart2: Q.tilePos(49.5, 3)
       }
     ];
     bullets = 18;
@@ -878,7 +876,7 @@
       })
     ];
     random = Math.floor(Math.random() * 4);
-    items = [["Key", doorKeyPositions[random].key], ["Door", doorKeyPositions[random].door], ["ExitSign", doorKeyPositions[random].sign], ["Gun", gunPositions[random]], ["Heart", doorKeyPositions[random].heart1], ["Heart", doorKeyPositions[random].heart2], ["Heart", Q.tilePos(4.5, 5.9)], ["Heart", Q.tilePos(7.5, 38.9)], ["Heart", Q.tilePos(94.5, 6.9)], ["Heart", Q.tilePos(92.5, 36.9)]];
+    items = [["Key", doorKeyPositions[random].key], ["Door", doorKeyPositions[random].door], ["ExitSign", doorKeyPositions[random].sign], ["Gun", gunPositions[random]], ["Heart", doorKeyPositions[random].heart1], ["Heart", doorKeyPositions[random].heart2], ["Heart", Q.tilePos(4.5, 6)], ["Heart", Q.tilePos(7.5, 39)], ["Heart", Q.tilePos(94.5, 7)], ["Heart", Q.tilePos(92.5, 37)]];
     stage.loadAssets(items);
     Game.currentLevelData.health.available = stage.lists.Heart.length;
     return Game.currentLevelData.zombies.available = stage.lists.Zombie.length;
@@ -958,29 +956,29 @@
     stage.loadAssets(enemies);
     doorKeyPositions = [
       {
-        door: Q.tilePos(50, 2.65),
+        door: Q.tilePos(50, 3),
         sign: Q.tilePos(48, 3),
-        key: Q.tilePos(49.5, 38.8),
-        heart1: Q.tilePos(5, 20.9),
-        heart2: Q.tilePos(94, 20.9)
+        key: Q.tilePos(49.5, 39),
+        heart1: Q.tilePos(5, 21),
+        heart2: Q.tilePos(94, 21)
       }, {
-        door: Q.tilePos(49, 38.65),
+        door: Q.tilePos(49, 39),
         sign: Q.tilePos(51, 39),
-        key: Q.tilePos(49.5, 2.8),
-        heart1: Q.tilePos(5, 20.9),
-        heart2: Q.tilePos(94, 20.9)
+        key: Q.tilePos(49.5, 3),
+        heart1: Q.tilePos(5, 21),
+        heart2: Q.tilePos(94, 21)
       }, {
-        door: Q.tilePos(4, 20.65),
+        door: Q.tilePos(4, 21),
         sign: Q.tilePos(6, 21),
-        key: Q.tilePos(94, 20.8),
-        heart1: Q.tilePos(49.5, 38.9),
-        heart2: Q.tilePos(49.5, 2.9)
+        key: Q.tilePos(94, 21),
+        heart1: Q.tilePos(49.5, 39),
+        heart2: Q.tilePos(49.5, 3)
       }, {
-        door: Q.tilePos(95, 20.65),
+        door: Q.tilePos(95, 21),
         sign: Q.tilePos(93, 21),
-        key: Q.tilePos(5, 20.8),
-        heart1: Q.tilePos(49.5, 38.9),
-        heart2: Q.tilePos(49.5, 2.9)
+        key: Q.tilePos(5, 21),
+        heart1: Q.tilePos(49.5, 39),
+        heart2: Q.tilePos(49.5, 3)
       }
     ];
     bullets = 26;
@@ -996,7 +994,7 @@
       })
     ];
     random = Math.floor(Math.random() * 4);
-    items = [["Key", doorKeyPositions[random].key], ["Door", doorKeyPositions[random].door], ["ExitSign", doorKeyPositions[random].sign], ["Gun", gunPositions[random]], ["Heart", doorKeyPositions[random].heart1], ["Heart", doorKeyPositions[random].heart2], ["Heart", Q.tilePos(4.5, 5.9)], ["Heart", Q.tilePos(7.5, 38.9)], ["Heart", Q.tilePos(94.5, 6.9)], ["Heart", Q.tilePos(92.5, 36.9)]];
+    items = [["Key", doorKeyPositions[random].key], ["Door", doorKeyPositions[random].door], ["ExitSign", doorKeyPositions[random].sign], ["Gun", gunPositions[random]], ["Heart", doorKeyPositions[random].heart1], ["Heart", doorKeyPositions[random].heart2], ["Heart", Q.tilePos(4.5, 6)], ["Heart", Q.tilePos(7.5, 39)], ["Heart", Q.tilePos(94.5, 7)], ["Heart", Q.tilePos(92.5, 37)]];
     stage.loadAssets(items);
     Game.currentLevelData.health.available = stage.lists.Heart.length;
     return Game.currentLevelData.zombies.available = stage.lists.Zombie.length;
@@ -1667,6 +1665,7 @@
         type: Game.SPRITE_PLAYER_COLLECTIBLE,
         sensor: true
       });
+      this.p.y -= this.p.h / 2 - Game.assets.map.tileSize / 2;
       return this.on("sensor", this, "sensor");
     },
     sensor: function(obj) {

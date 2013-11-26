@@ -11,6 +11,8 @@ Q.Sprite.extend "Door",
       type: Game.SPRITE_PLAYER_COLLECTIBLE
       sensor: true
 
+    @p.y -= @p.h/2 - Game.assets.map.tileSize/2
+
     # events
     @on "sensor", @, "sensor"
 
