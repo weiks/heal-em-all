@@ -1125,10 +1125,11 @@
     stage.insert(new Q.UI.Text({
       x: Q.width / 2,
       y: marginY / 2,
-      label: "Heal'em all | There's a cure for zombies",
+      label: "Heal'em all \n There's a cure for zombies",
       size: 30,
       color: "#fff",
-      family: "Ubuntu"
+      family: "Ubuntu",
+      align: "center"
     }));
     stage.insert(new Q.UI.Text({
       x: Q.width / 2,

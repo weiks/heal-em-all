@@ -33,10 +33,10 @@
   },
   "heart": {
     "sx": 303,
-    "sy": 82,
+    "sy": 87,
     "cols": 1,
-    "tilew": 36,
-    "tileh": 48,
+    "tilew": 61,
+    "tileh": 43,
     "frames": 1
   },
   "exit_sign": {
@@ -44,7 +44,7 @@
     "sy": 0,
     "cols": 1,
     "tilew": 61,
-    "tileh": 62,
+    "tileh": 61,
     "frames": 1
   }
 }
