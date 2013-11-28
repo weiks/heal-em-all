@@ -59,6 +59,9 @@ window.Game =
       items:
         dataAsset: "items.json"
         sheet: "items.png"
+      hud:
+        dataAsset: "hud.json"
+        sheet: "hud.png"
       map:
         sheet: "map_tiles.png"
         bg: "bg.png"
@@ -115,7 +118,7 @@ window.Game =
     # Align top-left
     stats.domElement.style.position = 'absolute'
     stats.domElement.style.left = '0px'
-    stats.domElement.style.top = '40px'
+    stats.domElement.style.top = '140px'
 
     document.body.appendChild( stats.domElement )
 

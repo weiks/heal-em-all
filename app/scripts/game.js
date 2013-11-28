@@ -50,6 +50,10 @@
           dataAsset: "items.json",
           sheet: "items.png"
         },
+        hud: {
+          dataAsset: "hud.json",
+          sheet: "hud.png"
+        },
         map: {
           sheet: "map_tiles.png",
           bg: "bg.png"
@@ -109,7 +113,7 @@
       stats.setMode(0);
       stats.domElement.style.position = 'absolute';
       stats.domElement.style.left = '0px';
-      stats.domElement.style.top = '40px';
+      stats.domElement.style.top = '140px';
       return document.body.appendChild(stats.domElement);
     },
     stageLevel: function(number) {
@@ -397,6 +401,7 @@
     });
     Q.compileSheets(Game.assets.characters.sheet, Game.assets.characters.dataAsset);
     Q.compileSheets(Game.assets.items.sheet, Game.assets.items.dataAsset);
+    Q.compileSheets(Game.assets.hud.sheet, Game.assets.hud.dataAsset);
     return Game.stageStartScreen();
   }, {
     progressCallback: function(loaded, total) {
@@ -459,26 +464,44 @@
   Q = Game.Q;
 
   Q.scene("hud", function(stage) {
-    var audioButton, bulletsCounterLabel, container, enemiesCounterLabel, lifesLabel, pauseButton;
-    container = stage.insert(new Q.UI.Container({
-      x: Q.width / 2,
-      y: 20,
-      w: Q.width,
-      h: 40,
-      radius: 0
+    var bulletsContainer, bulletsImg, enemiesContainer, healthContainer, healthImg, infoContainer, playerAvatar;
+    playerAvatar = stage.insert(new Q.UI.PlayerAvatar());
+    infoContainer = stage.insert(new Q.UI.Container({
+      y: 40,
+      fill: "#fff"
     }));
-    lifesLabel = container.insert(new Q.UI.LivesCounter());
-    lifesLabel.p.x = -container.p.w / 2 + lifesLabel.p.w / 2 + 20;
-    enemiesCounterLabel = container.insert(new Q.UI.EnemiesCounter());
-    enemiesCounterLabel.p.x = -container.p.w / 2 + enemiesCounterLabel.p.w / 2 + 160;
-    bulletsCounterLabel = container.insert(new Q.UI.BulletsCounter());
-    bulletsCounterLabel.p.x = -container.p.w / 2 + bulletsCounterLabel.p.w / 2 + 160;
-    Game.infoLabel = new Q.UI.InfoLabel;
-    container.insert(Game.infoLabel);
-    pauseButton = container.insert(new Q.UI.PauseButton);
-    pauseButton.p.x = container.p.w / 2 - 80;
-    audioButton = container.insert(new Q.UI.AudioButton);
-    return audioButton.p.x = container.p.w / 2 - 80;
+    Game.infoLabel = infoContainer.insert(new Q.UI.InfoLabel({
+      container: infoContainer,
+      offsetLeft: playerAvatar.p.w
+    }));
+    enemiesContainer = stage.insert(new Q.UI.Container({
+      y: 40,
+      fill: "#232322"
+    }));
+    enemiesContainer.insert(new Q.UI.EnemiesCounter());
+    enemiesContainer.fit(0, 8);
+    enemiesContainer.p.x = Q.width - enemiesContainer.p.w / 2 - 60;
+    stage.insert(new Q.UI.EnemiesAvatar());
+    bulletsContainer = stage.insert(new Q.UI.Container({
+      y: 40,
+      fill: "#232322"
+    }));
+    bulletsImg = bulletsContainer.insert(new Q.UI.BulletsImg());
+    bulletsContainer.insert(new Q.UI.BulletsCounter({
+      img: bulletsImg.p
+    }));
+    bulletsContainer.fit(0, 8);
+    bulletsContainer.p.x = enemiesContainer.p.x - enemiesContainer.p.w / 2 - bulletsContainer.p.w / 2 - 20 + 30;
+    healthContainer = stage.insert(new Q.UI.Container({
+      y: 40,
+      fill: "#232322"
+    }));
+    healthImg = healthContainer.insert(new Q.UI.HealthImg());
+    healthContainer.insert(new Q.UI.HealthCounter({
+      img: healthImg.p
+    }));
+    healthContainer.fit(0, 8);
+    return healthContainer.p.x = bulletsContainer.p.x - bulletsContainer.p.w / 2 - healthContainer.p.w / 2 - 20;
   });
 
 }).call(this);
@@ -1659,18 +1682,54 @@
   Q.UI.BulletsCounter = Q.UI.Text.extend("UI.BulletsCounter", {
     init: function(p) {
       this._super(p, {
-        text: "Bullets: ",
-        label: "Bullets: " + Q.state.get("bullets"),
-        size: 30,
-        family: "Ubuntu",
         x: 0,
-        y: 30,
-        color: "#000"
+        y: 0,
+        label: Q.state.get("bullets") + "",
+        size: 34,
+        color: "#f2da38",
+        family: "Boogaloo"
       });
+      this.p.x = -this.p.img.w / 2 - this.p.w / 2 - 5;
       return Q.state.on("change.bullets", this, "updateLabel");
     },
     updateLabel: function(bullets) {
-      return this.p.label = this.p.text + bullets;
+      return this.p.label = bullets + "";
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
+  Q.UI.BulletsImg = Q.Sprite.extend("Q.UI.BulletsImg", {
+    init: function(p) {
+      return this._super(p, {
+        x: 0,
+        y: 0,
+        sheet: "hud_bullets"
+      });
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
+  Q.UI.EnemiesAvatar = Q.Sprite.extend("Q.UI.EnemiesAvatar", {
+    init: function(p) {
+      this._super(p, {
+        x: 0,
+        y: 0,
+        sheet: "hud_zombie"
+      });
+      this.p.x = Q.width - this.p.w / 2;
+      return this.p.y = this.p.h / 2 + 8;
     }
   });
 
@@ -1684,17 +1743,60 @@
   Q.UI.EnemiesCounter = Q.UI.Text.extend("UI.EnemiesCounter", {
     init: function(p) {
       this._super(p, {
-        text: "Zombies left: ",
-        label: "Zombies left: " + Q.state.get("enemiesCounter"),
-        size: 30,
         x: 0,
         y: 0,
-        color: "#000"
+        label: Q.state.get("enemiesCounter") + "",
+        size: 34,
+        color: "#c4da4a",
+        family: "Boogaloo"
       });
+      this.p.w = 60;
       return Q.state.on("change.enemiesCounter", this, "updateLabel");
     },
     updateLabel: function(enemiesCounter) {
-      return this.p.label = this.p.text + enemiesCounter;
+      return this.p.label = enemiesCounter + "";
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
+  Q.UI.HealthCounter = Q.UI.Text.extend("UI.HealthCounter", {
+    init: function(p) {
+      this._super(p, {
+        x: 0,
+        y: 0,
+        label: Q.state.get("lives") + "",
+        size: 34,
+        color: "#ec655d",
+        family: "Boogaloo"
+      });
+      this.p.x = -this.p.img.w / 2 - this.p.w / 2 - 5;
+      return Q.state.on("change.lives", this, "updateLabel");
+    },
+    updateLabel: function(lives) {
+      return this.p.label = lives + "";
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
+  Q.UI.HealthImg = Q.Sprite.extend("Q.UI.HealthImg", {
+    init: function(p) {
+      return this._super(p, {
+        x: 0,
+        y: 0,
+        sheet: "hud_health"
+      });
     }
   });
 
@@ -1708,51 +1810,71 @@
   Q.UI.InfoLabel = Q.UI.Text.extend("UI.InfoLabel", {
     init: function(p, defaultProps) {
       return this._super(p, {
-        label: "",
-        color: "#000",
-        x: 100,
+        x: 0,
         y: 0,
-        size: 28
+        label: "",
+        color: "#222221",
+        size: 24,
+        family: "Boogaloo"
       });
     },
+    afterLabelChange: function() {
+      this.calcSize();
+      this.p.container.p.x = this.p.offsetLeft + this.p.w / 2 + 10;
+      this.p.container.fit(5, 10);
+      return Q._generatePoints(this);
+    },
     intro: function() {
-      return this.p.label = "I need to find the way out of here";
+      this.p.label = "I need to find the way out of here";
+      return this.afterLabelChange();
     },
     keyNeeded: function() {
-      return this.p.label = "I need the key";
+      this.p.label = "I need the key";
+      return this.afterLabelChange();
     },
     doorOpen: function() {
-      return this.p.label = "Nice! Now I need to 'jump' inside the door";
+      this.p.label = "Nice! Now I need to 'jump' inside the door";
+      return this.afterLabelChange();
     },
     gunFound: function() {
-      return this.p.label = "I found the gun, I can shoot pressing Z";
+      this.p.label = "I found the gun, I can shoot pressing Spacebar";
+      return this.afterLabelChange();
     },
     outOfBullets: function() {
-      return this.p.label = "I'm out of ammo";
+      this.p.label = "I'm out of ammo";
+      return this.afterLabelChange();
     },
     keyFound: function() {
-      return this.p.label = "I found the key, now I need to find the the door";
+      this.p.label = "I found the key, now I need to find the the door";
+      return this.afterLabelChange();
     },
     clear: function() {
-      return this.p.label = "";
+      this.p.label = "";
+      return this.afterLabelChange();
     },
     lifeLevelLow: function() {
-      return this.p.label = "I need to be more careful";
+      this.p.label = "I need to be more careful";
+      return this.afterLabelChange();
     },
     extraLifeFound: function() {
-      return this.p.label = "I feel better now!";
+      this.p.label = "I feel better now!";
+      return this.afterLabelChange();
     },
     lifeLost: function() {
-      return this.p.label = "That hurts!";
+      this.p.label = "That hurts!";
+      return this.afterLabelChange();
     },
     zombieModeOn: function() {
-      return this.p.label = "I was bitten. I'm turning. Nooo!";
+      this.p.label = "I was bitten. I'm turning. Nooo!";
+      return this.afterLabelChange();
     },
     zombieModeOnNext: function() {
-      return this.p.label = "I need to kill myself";
+      this.p.label = "I need to kill myself";
+      return this.afterLabelChange();
     },
     zombieModeOff: function() {
-      return this.p.label = "Ok, back to businness";
+      this.p.label = "Ok, back to businness";
+      return this.afterLabelChange();
     }
   });
 
@@ -1763,20 +1885,15 @@
 
   Q = Game.Q;
 
-  Q.UI.LivesCounter = Q.UI.Text.extend("UI.LivesCounter", {
+  Q.UI.PlayerAvatar = Q.Sprite.extend("Q.UI.PlayerAvatar", {
     init: function(p) {
       this._super(p, {
-        text: "Health: ",
-        label: "Health: " + Q.state.get("lives"),
-        size: 30,
         x: 0,
         y: 0,
-        color: "#000"
+        sheet: "hud_player"
       });
-      return Q.state.on("change.lives", this, "updateLabel");
-    },
-    updateLabel: function(lives) {
-      return this.p.label = this.p.text + lives;
+      this.p.x = this.p.w / 2;
+      return this.p.y = this.p.h / 2;
     }
   });
 

@@ -3,15 +3,16 @@ Q = Game.Q
 Q.UI.BulletsCounter = Q.UI.Text.extend "UI.BulletsCounter",
   init: (p) ->
     @_super p,
-      text: "Bullets: "
-      label: "Bullets: " + Q.state.get("bullets")
-      size: 30
-      family: "Ubuntu"
       x: 0
-      y: 30
-      color: "#000"
+      y: 0
+      label: Q.state.get("bullets") + ""
+      size: 34
+      color: "#f2da38"
+      family: "Boogaloo"
+
+    @p.x = -@p.img.w/2 - @p.w/2 - 5
 
     Q.state.on "change.bullets", @, "updateLabel"
 
   updateLabel: (bullets) ->
-    @p.label = @p.text + bullets
+    @p.label = bullets + ""

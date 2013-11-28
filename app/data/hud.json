@@ -1,0 +1,67 @@
+{
+  "hud_player": {
+    "sx": 0,
+    "sy": 0,
+    "cols": 1,
+    "tilew": 81,
+    "tileh": 71,
+    "frames": 1
+  },
+  "hud_zombie": {
+    "sx": 81,
+    "sy": 0,
+    "cols": 1,
+    "tilew": 76,
+    "tileh": 63,
+    "frames": 1
+  },
+  "hud_health": {
+    "sx": 81,
+    "sy": 71,
+    "cols": 1,
+    "tilew": 45,
+    "tileh": 27,
+    "frames": 1
+  },
+  "hud_bullets": {
+    "sx": 97,
+    "sy": 102,
+    "cols": 1,
+    "tilew": 60,
+    "tileh": 27,
+    "frames": 1
+  },
+
+  "hud_key_empty": {
+    "sx": 200,
+    "sy": 0,
+    "cols": 4,
+    "tilew": 50,
+    "tileh": 100,
+    "frames": 16
+  },
+  "hud_key_collected": {
+    "sx": 300,
+    "sy": 0,
+    "cols": 1,
+    "tilew": 50,
+    "tileh": 100,
+    "frames": 4
+  },
+  "hud_pause_button": {
+    "sx": 400,
+    "sy": 0,
+    "cols": 1,
+    "tilew": 50,
+    "tileh": 100,
+    "frames": 7
+  },
+  "hud_settings_button": {
+    "sx": 400,
+    "sy": 0,
+    "cols": 1,
+    "tilew": 50,
+    "tileh": 100,
+    "frames": 7
+  }
+}

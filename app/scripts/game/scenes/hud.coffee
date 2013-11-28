@@ -4,36 +4,61 @@ Q.scene "hud", (stage) ->
 
   # stage.insert new Q.UI.RadialGradient()
 
-  container = stage.insert new Q.UI.Container
-    x: Q.width/2,
-    y: 20,
-    w: Q.width,
-    h: 40
-    # fill: "rgba(0,0,0,0.5)"
-    radius: 0
+  # doctor's comments
+  playerAvatar = stage.insert new Q.UI.PlayerAvatar()
 
+  infoContainer = stage.insert new Q.UI.Container
+    y: 40
+    fill: "#fff"
 
-  # lifes indicator
-  lifesLabel = container.insert new Q.UI.LivesCounter()
-  lifesLabel.p.x = -container.p.w/2 + lifesLabel.p.w/2 + 20 # margin
+  Game.infoLabel = infoContainer.insert new Q.UI.InfoLabel
+    container: infoContainer
+    offsetLeft: playerAvatar.p.w
 
   # enemies counter
-  enemiesCounterLabel = container.insert new Q.UI.EnemiesCounter()
-  enemiesCounterLabel.p.x = -container.p.w/2 + enemiesCounterLabel.p.w/2 + 160 # margin
+  enemiesContainer = stage.insert new Q.UI.Container
+    y: 40
+    fill: "#232322"
 
-  # enemies counter
-  bulletsCounterLabel = container.insert new Q.UI.BulletsCounter()
-  bulletsCounterLabel.p.x = -container.p.w/2 + bulletsCounterLabel.p.w/2 + 160 # margin
+  enemiesContainer.insert new Q.UI.EnemiesCounter()
+  enemiesContainer.fit(0, 8)
+  enemiesContainer.p.x = Q.width - enemiesContainer.p.w/2 - 60
 
-  # game info/progress label
-  Game.infoLabel = new Q.UI.InfoLabel
-  container.insert Game.infoLabel
+  stage.insert new Q.UI.EnemiesAvatar()
+
+  # bullets counter
+  bulletsContainer = stage.insert new Q.UI.Container
+    y: 40
+    fill: "#232322"
+
+  bulletsImg = bulletsContainer.insert new Q.UI.BulletsImg()
+  bulletsContainer.insert new Q.UI.BulletsCounter
+    img: bulletsImg.p
+
+  bulletsContainer.fit(0, 8)
+  bulletsContainer.p.x = enemiesContainer.p.x - enemiesContainer.p.w/2 - bulletsContainer.p.w/2 - 20 + 30
+
+  # health counter
+  healthContainer = stage.insert new Q.UI.Container
+    y: 40
+    fill: "#232322"
+    # radius: 0
+
+  healthImg = healthContainer.insert new Q.UI.HealthImg()
+  healthContainer.insert new Q.UI.HealthCounter
+    img: healthImg.p
+
+  healthContainer.fit(0, 8)
+  healthContainer.p.x = bulletsContainer.p.x - bulletsContainer.p.w/2 - healthContainer.p.w/2 - 20
+
+
+
 
   # pause button
-  pauseButton = container.insert new Q.UI.PauseButton
-  pauseButton.p.x = container.p.w/2 - 80
+  # pauseButton = stage.insert new Q.UI.PauseButton
+  # pauseButton.p.x = container.p.w/2 - 80
 
-  # audio button
-  audioButton = container.insert new Q.UI.AudioButton
-  audioButton.p.x = container.p.w/2 - 80
+  # # audio button
+  # audioButton = stage.insert new Q.UI.AudioButton
+  # audioButton.p.x = container.p.w/2 - 80
 
