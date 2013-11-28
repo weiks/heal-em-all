@@ -1171,31 +1171,38 @@
   Q = Game.Q;
 
   Q.scene("start", function(stage) {
-    var button, marginY;
-    marginY = Q.height * 0.2;
-    Q.AudioManager.stopAll();
-    stage.insert(new Q.UI.Text({
+    var button, titleContainer;
+    titleContainer = stage.insert(new Q.UI.Container({
       x: Q.width / 2,
-      y: marginY / 2,
-      label: "Heal'em all \n There's a cure for zombies",
-      size: 30,
-      color: "#fff",
-      family: "Ubuntu",
-      align: "center"
+      y: Q.height / 2
     }));
-    stage.insert(new Q.UI.Text({
-      x: Q.width / 2,
-      y: marginY / 2 + 100,
-      label: "jakas grafika, autorzy, sterowanie, moze jakis kontakt? twitter?",
-      size: 30,
-      color: "#fff",
-      family: "Ubuntu"
+    titleContainer.insert(new Q.UI.Text({
+      x: 0,
+      y: -100,
+      label: "Heal'em all",
+      color: "#f2da38",
+      family: "Jolly Lodger",
+      size: 120
     }));
-    button = stage.insert(new Q.UI.Button({
-      x: Q.width / 2,
-      y: marginY / 2 + 350,
-      fill: "#CCCCCC",
-      label: "Click to continue",
+    titleContainer.insert(new Q.UI.Text({
+      x: 0,
+      y: -20,
+      label: "There's a cure for zombies",
+      color: "#ec655d",
+      family: "Jolly Lodger",
+      size: 40
+    }));
+    titleContainer.fit();
+    button = titleContainer.insert(new Q.UI.Button({
+      x: 0,
+      y: 80,
+      w: Q.width / 3,
+      h: 70,
+      fill: "#c4da4a",
+      radius: 10,
+      fontColor: "#353b47",
+      font: "400 58px Jolly Lodger",
+      label: "Continue",
       keyActionName: "confirm",
       type: Q.SPRITE_UI | Q.SPRITE_DEFAULT
     }));

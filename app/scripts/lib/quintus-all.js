@@ -4898,7 +4898,7 @@ Quintus.UI = function(Q) {
     font: function() {
       if(this.fontString) { return this.fontString; }
 
-      this.fontString = (this.p.weight || "800") + " " +
+      this.fontString = (this.p.weight || "400") + " " +
                         (this.p.size || 24) + "px " +
                         (this.p.family || "Arial");
 
