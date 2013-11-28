@@ -1656,6 +1656,165 @@
 
   Q = Game.Q;
 
+  Q.UI.BulletsCounter = Q.UI.Text.extend("UI.BulletsCounter", {
+    init: function(p) {
+      this._super(p, {
+        text: "Bullets: ",
+        label: "Bullets: " + Q.state.get("bullets"),
+        size: 30,
+        family: "Ubuntu",
+        x: 0,
+        y: 30,
+        color: "#000"
+      });
+      return Q.state.on("change.bullets", this, "updateLabel");
+    },
+    updateLabel: function(bullets) {
+      return this.p.label = this.p.text + bullets;
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
+  Q.UI.EnemiesCounter = Q.UI.Text.extend("UI.EnemiesCounter", {
+    init: function(p) {
+      this._super(p, {
+        text: "Zombies left: ",
+        label: "Zombies left: " + Q.state.get("enemiesCounter"),
+        size: 30,
+        x: 0,
+        y: 0,
+        color: "#000"
+      });
+      return Q.state.on("change.enemiesCounter", this, "updateLabel");
+    },
+    updateLabel: function(enemiesCounter) {
+      return this.p.label = this.p.text + enemiesCounter;
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
+  Q.UI.InfoLabel = Q.UI.Text.extend("UI.InfoLabel", {
+    init: function(p, defaultProps) {
+      return this._super(p, {
+        label: "",
+        color: "#000",
+        x: 100,
+        y: 0,
+        size: 28
+      });
+    },
+    intro: function() {
+      return this.p.label = "I need to find the way out of here";
+    },
+    keyNeeded: function() {
+      return this.p.label = "I need the key";
+    },
+    doorOpen: function() {
+      return this.p.label = "Nice! Now I need to 'jump' inside the door";
+    },
+    gunFound: function() {
+      return this.p.label = "I found the gun, I can shoot pressing Z";
+    },
+    outOfBullets: function() {
+      return this.p.label = "I'm out of ammo";
+    },
+    keyFound: function() {
+      return this.p.label = "I found the key, now I need to find the the door";
+    },
+    clear: function() {
+      return this.p.label = "";
+    },
+    lifeLevelLow: function() {
+      return this.p.label = "I need to be more careful";
+    },
+    extraLifeFound: function() {
+      return this.p.label = "I feel better now!";
+    },
+    lifeLost: function() {
+      return this.p.label = "That hurts!";
+    },
+    zombieModeOn: function() {
+      return this.p.label = "I was bitten. I'm turning. Nooo!";
+    },
+    zombieModeOnNext: function() {
+      return this.p.label = "I need to kill myself";
+    },
+    zombieModeOff: function() {
+      return this.p.label = "Ok, back to businness";
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
+  Q.UI.LivesCounter = Q.UI.Text.extend("UI.LivesCounter", {
+    init: function(p) {
+      this._super(p, {
+        text: "Health: ",
+        label: "Health: " + Q.state.get("lives"),
+        size: 30,
+        x: 0,
+        y: 0,
+        color: "#000"
+      });
+      return Q.state.on("change.lives", this, "updateLabel");
+    },
+    updateLabel: function(lives) {
+      return this.p.label = this.p.text + lives;
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
+  Q.UI.RadialGradient = Q.Sprite.extend("Q.UI.RadialGradient", {
+    init: function(p) {
+      this._super(p, {
+        x: Q.width / 2,
+        y: Q.height / 2,
+        w: Q.width,
+        h: Q.height
+      });
+      return console.log(this.p);
+    },
+    draw: function(ctx) {
+      var rad;
+      rad = ctx.createRadialGradient(0, 0, this.p.w / 3, 0, 0, this.p.w / 2 + this.p.w / 4);
+      rad.addColorStop(0, 'rgba(0,0,0,0)');
+      rad.addColorStop(1, 'rgba(0,0,0,1)');
+      ctx.fillStyle = rad;
+      ctx.fillRect(-this.p.cx, -this.p.cy, this.p.w, this.p.h);
+      return ctx.fill();
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
   Q.Sprite.extend("Bullet", {
     init: function(p) {
       this._super(p, {
@@ -1902,113 +2061,6 @@
 
   Q = Game.Q;
 
-  Q.UI.BulletsCounter = Q.UI.Text.extend("UI.BulletsCounter", {
-    init: function(p) {
-      this._super(p, {
-        text: "Bullets: ",
-        label: "Bullets: " + Q.state.get("bullets"),
-        size: 30,
-        family: "Ubuntu",
-        x: 0,
-        y: 30,
-        color: "#000"
-      });
-      return Q.state.on("change.bullets", this, "updateLabel");
-    },
-    updateLabel: function(bullets) {
-      return this.p.label = this.p.text + bullets;
-    }
-  });
-
-}).call(this);
-
-(function() {
-  var Q;
-
-  Q = Game.Q;
-
-  Q.UI.EnemiesCounter = Q.UI.Text.extend("UI.EnemiesCounter", {
-    init: function(p) {
-      this._super(p, {
-        text: "Zombies left: ",
-        label: "Zombies left: " + Q.state.get("enemiesCounter"),
-        size: 30,
-        x: 0,
-        y: 0,
-        color: "#000"
-      });
-      return Q.state.on("change.enemiesCounter", this, "updateLabel");
-    },
-    updateLabel: function(enemiesCounter) {
-      return this.p.label = this.p.text + enemiesCounter;
-    }
-  });
-
-}).call(this);
-
-(function() {
-  var Q;
-
-  Q = Game.Q;
-
-  Q.UI.InfoLabel = Q.UI.Text.extend("UI.InfoLabel", {
-    init: function(p, defaultProps) {
-      return this._super(p, {
-        label: "",
-        color: "#000",
-        x: 100,
-        y: 0,
-        size: 28
-      });
-    },
-    intro: function() {
-      return this.p.label = "I need to find the way out of here";
-    },
-    keyNeeded: function() {
-      return this.p.label = "I need the key";
-    },
-    doorOpen: function() {
-      return this.p.label = "Nice! Now I need to 'jump' inside the door";
-    },
-    gunFound: function() {
-      return this.p.label = "I found the gun, I can shoot pressing Z";
-    },
-    outOfBullets: function() {
-      return this.p.label = "I'm out of ammo";
-    },
-    keyFound: function() {
-      return this.p.label = "I found the key, now I need to find the the door";
-    },
-    clear: function() {
-      return this.p.label = "";
-    },
-    lifeLevelLow: function() {
-      return this.p.label = "I need to be more careful";
-    },
-    extraLifeFound: function() {
-      return this.p.label = "I feel better now!";
-    },
-    lifeLost: function() {
-      return this.p.label = "That hurts!";
-    },
-    zombieModeOn: function() {
-      return this.p.label = "I was bitten. I'm turning. Nooo!";
-    },
-    zombieModeOnNext: function() {
-      return this.p.label = "I need to kill myself";
-    },
-    zombieModeOff: function() {
-      return this.p.label = "Ok, back to businness";
-    }
-  });
-
-}).call(this);
-
-(function() {
-  var Q;
-
-  Q = Game.Q;
-
   Q.UI.LevelButton = Q.UI.Button.extend("UI.LevelButton", {
     init: function(p) {
       var _this = this;
@@ -2025,30 +2077,6 @@
           return Game.stageLevel(_this.p.level);
         }
       });
-    }
-  });
-
-}).call(this);
-
-(function() {
-  var Q;
-
-  Q = Game.Q;
-
-  Q.UI.LivesCounter = Q.UI.Text.extend("UI.LivesCounter", {
-    init: function(p) {
-      this._super(p, {
-        text: "Health: ",
-        label: "Health: " + Q.state.get("lives"),
-        size: 30,
-        x: 0,
-        y: 0,
-        color: "#000"
-      });
-      return Q.state.on("change.lives", this, "updateLabel");
-    },
-    updateLabel: function(lives) {
-      return this.p.label = this.p.text + lives;
     }
   });
 

@@ -1,6 +1,9 @@
 Q = Game.Q
 
 Q.scene "hud", (stage) ->
+
+  # stage.insert new Q.UI.RadialGradient()
+
   container = stage.insert new Q.UI.Container
     x: Q.width/2,
     y: 20,
@@ -33,3 +36,4 @@ Q.scene "hud", (stage) ->
   # audio button
   audioButton = container.insert new Q.UI.AudioButton
   audioButton.p.x = container.p.w/2 - 80
+
