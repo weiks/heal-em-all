@@ -33,20 +33,20 @@
   },
 
   "hud_key_empty": {
-    "sx": 200,
-    "sy": 0,
-    "cols": 4,
-    "tilew": 50,
-    "tileh": 100,
-    "frames": 16
+    "sx": 0,
+    "sy": 71,
+    "cols": 1,
+    "tilew": 30,
+    "tileh": 31,
+    "frames": 1
   },
   "hud_key_collected": {
-    "sx": 300,
-    "sy": 0,
+    "sx": 30,
+    "sy": 71,
     "cols": 1,
-    "tilew": 50,
-    "tileh": 100,
-    "frames": 4
+    "tilew": 30,
+    "tileh": 31,
+    "frames": 1
   },
   "hud_pause_button": {
     "sx": 400,

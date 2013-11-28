@@ -464,7 +464,7 @@
   Q = Game.Q;
 
   Q.scene("hud", function(stage) {
-    var bulletsContainer, bulletsImg, enemiesContainer, healthContainer, healthImg, infoContainer, playerAvatar;
+    var bulletsContainer, bulletsImg, enemiesContainer, healthContainer, healthImg, infoContainer, keyContainer, keyImg, playerAvatar;
     playerAvatar = stage.insert(new Q.UI.PlayerAvatar());
     infoContainer = stage.insert(new Q.UI.Container({
       y: 40,
@@ -501,7 +501,14 @@
       img: healthImg.p
     }));
     healthContainer.fit(0, 8);
-    return healthContainer.p.x = bulletsContainer.p.x - bulletsContainer.p.w / 2 - healthContainer.p.w / 2 - 20;
+    healthContainer.p.x = bulletsContainer.p.x - bulletsContainer.p.w / 2 - healthContainer.p.w / 2 - 20;
+    keyContainer = stage.insert(new Q.UI.Container({
+      y: 40,
+      fill: "#232322"
+    }));
+    keyImg = keyContainer.insert(new Q.UI.InventoryKey());
+    keyContainer.fit(5, 8);
+    return keyContainer.p.x = healthContainer.p.x - healthContainer.p.w / 2 - keyContainer.p.w / 2 - 34;
   });
 
 }).call(this);
@@ -1875,6 +1882,31 @@
     zombieModeOff: function() {
       this.p.label = "Ok, back to businness";
       return this.afterLabelChange();
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
+  Q.UI.InventoryKey = Q.Sprite.extend("Q.UI.InventoryKey", {
+    init: function(p) {
+      this._super(p, {
+        x: 0,
+        y: 0,
+        sheet: "hud_key_empty"
+      });
+      return Q.state.on("change.hasKey", this, "updateSheet");
+    },
+    updateSheet: function(hasKey) {
+      if (hasKey === true) {
+        return this.p.sheet = "hud_key_collected";
+      } else {
+        return this.p.sheet = "hud_key_empty";
+      }
     }
   });
 

@@ -42,7 +42,6 @@ Q.scene "hud", (stage) ->
   healthContainer = stage.insert new Q.UI.Container
     y: 40
     fill: "#232322"
-    # radius: 0
 
   healthImg = healthContainer.insert new Q.UI.HealthImg()
   healthContainer.insert new Q.UI.HealthCounter
@@ -51,6 +50,15 @@ Q.scene "hud", (stage) ->
   healthContainer.fit(0, 8)
   healthContainer.p.x = bulletsContainer.p.x - bulletsContainer.p.w/2 - healthContainer.p.w/2 - 20
 
+  # inventory key
+  keyContainer = stage.insert new Q.UI.Container
+    y: 40
+    fill: "#232322"
+
+  keyImg = keyContainer.insert new Q.UI.InventoryKey()
+
+  keyContainer.fit(5, 8)
+  keyContainer.p.x = healthContainer.p.x - healthContainer.p.w/2 - keyContainer.p.w/2 - 34
 
 
 

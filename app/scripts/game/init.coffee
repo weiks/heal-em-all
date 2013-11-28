@@ -176,6 +176,8 @@ window.Game =
     @Q.clearStages()
     @Q.stageScene "start"
 
+    # @stageLevel(1)
+
   stageEndScreen: ->
     @Q.clearStages()
     @Q.stageScene "end"
