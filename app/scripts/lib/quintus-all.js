@@ -2503,7 +2503,9 @@ Quintus.Input = function(Q) {
   var KEY_NAMES = { LEFT: 37, RIGHT: 39, SPACE: 32,
                     UP: 38, DOWN: 40,
                     Z: 90, X: 88,
-                    ENTER: 13, P: 80
+                    ENTER: 13,
+                    P: 80,
+                    ESC: 27
                   };
   
   var DEFAULT_KEYS = { LEFT: 'left', RIGHT: 'right',
@@ -2512,7 +2514,9 @@ Quintus.Input = function(Q) {
                        Z: 'fire',
                        X: 'action',
                        ENTER: 'confirm',
-                       P: 'pause' };
+                       P: 'pause',
+                       ESC: 'escape'
+                    };
 
   var DEFAULT_TOUCH_CONTROLS  = [ ['left','<' ],
                             ['right','>' ],

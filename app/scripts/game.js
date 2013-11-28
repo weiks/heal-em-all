@@ -150,7 +150,9 @@
       Q.stageScene("level" + number, {
         sort: true
       });
-      Q.stageScene("hud", 1);
+      Q.stageScene("hud", 1, {
+        sort: true
+      });
       return Game.infoLabel.intro();
     },
     stageLevelSelectScreen: function() {
@@ -201,30 +203,40 @@
     collection: [],
     muted: false,
     add: function(audio, options) {
-      var item;
+      var alreadyAdded, item;
       item = {
         audio: audio,
         options: options
       };
       if ((options != null ? options.loop : void 0) === true) {
-        this.collection.push(item);
+        alreadyAdded = this.find(audio);
+        if (alreadyAdded === false) {
+          this.collection.push(item);
+        }
       }
       if (!this.muted) {
         return Q.audio.play(item.audio, item.options);
       }
     },
     remove: function(audio) {
-      var index, indexToRemove, item, _i, _len, _ref;
+      var indexToRemove;
       indexToRemove = null;
+      indexToRemove = this.find(audio);
+      if (indexToRemove >= 0) {
+        Q.audio.stop(this.collection[indexToRemove].audio);
+        return this.collection.splice(indexToRemove, 1);
+      }
+    },
+    find: function(audio) {
+      var index, item, _i, _len, _ref;
       _ref = this.collection;
       for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
         item = _ref[index];
         if (item.audio === audio) {
-          indexToRemove = index;
-          Q.audio.stop(item.audio);
+          return index;
         }
       }
-      return this.collection.splice(indexToRemove, 1);
+      return false;
     },
     playAll: function() {
       var item, _i, _len, _ref, _results;
@@ -238,6 +250,9 @@
     },
     stopAll: function() {
       return Q.audio.stop();
+    },
+    clear: function() {
+      return this.collection = [];
     },
     mute: function() {
       this.muted = true;
@@ -508,7 +523,9 @@
     }));
     keyImg = keyContainer.insert(new Q.UI.InventoryKey());
     keyContainer.fit(5, 8);
-    return keyContainer.p.x = healthContainer.p.x - healthContainer.p.w / 2 - keyContainer.p.w / 2 - 34;
+    keyContainer.p.x = healthContainer.p.x - healthContainer.p.w / 2 - keyContainer.p.w / 2 - 34;
+    stage.insert(new Q.UI.PauseButton());
+    return stage.insert(new Q.UI.MenuButton());
   });
 
 }).call(this);
@@ -1062,7 +1079,12 @@
       color: "#fff",
       family: "Ubuntu"
     }));
-    return Q.AudioManager.stopAll();
+    Q.AudioManager.stopAll();
+    Q.AudioManager.clear();
+    return stage.insert(new Q.UI.AudioButton({
+      x: Q.width / 2,
+      y: Q.height - 50
+    }));
   });
 
 }).call(this);
@@ -2236,42 +2258,73 @@
 
   Q = Game.Q;
 
-  Q.UI.PauseButton = Q.UI.Button.extend("UI.PauseButton", {
+  Q.UI.MenuButton = Q.UI.Button.extend("UI.MenuButton", {
     init: function(p) {
       var _this = this;
       this._super(p, {
-        x: 0,
-        y: 0,
-        w: 120,
-        h: 60,
+        x: Q.width - 30,
+        y: 170,
+        z: 100,
         type: Q.SPRITE_UI | Q.SPRITE_DEFAULT,
-        fill: "#CCCCCC",
-        label: "Pause",
+        sheet: "hud_settings_button",
+        keyActionName: "escape"
+      });
+      return this.on('click', function() {
+        return Game.stageLevelSelectScreen();
+      });
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
+  Q.UI.PauseButton = Q.UI.Button.extend("UI.PauseButton", {
+    init: function(p) {
+      var pausedScreen, pausedText,
+        _this = this;
+      this._super(p, {
+        x: Q.width - 30,
+        y: 110,
+        z: 100,
+        type: Q.SPRITE_UI | Q.SPRITE_DEFAULT,
+        sheet: "hud_pause_button",
         isPaused: false,
         keyActionName: "pause"
       });
-      this.pausedScreen = new Q.UI.Container({
+      pausedScreen = new Q.UI.Container({
         x: Q.width / 2,
         y: Q.height / 2,
         w: Q.width,
         h: Q.height,
+        z: 50,
         fill: "rgba(0,0,0,0.5)"
+      });
+      pausedText = new Q.UI.Text({
+        x: 0,
+        y: 0,
+        label: "Paused",
+        color: "#f2da38",
+        family: "Jolly Lodger",
+        size: 100
       });
       return this.on('click', function() {
         if (!_this.isPaused) {
           Q.stage().pause();
           Q.AudioManager.stopAll();
-          _this.p.label = "Unpause";
           _this.isPaused = true;
-          return _this.stage.insert(_this.pausedScreen);
+          _this.stage.insert(pausedScreen);
+          return pausedScreen.insert(pausedText);
         } else {
           Q.stage().unpause();
           if (!Game.isMuted) {
             Q.AudioManager.playAll();
           }
-          _this.p.label = "Pause";
           _this.isPaused = false;
-          return _this.stage.remove(_this.pausedScreen);
+          return _this.stage.remove(pausedScreen);
         }
       });
     }

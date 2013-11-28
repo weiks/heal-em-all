@@ -58,4 +58,9 @@ Q.scene "levelSelect", (stage) ->
 
   # audio
   Q.AudioManager.stopAll()
+  Q.AudioManager.clear()
 
+  # audio button
+  stage.insert new Q.UI.AudioButton
+    x: Q.width/2
+    y: Q.height - 50

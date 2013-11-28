@@ -31,7 +31,6 @@
     "tileh": 27,
     "frames": 1
   },
-
   "hud_key_empty": {
     "sx": 0,
     "sy": 71,
@@ -48,20 +47,20 @@
     "tileh": 31,
     "frames": 1
   },
-  "hud_pause_button": {
-    "sx": 400,
-    "sy": 0,
-    "cols": 1,
-    "tilew": 50,
-    "tileh": 100,
-    "frames": 7
-  },
   "hud_settings_button": {
-    "sx": 400,
-    "sy": 0,
+    "sx": 0,
+    "sy": 102,
     "cols": 1,
-    "tilew": 50,
-    "tileh": 100,
-    "frames": 7
+    "tilew": 44,
+    "tileh": 49,
+    "frames": 1
+  },
+  "hud_pause_button": {
+    "sx": 45,
+    "sy": 102,
+    "cols": 1,
+    "tilew": 44,
+    "tileh": 49,
+    "frames": 1
   }
 }

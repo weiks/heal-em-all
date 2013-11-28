@@ -150,7 +150,8 @@ window.Game =
     Q.clearStages()
     Q.stageScene "level" + number,
       sort: true
-    Q.stageScene "hud", 1
+    Q.stageScene "hud", 1,
+      sort: true
 
     # the story
     Game.infoLabel.intro()
@@ -175,8 +176,6 @@ window.Game =
   stageStartScreen: ->
     @Q.clearStages()
     @Q.stageScene "start"
-
-    # @stageLevel(1)
 
   stageEndScreen: ->
     @Q.clearStages()

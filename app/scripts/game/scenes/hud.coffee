@@ -61,12 +61,7 @@ Q.scene "hud", (stage) ->
   keyContainer.p.x = healthContainer.p.x - healthContainer.p.w/2 - keyContainer.p.w/2 - 34
 
 
-
-  # pause button
-  # pauseButton = stage.insert new Q.UI.PauseButton
-  # pauseButton.p.x = container.p.w/2 - 80
-
-  # # audio button
-  # audioButton = stage.insert new Q.UI.AudioButton
-  # audioButton.p.x = container.p.w/2 - 80
+  # buttons
+  stage.insert new Q.UI.PauseButton()
+  stage.insert new Q.UI.MenuButton()
 
