@@ -2197,13 +2197,18 @@
   Q.UI.LinearGradient = Q.Sprite.extend("Q.UI.LinearGradient", {
     init: function(p) {
       return this._super(p, {
-        x: Q.width / 2,
-        y: Q.height / 2,
-        w: Q.width,
-        h: Q.height,
+        x: 0,
+        y: 0,
         z: 0,
         asset: Game.assets.gradient
       });
+    },
+    draw: function(ctx) {
+      var img, ptrn;
+      img = this.asset();
+      ptrn = ctx.createPattern(img, 'repeat');
+      ctx.fillStyle = ptrn;
+      return ctx.fillRect(0, 0, Q.width, this.p.h);
     }
   });
 
