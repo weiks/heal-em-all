@@ -66,6 +66,7 @@
           sheet: "map_tiles.png",
           bg: "bg.png"
         },
+        gradient: "gradient-top.png",
         level1: {
           dataAsset: "level1.tmx"
         },
@@ -668,9 +669,13 @@
 
   Q.scene("hud", function(stage) {
     var bulletsContainer, bulletsImg, enemiesContainer, healthContainer, healthImg, infoContainer, keyContainer, keyImg, playerAvatar;
-    Game.playerAvatar = playerAvatar = stage.insert(new Q.UI.PlayerAvatar());
+    stage.insert(new Q.UI.LinearGradient());
+    Game.playerAvatar = playerAvatar = stage.insert(new Q.UI.PlayerAvatar({
+      z: 10
+    }));
     infoContainer = stage.insert(new Q.UI.Container({
       y: 40,
+      z: 10,
       fill: "#fff"
     }));
     Game.infoLabel = infoContainer.insert(new Q.UI.InfoLabel({
@@ -679,14 +684,18 @@
     }));
     enemiesContainer = stage.insert(new Q.UI.Container({
       y: 40,
+      z: 10,
       fill: "#232322"
     }));
     enemiesContainer.insert(new Q.UI.EnemiesCounter());
     enemiesContainer.fit(0, 8);
     enemiesContainer.p.x = Q.width - enemiesContainer.p.w / 2 - 60;
-    stage.insert(new Q.UI.EnemiesAvatar());
+    stage.insert(new Q.UI.EnemiesAvatar({
+      z: 12
+    }));
     bulletsContainer = stage.insert(new Q.UI.Container({
       y: 40,
+      z: 10,
       fill: "#232322"
     }));
     bulletsImg = bulletsContainer.insert(new Q.UI.BulletsImg());
@@ -697,6 +706,7 @@
     bulletsContainer.p.x = enemiesContainer.p.x - enemiesContainer.p.w / 2 - bulletsContainer.p.w / 2 - 20 + 30;
     healthContainer = stage.insert(new Q.UI.Container({
       y: 40,
+      z: 10,
       fill: "#232322"
     }));
     Game.healthImg = healthImg = healthContainer.insert(new Q.UI.HealthImg());
@@ -707,6 +717,7 @@
     healthContainer.p.x = bulletsContainer.p.x - bulletsContainer.p.w / 2 - healthContainer.p.w / 2 - 20;
     keyContainer = stage.insert(new Q.UI.Container({
       y: 40,
+      z: 10,
       fill: "#232322"
     }));
     keyImg = keyContainer.insert(new Q.UI.InventoryKey());
@@ -2173,6 +2184,26 @@
       } else {
         return this.p.sheet = "hud_key_empty";
       }
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
+  Q.UI.LinearGradient = Q.Sprite.extend("Q.UI.LinearGradient", {
+    init: function(p) {
+      return this._super(p, {
+        x: Q.width / 2,
+        y: Q.height / 2,
+        w: Q.width,
+        h: Q.height,
+        z: 0,
+        asset: Game.assets.gradient
+      });
     }
   });
 

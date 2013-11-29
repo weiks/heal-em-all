@@ -71,6 +71,8 @@ window.Game =
       map:
         sheet: "map_tiles.png"
         bg: "bg.png"
+      gradient: "gradient-top.png"
+
       level1:
         dataAsset: "level1.tmx"
       level2:
