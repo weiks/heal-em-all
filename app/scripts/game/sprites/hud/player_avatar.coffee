@@ -10,3 +10,9 @@ Q.UI.PlayerAvatar = Q.Sprite.extend "Q.UI.PlayerAvatar",
     @p.x = @p.w/2
     @p.y = @p.h/2
 
+  changeToZombie: ->
+    @p.sheet = "hud_zombie_player"
+
+  changeToPlayer: ->
+    @p.sheet = "hud_player"
+

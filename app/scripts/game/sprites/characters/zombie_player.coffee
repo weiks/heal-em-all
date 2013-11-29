@@ -35,6 +35,8 @@ Q.Sprite.extend "ZombiePlayer",
 
     Game.infoLabel.zombieModeOnNext()
     Game.currentLevelData.zombieModeFound = true
+    Game.playerAvatar.changeToZombie()
+    Game.healthImg.changeToHalf()
 
     # audio
     Q.AudioManager.remove Game.audio.playerBg
@@ -96,6 +98,7 @@ Q.Sprite.extend "ZombiePlayer",
     Game.setCameraTo(@stage, player)
 
     Game.infoLabel.zombieModeOff()
+    Game.playerAvatar.changeToPlayer()
 
     Q.AudioManager.remove Game.audio.zombieMode
     @destroy()

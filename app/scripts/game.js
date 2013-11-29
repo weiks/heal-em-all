@@ -613,7 +613,7 @@
 
   Q.scene("hud", function(stage) {
     var bulletsContainer, bulletsImg, enemiesContainer, healthContainer, healthImg, infoContainer, keyContainer, keyImg, playerAvatar;
-    playerAvatar = stage.insert(new Q.UI.PlayerAvatar());
+    Game.playerAvatar = playerAvatar = stage.insert(new Q.UI.PlayerAvatar());
     infoContainer = stage.insert(new Q.UI.Container({
       y: 40,
       fill: "#fff"
@@ -644,7 +644,7 @@
       y: 40,
       fill: "#232322"
     }));
-    healthImg = healthContainer.insert(new Q.UI.HealthImg());
+    Game.healthImg = healthImg = healthContainer.insert(new Q.UI.HealthImg());
     healthContainer.insert(new Q.UI.HealthCounter({
       img: healthImg.p
     }));
@@ -1810,6 +1810,8 @@
       this.p.savedPosition.y = this.p.y;
       Game.infoLabel.zombieModeOnNext();
       Game.currentLevelData.zombieModeFound = true;
+      Game.playerAvatar.changeToZombie();
+      Game.healthImg.changeToHalf();
       Q.AudioManager.remove(Game.audio.playerBg);
       Q.AudioManager.add(Game.audio.zombieMode, {
         loop: true
@@ -1865,6 +1867,7 @@
       }));
       Game.setCameraTo(this.stage, player);
       Game.infoLabel.zombieModeOff();
+      Game.playerAvatar.changeToPlayer();
       Q.AudioManager.remove(Game.audio.zombieMode);
       return this.destroy();
     }
@@ -1995,6 +1998,9 @@
         y: 0,
         sheet: "hud_health"
       });
+    },
+    changeToHalf: function() {
+      return this.p.sheet = "hud_health_half";
     }
   });
 
@@ -2117,6 +2123,12 @@
       });
       this.p.x = this.p.w / 2;
       return this.p.y = this.p.h / 2;
+    },
+    changeToZombie: function() {
+      return this.p.sheet = "hud_zombie_player";
+    },
+    changeToPlayer: function() {
+      return this.p.sheet = "hud_player";
     }
   });
 

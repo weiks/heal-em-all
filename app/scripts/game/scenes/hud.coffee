@@ -5,7 +5,7 @@ Q.scene "hud", (stage) ->
   # stage.insert new Q.UI.RadialGradient()
 
   # doctor's comments
-  playerAvatar = stage.insert new Q.UI.PlayerAvatar()
+  Game.playerAvatar = playerAvatar = stage.insert new Q.UI.PlayerAvatar()
 
   infoContainer = stage.insert new Q.UI.Container
     y: 40
@@ -43,7 +43,7 @@ Q.scene "hud", (stage) ->
     y: 40
     fill: "#232322"
 
-  healthImg = healthContainer.insert new Q.UI.HealthImg()
+  Game.healthImg = healthImg = healthContainer.insert new Q.UI.HealthImg()
   healthContainer.insert new Q.UI.HealthCounter
     img: healthImg.p
 
