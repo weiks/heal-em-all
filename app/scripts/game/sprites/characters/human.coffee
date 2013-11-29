@@ -52,6 +52,10 @@ Q.Sprite.extend "Human",
       obj.play("attack", 10)
       @play("outro")
 
+    if obj.isA("ZombiePlayer")
+      @play("outro")
+      @p.zombiePlayerSensor = true
+
   die: ->
     @destroy()
 
@@ -61,4 +65,5 @@ Q.Sprite.extend "Human",
       y: @p.y
       startLeft: randomBool
 
-    zombie.p.wasHuman = true
+    if !@p.zombiePlayerSensor
+      zombie.p.wasHuman = true

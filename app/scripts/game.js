@@ -1519,7 +1519,11 @@
     sensor: function(obj) {
       if (obj.isA("Zombie") && this.p.timeInvincible === 0) {
         obj.play("attack", 10);
-        return this.play("outro");
+        this.play("outro");
+      }
+      if (obj.isA("ZombiePlayer")) {
+        this.play("outro");
+        return this.p.zombiePlayerSensor = true;
       }
     },
     die: function() {
@@ -1531,7 +1535,9 @@
         y: this.p.y,
         startLeft: randomBool
       }));
-      return zombie.p.wasHuman = true;
+      if (!this.p.zombiePlayerSensor) {
+        return zombie.p.wasHuman = true;
+      }
     }
   });
 
@@ -1861,7 +1867,7 @@
         sheet: "zombie_player",
         sprite: "zombiePlayer",
         type: Game.SPRITE_ZOMBIE_PLAYER,
-        collisionMask: Game.SPRITE_TILES | Game.SPRITE_PLAYER_COLLECTIBLE
+        collisionMask: Game.SPRITE_TILES | Game.SPRITE_HUMAN
       });
       this.add("2d, platformerControls, animation");
       this.p.jumpSpeed = -500;

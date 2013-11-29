@@ -24,7 +24,7 @@ Q.Sprite.extend "ZombiePlayer",
       sheet: "zombie_player"
       sprite: "zombiePlayer"
       type: Game.SPRITE_ZOMBIE_PLAYER
-      collisionMask: Game.SPRITE_TILES | Game.SPRITE_PLAYER_COLLECTIBLE
+      collisionMask: Game.SPRITE_TILES | Game.SPRITE_HUMAN
 
     @add("2d, platformerControls, animation")
 
