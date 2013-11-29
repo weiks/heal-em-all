@@ -77,6 +77,11 @@ Q.scene "levelSummary", (stage) ->
   buttonNext.p.x = Q.width/2 + buttonNext.p.w/2 + 40
 
   buttonNext.on "click", (e) ->
+    # last level just finished
+    if Q.state.get("currentLevel") == 6
+      Game.stageEndScreen()
+      return
+
     Game.stageLevel(Q.state.get("currentLevel") + 1)
 
   # button back

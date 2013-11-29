@@ -159,13 +159,7 @@ window.Game =
     Game.infoLabel.intro()
 
   stageLevelSelectScreen: ->
-    # last level just finished
-    if @Q.state.get("currentLevel") == 6
-      @stageEndScreen()
-      return
-
     @Q.input.disableTouchControls()
-
     @Q.clearStages()
     @Q.stageScene "levelSelect"
 
@@ -180,6 +174,7 @@ window.Game =
     @Q.stageScene "start"
 
   stageEndScreen: ->
+    @Q.input.disableTouchControls()
     @Q.clearStages()
     @Q.stageScene "end"
 

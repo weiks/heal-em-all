@@ -157,10 +157,6 @@
       return Game.infoLabel.intro();
     },
     stageLevelSelectScreen: function() {
-      if (this.Q.state.get("currentLevel") === 6) {
-        this.stageEndScreen();
-        return;
-      }
       this.Q.input.disableTouchControls();
       this.Q.clearStages();
       return this.Q.stageScene("levelSelect");
@@ -175,6 +171,7 @@
       return this.Q.stageScene("start");
     },
     stageEndScreen: function() {
+      this.Q.input.disableTouchControls();
       this.Q.clearStages();
       return this.Q.stageScene("end");
     },
@@ -1296,6 +1293,10 @@
     }));
     buttonNext.p.x = Q.width / 2 + buttonNext.p.w / 2 + 40;
     buttonNext.on("click", function(e) {
+      if (Q.state.get("currentLevel") === 6) {
+        Game.stageEndScreen();
+        return;
+      }
       return Game.stageLevel(Q.state.get("currentLevel") + 1);
     });
     buttonBack = stage.insert(new Q.UI.Button({
