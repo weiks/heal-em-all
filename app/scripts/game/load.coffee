@@ -11,6 +11,7 @@ Q.load Game.assets.all,
     Q.compileSheets Game.assets.items.sheet, Game.assets.items.dataAsset
     Q.compileSheets Game.assets.hud.sheet, Game.assets.hud.dataAsset
     Q.compileSheets Game.assets.others.sheet, Game.assets.others.dataAsset
+    Q.compileSheets Game.assets.bullet.sheet, Game.assets.bullet.dataAsset
 
     # first stage
     Game.stageStartScreen()

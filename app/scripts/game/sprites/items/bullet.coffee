@@ -1,33 +1,38 @@
 Q = Game.Q
 
+# animations object
+Q.animations "bullet",
+  fly:
+    frames: [0, 1, 2, 3, 4, 5]
+    rate: 0.3
+
 Q.Sprite.extend "Bullet",
   init: (p) ->
     @_super p,
-      color: "red"
       range: Q.width/2
-      w: 5
-      h: 5
+      sheet: "bullet"
+      sprite: "bullet"
       speed: 700
       gravity: 0
       type: Game.SPRITE_BULLET
       collisionMask: Game.SPRITE_TILES | Game.SPRITE_ENEMY
 
-    @add("2d")
+    @add "2d, animation"
+
+    @play "fly"
 
     @p.initialX = @p.x
     @p.initialY = @p.y
 
     @on "hit", @, "collision"
 
-  draw: (ctx) ->
-    ctx.fillStyle = @p.color;
-    ctx.fillRect(-@p.cx, -@p.cy, @p.w, @p.h)
-
   step: (dt) ->
     if @p.direction == "left"
       @p.vx = -@p.speed
+      @p.flip = "x"
     else
       @p.vx = @p.speed
+      @p.flip = false
 
     if @p.x > Game.map.width || @p.x < 0
       @die()

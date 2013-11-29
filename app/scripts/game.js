@@ -58,6 +58,10 @@
           dataAsset: "others.json",
           sheet: "others.png"
         },
+        bullet: {
+          dataAsset: "bullet.json",
+          sheet: "bullet.png"
+        },
         map: {
           sheet: "map_tiles.png",
           bg: "bg.png"
@@ -428,6 +432,7 @@
     Q.compileSheets(Game.assets.items.sheet, Game.assets.items.dataAsset);
     Q.compileSheets(Game.assets.hud.sheet, Game.assets.hud.dataAsset);
     Q.compileSheets(Game.assets.others.sheet, Game.assets.others.dataAsset);
+    Q.compileSheets(Game.assets.bullet.sheet, Game.assets.bullet.dataAsset);
     return Game.stageStartScreen();
   }, {
     progressCallback: function(loaded, total) {
@@ -2223,32 +2228,37 @@
 
   Q = Game.Q;
 
+  Q.animations("bullet", {
+    fly: {
+      frames: [0, 1, 2, 3, 4, 5],
+      rate: 0.3
+    }
+  });
+
   Q.Sprite.extend("Bullet", {
     init: function(p) {
       this._super(p, {
-        color: "red",
         range: Q.width / 2,
-        w: 5,
-        h: 5,
+        sheet: "bullet",
+        sprite: "bullet",
         speed: 700,
         gravity: 0,
         type: Game.SPRITE_BULLET,
         collisionMask: Game.SPRITE_TILES | Game.SPRITE_ENEMY
       });
-      this.add("2d");
+      this.add("2d, animation");
+      this.play("fly");
       this.p.initialX = this.p.x;
       this.p.initialY = this.p.y;
       return this.on("hit", this, "collision");
     },
-    draw: function(ctx) {
-      ctx.fillStyle = this.p.color;
-      return ctx.fillRect(-this.p.cx, -this.p.cy, this.p.w, this.p.h);
-    },
     step: function(dt) {
       if (this.p.direction === "left") {
         this.p.vx = -this.p.speed;
+        this.p.flip = "x";
       } else {
         this.p.vx = this.p.speed;
+        this.p.flip = false;
       }
       if (this.p.x > Game.map.width || this.p.x < 0) {
         this.die();

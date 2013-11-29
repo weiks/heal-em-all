@@ -65,6 +65,9 @@ window.Game =
       others:
         dataAsset: "others.json"
         sheet: "others.png"
+      bullet:
+        dataAsset: "bullet.json"
+        sheet: "bullet.png"
       map:
         sheet: "map_tiles.png"
         bg: "bg.png"
