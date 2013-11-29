@@ -12,7 +12,7 @@ We also support latest mobile devices!
 ## Team
 
 -   [Kris Urbas](https://twitter.com/krzysu) - programming, story
-- 	[Pawel Madeja](http://pawelmadeja.com/) - graphics
+- 	[Pawel Madeja](https://twitter.com/pawelmadeja) - graphics
 
 ## Open source
 
@@ -22,3 +22,14 @@ Great thanks to authors of these projects!
 -   [grunt.js](http://gruntjs.com/)
 
 Audio downloaded from [OpenGameArt](http://opengameart.org/)
+
+## Copyright
+
+This game is open source, but that doesn't mean you can just copy it and use it as your own.
+You can reuse some code parts, take a look how we solved some problems etc.
+
+**It is forbiden to use this game for profit.**
+
+All rights reserved for graphic design. You are not allowed to use graphic from this game in your own projects.
+
+Copyright (c) 2013 Krzysztof Urbas (@krzysu) and Paweł Madeja (@pawelmadeja).

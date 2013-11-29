@@ -22,4 +22,7 @@ Q.UI.LevelButton = Q.UI.Button.extend "UI.LevelButton",
 
     @on 'click', =>
       if @p.enabled
-        Game.stageLevel(@p.level)
+        if @p.level > 1
+          Game.stageLevel(@p.level)
+        else
+          Game.stageControlsScreen()

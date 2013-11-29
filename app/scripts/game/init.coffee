@@ -183,6 +183,10 @@ window.Game =
     @Q.clearStages()
     @Q.stageScene "end"
 
+  stageControlsScreen: ->
+    @Q.clearStages()
+    @Q.stageScene "controls"
+
   setCameraTo: (stage, toFollowObj) ->
     stage.follow toFollowObj,
       x: true
