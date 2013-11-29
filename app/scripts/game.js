@@ -564,29 +564,35 @@
 
   Q.scene("end", function(stage) {
     var button, marginY;
-    marginY = Q.height * 0.2;
+    marginY = Q.height * 0.25;
     Q.AudioManager.stopAll();
     stage.insert(new Q.UI.Text({
       x: Q.width / 2,
       y: marginY / 2,
       label: "The End",
-      size: 30,
-      color: "#fff",
-      family: "Ubuntu"
+      color: "#f2da38",
+      family: "Jolly Lodger",
+      size: 100
     }));
     stage.insert(new Q.UI.Text({
       x: Q.width / 2,
-      y: marginY / 2 + 100,
-      label: "You did it! If you like the game give us some feedback.",
-      size: 30,
-      color: "#fff",
-      family: "Ubuntu"
+      y: Q.height / 2,
+      label: "You did it!\nIf you like the game, follow us on twitter.\nAlso please give us some feedback.\nThanks for your time!",
+      color: "#c4da4a",
+      family: "Boogaloo",
+      size: 36,
+      align: "center"
     }));
     button = stage.insert(new Q.UI.Button({
       x: Q.width / 2,
-      y: marginY / 2 + 350,
-      fill: "#CCCCCC",
-      label: "Play again",
+      y: Q.height - marginY / 2,
+      w: Q.width / 3,
+      h: 70,
+      fill: "#c4da4a",
+      radius: 10,
+      fontColor: "#353b47",
+      font: "400 58px Jolly Lodger",
+      label: "Back to all levels",
       keyActionName: "confirm",
       type: Q.SPRITE_UI | Q.SPRITE_DEFAULT
     }));
@@ -1220,66 +1226,91 @@
   Q = Game.Q;
 
   Q.scene("levelSummary", function(stage) {
-    var button, marginY;
-    marginY = Q.height * 0.2;
+    var buttonBack, buttonNext, container, lineHeight, marginY;
+    marginY = Q.height * 0.25;
     Q.AudioManager.stopAll();
     stage.insert(new Q.UI.Text({
       x: Q.width / 2,
       y: marginY / 2,
-      label: "Well done! Let's see the level summary:",
-      size: 30,
-      color: "#fff",
-      family: "Ubuntu"
+      label: "Well done!",
+      color: "#f2da38",
+      family: "Jolly Lodger",
+      size: 100
     }));
+    container = stage.insert(new Q.UI.Container({
+      x: Q.width / 2,
+      y: Q.height / 2
+    }));
+    lineHeight = 50;
     if (stage.options.health) {
-      stage.insert(new Q.UI.Text({
-        x: Q.width / 2,
-        y: marginY / 2 + 100,
+      container.insert(new Q.UI.Text({
+        x: 0,
+        y: -lineHeight * 2,
         label: "Health collected: " + stage.options.health.collected + "/" + stage.options.health.available,
-        size: 30,
-        color: "#fff",
-        family: "Ubuntu"
+        color: "#c4da4a",
+        family: "Boogaloo",
+        size: 36
       }));
     }
     if (stage.options.zombies) {
-      stage.insert(new Q.UI.Text({
-        x: Q.width / 2,
-        y: marginY / 2 + 150,
+      container.insert(new Q.UI.Text({
+        x: 0,
+        y: -lineHeight,
         label: "Zombies healed: " + stage.options.zombies.healed + "/" + stage.options.zombies.available,
-        size: 30,
-        color: "#fff",
-        family: "Ubuntu"
+        color: "#c4da4a",
+        family: "Boogaloo",
+        size: 36
       }));
     }
     if (stage.options.bullets) {
-      stage.insert(new Q.UI.Text({
-        x: Q.width / 2,
-        y: marginY / 2 + 200,
+      container.insert(new Q.UI.Text({
+        x: 0,
+        y: 0,
         label: "Bullets waisted: " + stage.options.bullets.waisted + "/" + stage.options.bullets.available,
-        size: 30,
-        color: "#fff",
-        family: "Ubuntu"
+        color: "#c4da4a",
+        family: "Boogaloo",
+        size: 36
       }));
     }
     if (stage.options.zombieModeFound != null) {
-      stage.insert(new Q.UI.Text({
-        x: Q.width / 2,
-        y: marginY / 2 + 250,
+      container.insert(new Q.UI.Text({
+        x: 0,
+        y: lineHeight,
         label: "Zombie Mode: " + (stage.options.zombieModeFound ? "done" : "not found"),
-        size: 30,
-        color: "#fff",
-        family: "Ubuntu"
+        color: "#c4da4a",
+        family: "Boogaloo",
+        size: 36
       }));
     }
-    button = stage.insert(new Q.UI.Button({
-      x: Q.width / 2,
-      y: marginY / 2 + 350,
-      fill: "#CCCCCC",
-      label: "Play Next",
+    buttonNext = stage.insert(new Q.UI.Button({
+      y: Q.height - marginY,
+      w: Q.width / 4,
+      h: 70,
+      fill: "#c4da4a",
+      radius: 10,
+      fontColor: "#353b47",
+      font: "400 58px Jolly Lodger",
+      label: "Play next",
       keyActionName: "confirm",
       type: Q.SPRITE_UI | Q.SPRITE_DEFAULT
     }));
-    button.on("click", function(e) {
+    buttonNext.p.x = Q.width / 2 + buttonNext.p.w / 2 + 40;
+    buttonNext.on("click", function(e) {
+      return Game.stageLevel(Q.state.get("currentLevel") + 1);
+    });
+    buttonBack = stage.insert(new Q.UI.Button({
+      y: Q.height - marginY,
+      w: Q.width / 4,
+      h: 70,
+      fill: "#f2da38",
+      radius: 10,
+      fontColor: "#353b47",
+      font: "400 58px Jolly Lodger",
+      label: "All levels",
+      type: Q.SPRITE_UI | Q.SPRITE_DEFAULT
+    }));
+    buttonBack.p.x = Q.width / 2 - buttonBack.p.w / 2 - 40;
+    buttonBack.on("click", function(e) {
       return Game.stageLevelSelectScreen();
     });
     if (Q.state.get("currentLevel") >= Game.availableLevel) {
