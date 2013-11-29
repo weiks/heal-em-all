@@ -10,7 +10,7 @@ Q.UI.HealthCounter = Q.UI.Text.extend "UI.HealthCounter",
       color: "#ec655d"
       family: "Boogaloo"
 
-    @p.x = -@p.img.w/2 - @p.w/2 - 5
+    @p.x = -@p.img.w/2 - @p.w/2 - 6
 
     Q.state.on "change.lives", @, "updateLabel"
 

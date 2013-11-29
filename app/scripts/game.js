@@ -1890,7 +1890,7 @@
         color: "#f2da38",
         family: "Boogaloo"
       });
-      this.p.x = -this.p.img.w / 2 - this.p.w / 2 - 5;
+      this.p.x = -this.p.img.w / 2 - this.p.w / 2 - 12;
       return Q.state.on("change.bullets", this, "updateLabel");
     },
     updateLabel: function(bullets) {
@@ -1976,7 +1976,7 @@
         color: "#ec655d",
         family: "Boogaloo"
       });
-      this.p.x = -this.p.img.w / 2 - this.p.w / 2 - 5;
+      this.p.x = -this.p.img.w / 2 - this.p.w / 2 - 6;
       return Q.state.on("change.lives", this, "updateLabel");
     },
     updateLabel: function(lives) {

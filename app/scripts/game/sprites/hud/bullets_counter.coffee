@@ -10,7 +10,7 @@ Q.UI.BulletsCounter = Q.UI.Text.extend "UI.BulletsCounter",
       color: "#f2da38"
       family: "Boogaloo"
 
-    @p.x = -@p.img.w/2 - @p.w/2 - 5
+    @p.x = -@p.img.w/2 - @p.w/2 - 12
 
     Q.state.on "change.bullets", @, "updateLabel"
 
