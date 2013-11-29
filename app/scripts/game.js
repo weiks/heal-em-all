@@ -54,6 +54,10 @@
           dataAsset: "hud.json",
           sheet: "hud.png"
         },
+        others: {
+          dataAsset: "others.json",
+          sheet: "others.png"
+        },
         map: {
           sheet: "map_tiles.png",
           bg: "bg.png"
@@ -419,6 +423,7 @@
     Q.compileSheets(Game.assets.characters.sheet, Game.assets.characters.dataAsset);
     Q.compileSheets(Game.assets.items.sheet, Game.assets.items.dataAsset);
     Q.compileSheets(Game.assets.hud.sheet, Game.assets.hud.dataAsset);
+    Q.compileSheets(Game.assets.others.sheet, Game.assets.others.dataAsset);
     return Game.stageStartScreen();
   }, {
     progressCallback: function(loaded, total) {

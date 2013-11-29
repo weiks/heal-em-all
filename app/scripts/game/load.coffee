@@ -10,6 +10,7 @@ Q.load Game.assets.all,
     Q.compileSheets Game.assets.characters.sheet, Game.assets.characters.dataAsset
     Q.compileSheets Game.assets.items.sheet, Game.assets.items.dataAsset
     Q.compileSheets Game.assets.hud.sheet, Game.assets.hud.dataAsset
+    Q.compileSheets Game.assets.others.sheet, Game.assets.others.dataAsset
 
     # first stage
     Game.stageStartScreen()

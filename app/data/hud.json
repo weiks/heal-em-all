@@ -78,53 +78,5 @@
     "tilew": 44,
     "tileh": 49,
     "frames": 1
-  },
-  "ui_level_button": {
-    "sx": 0,
-    "sy": 151,
-    "cols": 1,
-    "tilew": 172,
-    "tileh": 171,
-    "frames": 1
-  },
-  "ui_level_button_locked": {
-    "sx": 0,
-    "sy": 364,
-    "cols": 1,
-    "tilew": 175,
-    "tileh": 184,
-    "frames": 1
-  },
-  "ui_level_progress": {
-    "sx": 0,
-    "sy": 322,
-    "cols": 1,
-    "tilew": 30,
-    "tileh": 30,
-    "frames": 1
-  },
-  "ui_controls_1": {
-    "sx": 174,
-    "sy": 55,
-    "cols": 1,
-    "tilew": 174,
-    "tileh": 97,
-    "frames": 1
-  },
-  "ui_controls_2": {
-    "sx": 349,
-    "sy": 55,
-    "cols": 1,
-    "tilew": 118,
-    "tileh": 112,
-    "frames": 1
-  },
-  "ui_controls_3": {
-    "sx": 174,
-    "sy": 0,
-    "cols": 1,
-    "tilew": 297,
-    "tileh": 55,
-    "frames": 1
   }
 }

@@ -62,6 +62,9 @@ window.Game =
       hud:
         dataAsset: "hud.json"
         sheet: "hud.png"
+      others:
+        dataAsset: "others.json"
+        sheet: "others.png"
       map:
         sheet: "map_tiles.png"
         bg: "bg.png"
