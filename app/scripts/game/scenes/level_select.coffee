@@ -2,6 +2,10 @@ Q = Game.Q
 
 Q.scene "levelSelect", (stage) ->
 
+  # audio
+  Q.AudioManager.stopAll()
+  Q.AudioManager.clear()
+
   # layout params
   marginXinP = 20 # %
   marginYinP = 20 # %
@@ -56,9 +60,8 @@ Q.scene "levelSelect", (stage) ->
     family: "Jolly Lodger"
     size: 60
 
-  # audio
-  Q.AudioManager.stopAll()
-  Q.AudioManager.clear()
+  # authors
+  authors = stage.insert new Q.UI.Authors()
 
   # audio button
   audioButton = stage.insert new Q.UI.AudioButton

@@ -25,6 +25,9 @@ Q.scene "start", (stage) ->
 
   titleContainer.fit()
 
+  # authors
+  authors = stage.insert new Q.UI.Authors()
+
   # button
   button = titleContainer.insert new Q.UI.Button
     x: 0

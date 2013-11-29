@@ -1224,7 +1224,9 @@
   Q = Game.Q;
 
   Q.scene("levelSelect", function(stage) {
-    var audioButton, columnInP, columnWidth, columnsNo, enabled, gutterX, gutterXinP, gutterY, gutterYinP, h, item, marginX, marginXinP, marginY, marginYinP, rowHeight, w, x, y, _i;
+    var audioButton, authors, columnInP, columnWidth, columnsNo, enabled, gutterX, gutterXinP, gutterY, gutterYinP, h, item, marginX, marginXinP, marginY, marginYinP, rowHeight, w, x, y, _i;
+    Q.AudioManager.stopAll();
+    Q.AudioManager.clear();
     marginXinP = 20;
     marginYinP = 20;
     gutterXinP = 8;
@@ -1267,8 +1269,7 @@
       family: "Jolly Lodger",
       size: 60
     }));
-    Q.AudioManager.stopAll();
-    Q.AudioManager.clear();
+    authors = stage.insert(new Q.UI.Authors());
     audioButton = stage.insert(new Q.UI.AudioButton({
       y: marginY / 2
     }));
@@ -1388,7 +1389,7 @@
   Q = Game.Q;
 
   Q.scene("start", function(stage) {
-    var button, titleContainer;
+    var authors, button, titleContainer;
     titleContainer = stage.insert(new Q.UI.Container({
       x: Q.width / 2,
       y: Q.height / 2
@@ -1410,6 +1411,7 @@
       size: 40
     }));
     titleContainer.fit();
+    authors = stage.insert(new Q.UI.Authors());
     button = titleContainer.insert(new Q.UI.Button({
       x: 0,
       y: 80,
@@ -2476,6 +2478,26 @@
           return Game.isMuted = false;
         }
       });
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
+  Q.UI.Authors = Q.UI.Text.extend("UI.Authors", {
+    init: function(p) {
+      this._super(p, {
+        label: "created by @krzysu and @pawelmadeja, follow us for updates",
+        color: "#c4da4a",
+        family: "Boogaloo",
+        size: 22
+      });
+      this.p.x = Q.width / 2;
+      return this.p.y = Q.height - this.p.h / 2;
     }
   });
 
