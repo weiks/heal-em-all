@@ -9,6 +9,13 @@ But be careful not to become one of them!
 We present you our first HTML5 game. Play it anywhere and anyhow you want.
 We also support latest mobile devices!
 
+## How we use game jam "change" theme?
+
+In our game zombies plague can be stoped, so you don't kill them, but heal them and "change" back to humans.
+Turned humans need to be protected, as they can "change" back to zombies after being beaten.
+
+Our protagonist also doesn't die, but "changes" to zombie. You have even oportunity to play him in zombie form.
+
 ## Team
 
 -   [Kris Urbas](https://twitter.com/krzysu) - programming, story
