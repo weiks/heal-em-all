@@ -11,6 +11,14 @@ body {
   background-color: white;
 }
 
+h1, h2 {
+  font-family: "Jolly Lodger", Arial, sans-serif;
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
+  line-height: 1em;
+}
+
 #quintus_container {
   background: #252524 url('../images/bg.png') center center no-repeat;
   background-size: cover;
@@ -28,11 +36,10 @@ body {
 
 #loading-container {
   position: relative;
-  top: 50%;
+  top: 60%;
   margin: 0 auto;
   width: 70%;
-  border: 1px solid black;
-  text-align: center;
+  background-color: #ec655d;
   height: 40px;
 }
 
@@ -42,6 +49,47 @@ body {
   top: 0;
   left: 0;
   height: 40px;
-  background-color: red;
-  opacity: 0.4;
+  background-color: #f2da38;
+  z-index: 10;
+}
+
+.loading-text {
+  font-size: 30px;
+  line-height: 40px;
+  font-family: "Boogaloo", Arial, sans-serif;
+  z-index: 20;
+  position: relative;
+}
+
+.loading-title {
+  position: relative;
+  top: 50%;
+  margin: -157px auto 0;
+  width: 70%;
+  text-align: center;
+
+  h1 {
+    font-size: 120px;
+    color: #f2da38;
+  }
+
+  h2 {
+    font-size: 40px;
+    color: #ec655d;
+  }
+}
+
+
+@media only screen and (max-width : 640px) {
+  .loading-title {
+    margin-top: -81px;
+
+    h1 {
+      font-size: 60px;
+    }
+
+    h2 {
+      font-size: 20px;
+    }
+  }
 }
