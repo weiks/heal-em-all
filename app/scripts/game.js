@@ -2447,7 +2447,7 @@
         y: 170,
         z: 100,
         type: Q.SPRITE_UI | Q.SPRITE_DEFAULT,
-        sheet: "hud_settings_button",
+        sheet: "hud_back_button",
         keyActionName: "escape"
       });
       return this.on('click', function() {
