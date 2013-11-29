@@ -78,7 +78,7 @@ window.Game =
       level6:
         dataAsset: "level6.tmx"
 
-
+    # audio
     @audio =
       zombieMode: "zombie_mode.mp3"
       playerBg: "player_bg.mp3"
@@ -87,6 +87,8 @@ window.Game =
       collected: "collected.mp3"
       playerHit: "player_hit.mp3"
       humanCreated: "human_created.mp3"
+
+    Game.isMuted = false
 
     # convert to array for Q.load
     assetsAsArray = []

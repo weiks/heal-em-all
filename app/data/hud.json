@@ -62,5 +62,45 @@
     "tilew": 44,
     "tileh": 49,
     "frames": 1
+  },
+  "hud_audio_on_button": {
+    "sx": 0,
+    "sy": 102,
+    "cols": 1,
+    "tilew": 44,
+    "tileh": 49,
+    "frames": 1
+  },
+  "hud_audio_off_button": {
+    "sx": 45,
+    "sy": 102,
+    "cols": 1,
+    "tilew": 44,
+    "tileh": 49,
+    "frames": 1
+  },
+  "ui_level_button": {
+    "sx": 0,
+    "sy": 151,
+    "cols": 1,
+    "tilew": 172,
+    "tileh": 171,
+    "frames": 1
+  },
+  "ui_level_button_locked": {
+    "sx": 0,
+    "sy": 364,
+    "cols": 1,
+    "tilew": 175,
+    "tileh": 184,
+    "frames": 1
+  },
+  "ui_level_progress": {
+    "sx": 0,
+    "sy": 322,
+    "cols": 1,
+    "tilew": 30,
+    "tileh": 30,
+    "frames": 1
   }
 }

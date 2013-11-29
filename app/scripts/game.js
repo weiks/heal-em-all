@@ -86,6 +86,7 @@
         playerHit: "player_hit.mp3",
         humanCreated: "human_created.mp3"
       };
+      Game.isMuted = false;
       assetsAsArray = [];
       this.objValueToArray(this.assets, assetsAsArray);
       this.assets.map.sheetName = "tiles";
@@ -1036,11 +1037,11 @@
   Q = Game.Q;
 
   Q.scene("levelSelect", function(stage) {
-    var columnInP, columnWidth, columnsNo, enabled, gutterX, gutterXinP, gutterY, gutterYinP, h, item, marginX, marginXinP, marginY, marginYinP, rowHeight, w, x, y, _i;
-    marginXinP = 10;
+    var audioButton, columnInP, columnWidth, columnsNo, enabled, gutterX, gutterXinP, gutterY, gutterYinP, h, item, marginX, marginXinP, marginY, marginYinP, rowHeight, w, x, y, _i;
+    marginXinP = 20;
     marginYinP = 20;
     gutterXinP = 8;
-    gutterYinP = 8;
+    gutterYinP = 14;
     columnsNo = 3;
     columnInP = (100 - (marginXinP * 2) - (columnsNo - 1) * gutterXinP) / columnsNo;
     marginX = Q.width * marginXinP * 0.01;
@@ -1048,7 +1049,7 @@
     columnWidth = Q.width * columnInP * 0.01;
     marginY = Q.height * marginYinP * 0.01;
     gutterY = Q.height * gutterYinP * 0.01;
-    rowHeight = Q.height * 0.20;
+    rowHeight = Q.height * 0.22;
     x = marginX + columnWidth / 2;
     y = marginY + rowHeight / 2;
     w = columnWidth;
@@ -1075,16 +1076,16 @@
       x: Q.width / 2,
       y: marginY / 2,
       label: "Everything begins here!",
-      size: 30,
-      color: "#fff",
-      family: "Ubuntu"
+      color: "#f2da38",
+      family: "Jolly Lodger",
+      size: 60
     }));
     Q.AudioManager.stopAll();
     Q.AudioManager.clear();
-    return stage.insert(new Q.UI.AudioButton({
-      x: Q.width / 2,
-      y: Q.height - 50
+    audioButton = stage.insert(new Q.UI.AudioButton({
+      y: marginY / 2
     }));
+    return audioButton.p.x = Q.width - marginX - audioButton.p.w / 2;
   });
 
 }).call(this);
@@ -2209,23 +2210,24 @@
       var _this = this;
       this._super(p, {
         x: 0,
-        y: 80,
-        w: 120,
-        h: 60,
+        y: 0,
         type: Q.SPRITE_UI | Q.SPRITE_DEFAULT,
-        fill: "#CCCCCC",
-        label: "Sound on",
+        sheet: "hud_audio_on_button",
         keyActionName: "mute"
       });
-      Game.isMuted = false;
+      if (Game.isMuted) {
+        this.p.sheet = "hud_audio_off_button";
+      } else {
+        this.p.sheet = "hud_audio_on_button";
+      }
       return this.on('click', function() {
         if (!Game.isMuted) {
           Q.AudioManager.mute();
-          _this.p.label = "Sound off";
+          _this.p.sheet = "hud_audio_off_button";
           return Game.isMuted = true;
         } else {
           Q.AudioManager.unmute();
-          _this.p.label = "Sound on";
+          _this.p.sheet = "hud_audio_on_button";
           return Game.isMuted = false;
         }
       });
@@ -2244,11 +2246,18 @@
       var _this = this;
       this._super(p, {
         type: Q.SPRITE_UI | Q.SPRITE_DEFAULT,
-        fill: "#EEE"
+        sheet: "ui_level_button",
+        fontColor: "#595f5f",
+        font: "400 70px Jolly Lodger"
       });
       this.p.label = this.p.level;
+      this.p.sheetW = 172;
+      this.p.sheetH = 130;
+      this.p.cx = this.p.sheetW / 2;
+      this.p.cy = this.p.sheetH / 2;
       if (this.p.enabled === false) {
-        this.p.fill = "#CCC";
+        this.p.sheet = "ui_level_button_locked";
+        this.p.label = false;
       }
       return this.on('click', function() {
         if (_this.p.enabled) {

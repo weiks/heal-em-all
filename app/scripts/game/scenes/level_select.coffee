@@ -3,10 +3,10 @@ Q = Game.Q
 Q.scene "levelSelect", (stage) ->
 
   # layout params
-  marginXinP = 10 # %
+  marginXinP = 20 # %
   marginYinP = 20 # %
   gutterXinP = 8 # %
-  gutterYinP = 8 # %
+  gutterYinP = 14 # %
   columnsNo = 3
 
   # layout math
@@ -18,7 +18,7 @@ Q.scene "levelSelect", (stage) ->
 
   marginY = Q.height * marginYinP * 0.01
   gutterY = Q.height * gutterYinP * 0.01
-  rowHeight = Q.height * 0.20 # 20%
+  rowHeight = Q.height * 0.22 # 22%
 
   # init params
   x = marginX + columnWidth/2
@@ -52,15 +52,16 @@ Q.scene "levelSelect", (stage) ->
     x: Q.width/2
     y: marginY/2
     label: "Everything begins here!"
-    size: 30
-    color: "#fff"
-    family: "Ubuntu"
+    color: "#f2da38"
+    family: "Jolly Lodger"
+    size: 60
 
   # audio
   Q.AudioManager.stopAll()
   Q.AudioManager.clear()
 
   # audio button
-  stage.insert new Q.UI.AudioButton
-    x: Q.width/2
-    y: Q.height - 50
+  audioButton = stage.insert new Q.UI.AudioButton
+    y: marginY/2
+
+  audioButton.p.x = Q.width - marginX - audioButton.p.w/2

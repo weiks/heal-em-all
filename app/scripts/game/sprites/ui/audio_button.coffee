@@ -4,24 +4,24 @@ Q.UI.AudioButton = Q.UI.Button.extend "UI.AudioButton",
   init: (p) ->
     @_super p,
       x: 0
-      y: 80
-      w: 120
-      h: 60
+      y: 0
       type: Q.SPRITE_UI | Q.SPRITE_DEFAULT
-      fill: "#CCCCCC"
-      label: "Sound on"
+      sheet: "hud_audio_on_button"
       keyActionName: "mute" # button that will trigger click event
 
-    Game.isMuted = false
+    if Game.isMuted
+      @p.sheet = "hud_audio_off_button"
+    else
+      @p.sheet = "hud_audio_on_button"
 
     @on 'click', =>
       if !Game.isMuted
         Q.AudioManager.mute()
-        @p.label = "Sound off"
+        @p.sheet = "hud_audio_off_button"
         Game.isMuted = true
 
       else
         Q.AudioManager.unmute()
-        @p.label = "Sound on"
+        @p.sheet = "hud_audio_on_button"
         Game.isMuted = false
 
