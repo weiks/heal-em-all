@@ -160,9 +160,11 @@ Q.Sprite.extend "Player",
       Q.AudioManager.add Game.audio.playerHit
 
       if @p.lifePoints <= 0
-        # @destroy()
-        # Q.stageScene "end", 2,
-        #   label: "You Died"
+
+        if @p.wasZombie
+          @destroy()
+          Game.stageGameOverScreen()
+          return
 
         # zombie mode!
         Game.infoLabel.zombieModeOn()

@@ -183,6 +183,10 @@
       this.Q.clearStages();
       return this.Q.stageScene("controls");
     },
+    stageGameOverScreen: function() {
+      this.Q.clearStages();
+      return this.Q.stageScene("gameOver");
+    },
     setCameraTo: function(stage, toFollowObj) {
       return stage.follow(toFollowObj, {
         x: true,
@@ -602,6 +606,52 @@
       return Game.stageLevelSelectScreen();
     });
     return Q.state.set("currentLevel", 0);
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
+  Q.scene("gameOver", function(stage) {
+    var button, marginY;
+    marginY = Q.height * 0.25;
+    Q.AudioManager.stopAll();
+    stage.insert(new Q.UI.Text({
+      x: Q.width / 2,
+      y: marginY / 2,
+      label: "Game Over",
+      color: "#f2da38",
+      family: "Jolly Lodger",
+      size: 100
+    }));
+    stage.insert(new Q.UI.Text({
+      x: Q.width / 2,
+      y: Q.height / 2,
+      label: "Looks like these zombies cannot hope for your help :/\nBe better next time!",
+      color: "#c4da4a",
+      family: "Boogaloo",
+      size: 36,
+      align: "center"
+    }));
+    button = stage.insert(new Q.UI.Button({
+      x: Q.width / 2,
+      y: Q.height - marginY / 2,
+      w: Q.width / 3,
+      h: 70,
+      fill: "#c4da4a",
+      radius: 10,
+      fontColor: "#353b47",
+      font: "400 58px Jolly Lodger",
+      label: "All levels",
+      keyActionName: "confirm",
+      type: Q.SPRITE_UI | Q.SPRITE_DEFAULT
+    }));
+    return button.on("click", function(e) {
+      return Game.stageLevelSelectScreen();
+    });
   });
 
 }).call(this);
@@ -1634,6 +1684,11 @@
         this.play("hit", 1);
         Q.AudioManager.add(Game.audio.playerHit);
         if (this.p.lifePoints <= 0) {
+          if (this.p.wasZombie) {
+            this.destroy();
+            Game.stageGameOverScreen();
+            return;
+          }
           Game.infoLabel.zombieModeOn();
           zombiePlayer = this.stage.insert(new Q.ZombiePlayer({
             x: (function() {
@@ -1865,6 +1920,7 @@
         x: this.p.savedPosition.x,
         y: this.p.savedPosition.y
       }));
+      player.p.wasZombie = true;
       Game.setCameraTo(this.stage, player);
       Game.infoLabel.zombieModeOff();
       Game.playerAvatar.changeToPlayer();

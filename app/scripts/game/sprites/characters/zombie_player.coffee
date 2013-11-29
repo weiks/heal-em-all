@@ -95,6 +95,8 @@ Q.Sprite.extend "ZombiePlayer",
       x: @p.savedPosition.x
       y: @p.savedPosition.y
 
+    player.p.wasZombie = true
+
     Game.setCameraTo(@stage, player)
 
     Game.infoLabel.zombieModeOff()
