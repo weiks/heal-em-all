@@ -1,4 +1,4 @@
-![GitHub Game Off Game Jam](https://f.cloud.github.com/assets/121322/1436486/25f88b78-4158-11e3-9b23-43596516362c.png)
+![GitHub Game Off Game Jam](http://krzysu.github.io/game-off-2013/images/promo.png)
 
 ## Heal'em all. There's a cure for zombies.
 
@@ -20,6 +20,8 @@ Our protagonist also doesn't die, but "changes" to zombie. You have even oportun
 
 -   [Kris Urbas](https://twitter.com/krzysu) - programming, story
 - 	[Pawel Madeja](https://twitter.com/pawelmadeja) - graphics
+
+![GitHub Game Off Game Jam](http://krzysu.github.io/game-off-2013/images/promo2.png)
 
 ## Open source
 
