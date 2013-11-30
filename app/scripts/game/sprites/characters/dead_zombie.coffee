@@ -4,7 +4,7 @@ Q = Game.Q
 Q.animations "deadZombie",
   intro:
     frames: [16, 17, 18, 19, 20, 21]
-    rate: 0.6
+    rate: 1/3
     next: "stand"
   stand:
     frames: [21]
