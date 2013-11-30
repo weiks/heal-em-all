@@ -5,6 +5,17 @@ Q.scene "levelSummary", (stage) ->
   # some math
   marginY = Q.height * 0.25
 
+  marginXinP = 20 # %
+  gutterXinP = 8 # %
+  columnsNo = 2
+
+  # layout math
+  columnInP = (100 - (marginXinP * 2) - (columnsNo - 1) * gutterXinP)/columnsNo  # 24%
+
+  marginX = Q.width * marginXinP * 0.01
+  gutterX = Q.width * gutterXinP * 0.01
+  columnWidth = Q.width * columnInP * 0.01
+
   # audio
   Q.AudioManager.stopAll()
 
@@ -18,14 +29,14 @@ Q.scene "levelSummary", (stage) ->
     size: 100
 
   # add level summary
-  container = stage.insert new Q.UI.Container
-    x: Q.width/2
+  summaryContainer = stage.insert new Q.UI.Container
+    x: marginX + columnWidth/2
     y: Q.height/2
 
   lineHeight = 50
 
   if stage.options.health
-    container.insert new Q.UI.Text
+    summaryContainer.insert new Q.UI.Text
       x: 0
       y: -lineHeight * 2
       label: "Health collected: " + stage.options.health.collected + "/" + stage.options.health.available
@@ -34,7 +45,7 @@ Q.scene "levelSummary", (stage) ->
       size: 36
 
   if stage.options.zombies
-    container.insert new Q.UI.Text
+    summaryContainer.insert new Q.UI.Text
       x: 0
       y: -lineHeight
       label: "Zombies healed: " + stage.options.zombies.healed + "/" + stage.options.zombies.available
@@ -43,7 +54,7 @@ Q.scene "levelSummary", (stage) ->
       size: 36
 
   if stage.options.bullets
-    container.insert new Q.UI.Text
+    summaryContainer.insert new Q.UI.Text
       x: 0
       y: 0
       label: "Bullets waisted: " + stage.options.bullets.waisted + "/" + stage.options.bullets.available
@@ -52,7 +63,7 @@ Q.scene "levelSummary", (stage) ->
       size: 36
 
   if stage.options.zombieModeFound?
-    container.insert new Q.UI.Text
+    summaryContainer.insert new Q.UI.Text
       x: 0
       y: lineHeight
       label: "Zombie Mode: " + if stage.options.zombieModeFound then "done" else "not found"
@@ -104,4 +115,39 @@ Q.scene "levelSummary", (stage) ->
   # save progress in game
   if Q.state.get("currentLevel") >= Game.availableLevel
     Game.availableLevel = Q.state.get("currentLevel") + 1
-    localStorage.setItem(Game.storageKey, Game.availableLevel)
+    localStorage.setItem(Game.storageKeys.availableLevel, Game.availableLevel)
+
+
+  # count stars
+  score = stage.options.zombies.healed/stage.options.zombies.available
+  stars = 0
+
+  if score <= 0.5
+    stars = 1
+  else if score > 0.5 && score < 0.9
+    stars = 2
+  else
+    stars = 3
+
+  # save only if better than previous
+  previousStars = localStorage.getItem(Game.storageKeys.levelProgress + ":" + Q.state.get("currentLevel"))
+  if previousStars < stars
+    localStorage.setItem(Game.storageKeys.levelProgress + ":" + Q.state.get("currentLevel"), stars)
+
+  # insert stars on the screen
+  starsContainer = stage.insert new Q.UI.Container
+    x: summaryContainer.p.x + gutterX + columnWidth
+    y: Q.height/2
+
+  x = -80 - 20 # width of LevelScoreImg - margin between stars
+
+  for index in [1..3]
+    empty = if stars >= index then false else true
+
+    scoreImg = starsContainer.insert new Q.UI.LevelScoreImg
+      x: x
+      y: -lineHeight/2
+      empty: empty
+
+    x += scoreImg.p.w + 20
+

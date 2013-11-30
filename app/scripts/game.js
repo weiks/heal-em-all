@@ -14,8 +14,11 @@
       });
       Q.controls().touch();
       Q.enableSound();
-      Game.storageKey = "zombieGame:availableLevel";
-      Game.availableLevel = localStorage.getItem(Game.storageKey) || 1;
+      Game.storageKeys = {
+        availableLevel: "zombieGame:availableLevel",
+        levelProgress: "zombieGame:levelProgress"
+      };
+      Game.availableLevel = localStorage.getItem(Game.storageKeys.availableLevel) || 1;
       this.SPRITE_NONE = 0;
       this.SPRITE_PLAYER = 1;
       this.SPRITE_TILES = 2;
@@ -1295,8 +1298,15 @@
   Q = Game.Q;
 
   Q.scene("levelSummary", function(stage) {
-    var buttonBack, buttonNext, container, lineHeight, marginY;
+    var buttonBack, buttonNext, columnInP, columnWidth, columnsNo, empty, gutterX, gutterXinP, index, lineHeight, marginX, marginXinP, marginY, previousStars, score, scoreImg, stars, starsContainer, summaryContainer, x, _i, _results;
     marginY = Q.height * 0.25;
+    marginXinP = 20;
+    gutterXinP = 8;
+    columnsNo = 2;
+    columnInP = (100 - (marginXinP * 2) - (columnsNo - 1) * gutterXinP) / columnsNo;
+    marginX = Q.width * marginXinP * 0.01;
+    gutterX = Q.width * gutterXinP * 0.01;
+    columnWidth = Q.width * columnInP * 0.01;
     Q.AudioManager.stopAll();
     stage.insert(new Q.UI.Text({
       x: Q.width / 2,
@@ -1306,13 +1316,13 @@
       family: "Jolly Lodger",
       size: 100
     }));
-    container = stage.insert(new Q.UI.Container({
-      x: Q.width / 2,
+    summaryContainer = stage.insert(new Q.UI.Container({
+      x: marginX + columnWidth / 2,
       y: Q.height / 2
     }));
     lineHeight = 50;
     if (stage.options.health) {
-      container.insert(new Q.UI.Text({
+      summaryContainer.insert(new Q.UI.Text({
         x: 0,
         y: -lineHeight * 2,
         label: "Health collected: " + stage.options.health.collected + "/" + stage.options.health.available,
@@ -1322,7 +1332,7 @@
       }));
     }
     if (stage.options.zombies) {
-      container.insert(new Q.UI.Text({
+      summaryContainer.insert(new Q.UI.Text({
         x: 0,
         y: -lineHeight,
         label: "Zombies healed: " + stage.options.zombies.healed + "/" + stage.options.zombies.available,
@@ -1332,7 +1342,7 @@
       }));
     }
     if (stage.options.bullets) {
-      container.insert(new Q.UI.Text({
+      summaryContainer.insert(new Q.UI.Text({
         x: 0,
         y: 0,
         label: "Bullets waisted: " + stage.options.bullets.waisted + "/" + stage.options.bullets.available,
@@ -1342,7 +1352,7 @@
       }));
     }
     if (stage.options.zombieModeFound != null) {
-      container.insert(new Q.UI.Text({
+      summaryContainer.insert(new Q.UI.Text({
         x: 0,
         y: lineHeight,
         label: "Zombie Mode: " + (stage.options.zombieModeFound ? "done" : "not found"),
@@ -1388,8 +1398,37 @@
     });
     if (Q.state.get("currentLevel") >= Game.availableLevel) {
       Game.availableLevel = Q.state.get("currentLevel") + 1;
-      return localStorage.setItem(Game.storageKey, Game.availableLevel);
+      localStorage.setItem(Game.storageKeys.availableLevel, Game.availableLevel);
     }
+    score = stage.options.zombies.healed / stage.options.zombies.available;
+    stars = 0;
+    if (score <= 0.5) {
+      stars = 1;
+    } else if (score > 0.5 && score < 0.9) {
+      stars = 2;
+    } else {
+      stars = 3;
+    }
+    previousStars = localStorage.getItem(Game.storageKeys.levelProgress + ":" + Q.state.get("currentLevel"));
+    if (previousStars < stars) {
+      localStorage.setItem(Game.storageKeys.levelProgress + ":" + Q.state.get("currentLevel"), stars);
+    }
+    starsContainer = stage.insert(new Q.UI.Container({
+      x: summaryContainer.p.x + gutterX + columnWidth,
+      y: Q.height / 2
+    }));
+    x = -80 - 20;
+    _results = [];
+    for (index = _i = 1; _i <= 3; index = ++_i) {
+      empty = stars >= index ? false : true;
+      scoreImg = starsContainer.insert(new Q.UI.LevelScoreImg({
+        x: x,
+        y: -lineHeight / 2,
+        empty: empty
+      }));
+      _results.push(x += scoreImg.p.w + 20);
+    }
+    return _results;
   });
 
 }).call(this);
@@ -2571,6 +2610,26 @@
           }
         }
       });
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
+  Q.UI.LevelScoreImg = Q.Sprite.extend("Q.UI.LevelScoreImg", {
+    init: function(p) {
+      this._super(p, {
+        x: 0,
+        y: 0,
+        sheet: "ui_level_score"
+      });
+      if (this.p.empty) {
+        return this.p.sheet = "ui_level_score_empty";
+      }
     }
   });
 

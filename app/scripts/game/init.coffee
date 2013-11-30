@@ -21,8 +21,10 @@ window.Game =
     Q.enableSound()
 
     # game progress
-    Game.storageKey = "zombieGame:availableLevel"
-    Game.availableLevel = localStorage.getItem(Game.storageKey) || 1
+    Game.storageKeys =
+      availableLevel: "zombieGame:availableLevel"
+      levelProgress: "zombieGame:levelProgress"
+    Game.availableLevel = localStorage.getItem(Game.storageKeys.availableLevel) || 1
 
     # used for collision detection
     @SPRITE_NONE = 0

@@ -39,12 +39,28 @@
     "tileh": 55,
     "frames": 1
   },
-    "ui_level_progress": {
+  "ui_level_progress": {
     "sx": 0,
-    "sy": 0,
+    "sy": 353,
     "cols": 1,
     "tilew": 30,
     "tileh": 30,
+    "frames": 1
+  },
+  "ui_level_score": {
+    "sx": 0,
+    "sy": 350,
+    "cols": 1,
+    "tilew": 79,
+    "tileh": 90,
+    "frames": 1
+  },
+  "ui_level_score_empty": {
+    "sx": 79,
+    "sy": 350,
+    "cols": 1,
+    "tilew": 79,
+    "tileh": 90,
     "frames": 1
   }
 }
