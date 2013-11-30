@@ -1,6 +1,6 @@
 ![Heal'em All. Promo.](https://dl.dropboxusercontent.com/u/8751332/promo.png)
 
-## Heal'em all. There's a cure for zombies.
+## Heal'em All. There's a cure for zombies.
 
 Imagine, what if the cure exists? What if zombies plague can be stoped?
 Explore old, abandoned graveyard, heal as many zombies as you can, and find your way out.

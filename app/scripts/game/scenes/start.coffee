@@ -10,7 +10,7 @@ Q.scene "start", (stage) ->
   titleContainer.insert new Q.UI.Text
     x: 0
     y: -100
-    label: "Heal'em all"
+    label: "Heal'em All"
     color: "#f2da38"
     family: "Jolly Lodger"
     size: 120
