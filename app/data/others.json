@@ -39,8 +39,8 @@
     "tileh": 55,
     "frames": 1
   },
-  "ui_level_progress": {
-    "sx": 0,
+  "ui_level_score_small": {
+    "sx": 157,
     "sy": 353,
     "cols": 1,
     "tilew": 30,

@@ -41,15 +41,39 @@ Q.scene "levelSelect", (stage) ->
 
     enabled = if item + 1 <= Game.availableLevel then true else false
 
-    stage.insert new Q.UI.LevelButton
-      level: item + 1
+    # put button into container
+    container = stage.insert new Q.UI.Container
       x: x
       y: y
+
+    x += columnWidth + gutterX
+
+    container.insert new Q.UI.LevelButton
+      level: item + 1
+      x: 0
+      y: 0
       w: w
       h: h
       enabled: enabled
 
-    x += columnWidth + gutterX
+    # add progress stars
+    level = item + 1
+    stars = localStorage.getItem(Game.storageKeys.levelProgress + ":" + level)
+
+    if stars
+      starsX = -60
+      starsY = [34, 50, 40]
+
+      for i in [1..stars]
+        container.insert new Q.UI.LevelScoreImgSmall
+          x: starsX
+          y: starsY[i-1]
+
+        starsX += 60
+
+
+  # end of adding level buttons
+
 
   # add title
   stage.insert new Q.UI.Text

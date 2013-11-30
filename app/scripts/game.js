@@ -1238,7 +1238,7 @@
   Q = Game.Q;
 
   Q.scene("levelSelect", function(stage) {
-    var audioButton, authors, columnInP, columnWidth, columnsNo, enabled, gutterX, gutterXinP, gutterY, gutterYinP, h, item, marginX, marginXinP, marginY, marginYinP, rowHeight, w, x, y, _i;
+    var audioButton, authors, columnInP, columnWidth, columnsNo, container, enabled, gutterX, gutterXinP, gutterY, gutterYinP, h, i, item, level, marginX, marginXinP, marginY, marginYinP, rowHeight, stars, starsX, starsY, w, x, y, _i, _j;
     Q.AudioManager.stopAll();
     Q.AudioManager.clear();
     marginXinP = 20;
@@ -1265,15 +1265,32 @@
         }
       }
       enabled = item + 1 <= Game.availableLevel ? true : false;
-      stage.insert(new Q.UI.LevelButton({
-        level: item + 1,
+      container = stage.insert(new Q.UI.Container({
         x: x,
-        y: y,
+        y: y
+      }));
+      x += columnWidth + gutterX;
+      container.insert(new Q.UI.LevelButton({
+        level: item + 1,
+        x: 0,
+        y: 0,
         w: w,
         h: h,
         enabled: enabled
       }));
-      x += columnWidth + gutterX;
+      level = item + 1;
+      stars = localStorage.getItem(Game.storageKeys.levelProgress + ":" + level);
+      if (stars) {
+        starsX = -60;
+        starsY = [34, 50, 40];
+        for (i = _j = 1; 1 <= stars ? _j <= stars : _j >= stars; i = 1 <= stars ? ++_j : --_j) {
+          container.insert(new Q.UI.LevelScoreImgSmall({
+            x: starsX,
+            y: starsY[i - 1]
+          }));
+          starsX += 60;
+        }
+      }
     }
     stage.insert(new Q.UI.Text({
       x: Q.width / 2,
@@ -2630,6 +2647,23 @@
       if (this.p.empty) {
         return this.p.sheet = "ui_level_score_empty";
       }
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
+  Q.UI.LevelScoreImgSmall = Q.Sprite.extend("Q.UI.LevelScoreImgSmall", {
+    init: function(p) {
+      return this._super(p, {
+        x: 0,
+        y: 0,
+        sheet: "ui_level_score_small"
+      });
     }
   });
 
