@@ -40,7 +40,7 @@
     "frames": 1
   },
   "ui_level_score_small": {
-    "sx": 157,
+    "sx": 159,
     "sy": 353,
     "cols": 1,
     "tilew": 30,
@@ -51,12 +51,12 @@
     "sx": 0,
     "sy": 350,
     "cols": 1,
-    "tilew": 79,
+    "tilew": 80,
     "tileh": 90,
     "frames": 1
   },
   "ui_level_score_empty": {
-    "sx": 79,
+    "sx": 80,
     "sy": 350,
     "cols": 1,
     "tilew": 79,

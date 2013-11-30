@@ -221,7 +221,7 @@ window.Game =
 
   initUnloadEvent: ->
     # window.addEventListener "beforeunload", (e) ->
-    #   Game.trackEvent("Unload", "Current Page", "")
+    #   Game.trackEvent("Unload", "Current Page", Game.currentScreen)
 
 # init game
 Game.init()
