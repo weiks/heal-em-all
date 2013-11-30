@@ -1829,7 +1829,6 @@
             Game.stageGameOverScreen();
             return;
           }
-          Game.infoLabel.zombieModeOn();
           zombiePlayer = this.stage.insert(new Q.ZombiePlayer({
             x: (function() {
               if (_this.p.y > Game.map.p.h) {
@@ -1847,6 +1846,7 @@
             })()
           }));
           Game.setCameraTo(this.stage, zombiePlayer);
+          zombiePlayer.p.direction = this.p.direction;
           this.destroy();
         }
         if (this.p.lifePoints === 1) {
@@ -1985,9 +1985,10 @@
       rate: 1
     },
     intro: {
-      frames: [0, 1, 2],
-      rate: 0.7,
-      next: "stand"
+      frames: [0, 1, 0, 1, 0, 1],
+      rate: 0.8,
+      next: "stand",
+      trigger: "ready"
     }
   });
 
@@ -2004,20 +2005,28 @@
         type: Game.SPRITE_ZOMBIE_PLAYER,
         collisionMask: Game.SPRITE_TILES | Game.SPRITE_HUMAN
       });
-      this.add("2d, platformerControls, animation");
+      this.add("2d, animation");
       this.p.jumpSpeed = -500;
       this.p.speed = 140;
       this.p.savedPosition.x = this.p.x;
       this.p.savedPosition.y = this.p.y;
+      this.p.playerDirection = this.p.direction;
+      Game.infoLabel.zombieModeOn();
+      this.play("intro", 10);
+      this.on("player.outOfMap", this, "die");
+      return this.on("ready", this, "enableZombieMode");
+    },
+    enableZombieMode: function() {
+      this.add("platformerControls");
+      this.p.direction = this.p.playerDirection;
       Game.infoLabel.zombieModeOnNext();
       Game.currentLevelData.zombieModeFound = true;
       Game.playerAvatar.changeToZombie();
       Game.healthImg.changeToHalf();
       Q.AudioManager.remove(Game.audio.playerBg);
-      Q.AudioManager.add(Game.audio.zombieMode, {
+      return Q.AudioManager.add(Game.audio.zombieMode, {
         loop: true
       });
-      return this.on("player.outOfMap", this, "die");
     },
     step: function(dt) {
       if (this.p.direction === "left") {

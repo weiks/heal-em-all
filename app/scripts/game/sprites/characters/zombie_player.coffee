@@ -12,9 +12,10 @@ Q.animations "zombiePlayer",
     frames: [3]
     rate: 1
   intro:
-    frames: [0, 1, 2]
-    rate: 0.7
+    frames: [0, 1, 0, 1, 0, 1]
+    rate: 0.8
     next: "stand"
+    trigger: "ready"
 
 # main object and logic
 Q.Sprite.extend "ZombiePlayer",
@@ -30,13 +31,24 @@ Q.Sprite.extend "ZombiePlayer",
       type: Game.SPRITE_ZOMBIE_PLAYER
       collisionMask: Game.SPRITE_TILES | Game.SPRITE_HUMAN
 
-    @add("2d, platformerControls, animation")
+    @add("2d, animation")
 
     @p.jumpSpeed = -500
     @p.speed = 140
     @p.savedPosition.x = @p.x
     @p.savedPosition.y = @p.y
+    @p.playerDirection = @p.direction
 
+    Game.infoLabel.zombieModeOn()
+    @play "intro", 10
+
+    # events
+    @on "player.outOfMap", @, "die"
+    @on "ready", @, "enableZombieMode"
+
+  enableZombieMode: ->
+    @add "platformerControls"
+    @p.direction = @p.playerDirection
     Game.infoLabel.zombieModeOnNext()
     Game.currentLevelData.zombieModeFound = true
     Game.playerAvatar.changeToZombie()
@@ -46,9 +58,6 @@ Q.Sprite.extend "ZombiePlayer",
     Q.AudioManager.remove Game.audio.playerBg
     Q.AudioManager.add Game.audio.zombieMode,
       loop: true
-
-    # events
-    @on "player.outOfMap", @, "die"
 
   step: (dt) ->
     if @p.direction == "left"

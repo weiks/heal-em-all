@@ -167,8 +167,6 @@ Q.Sprite.extend "Player",
           return
 
         # zombie mode!
-        Game.infoLabel.zombieModeOn()
-
         zombiePlayer = @stage.insert new Q.ZombiePlayer
           x: do =>
             if @p.y > Game.map.p.h
@@ -183,6 +181,7 @@ Q.Sprite.extend "Player",
               return @p.y
 
         Game.setCameraTo(@stage, zombiePlayer)
+        zombiePlayer.p.direction = @p.direction
 
         @destroy()
 
