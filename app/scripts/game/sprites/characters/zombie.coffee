@@ -2,24 +2,21 @@ Q = Game.Q
 
 #
 Q.animations "zombie",
-  stand:
-    frames: [4]
-    rate: 1
   run:
-    frames: [0, 4, 8, 12]
+    frames: [0, 1, 2, 3]
     rate: 0.4
   hit:
-    frames: [13]
+    frames: [10]
     loop: false
     rate: 1
     next: "run"
   attack:
-    frames: [1, 5, 9, 13]
+    frames: [8, 9, 10, 11]
     loop: false
     rate: 1/2
     next: "run"
   fall:
-    frames: [3, 7, 11, 15, 15, 15, 15]
+    frames: [4, 5, 6, 7, 7, 7, 7]
     rate: 1/5
     loop: false
     next: "run"
@@ -86,6 +83,8 @@ Q.Sprite.extend "Zombie",
     if !@p.wasHuman && turnToHuman
       # replace zombie with human
       @stage.insert new Q.Human(x: @p.x, y: @p.y)
+    else
+      @stage.insert new Q.DeadZombie(x: @p.x, y: @p.y)
 
     # update enemies counter
     Q.state.dec "enemiesCounter", 1

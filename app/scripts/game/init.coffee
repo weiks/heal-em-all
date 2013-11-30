@@ -239,7 +239,9 @@ window.Game =
       maxY: Game.map.p.h
 
   trackEvent: (category, action, label, value) ->
-    unless value?
+    if !label?
+      ga 'send', 'event', category, action
+    else if !value?
       ga 'send', 'event', category, action, label.toString()
       # console.log('_gaq.push', category + ' | ', action + ' | ', label.toString())
     else

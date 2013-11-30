@@ -3,14 +3,18 @@ Q = Game.Q
 # animations object
 Q.animations "zombiePlayer",
   stand:
-    frames: [1]
+    frames: [4]
     rate: 1
   run:
-    frames: [0, 1, 2, 3]
+    frames: [3, 4, 5, 4]
     rate: 1/3
   jump:
-    frames: [0]
+    frames: [3]
     rate: 1
+  intro:
+    frames: [0, 1, 2]
+    rate: 0.7
+    next: "stand"
 
 # main object and logic
 Q.Sprite.extend "ZombiePlayer",

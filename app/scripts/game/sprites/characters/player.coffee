@@ -3,10 +3,26 @@ Q = Game.Q
 # animations object
 Q.animations "player",
   stand:
-    frames: [2]
+    frames: [1]
     rate: 1
   run:
-    frames: [0, 2, 4, 2]
+    frames: [0, 1, 2, 1]
+    rate: 1/4
+  hit:
+    frames: [4]
+    loop: false
+    rate: 1
+    next: "stand"
+  jump:
+    frames: [3, 4, 5, 4]
+    rate: 1/3
+
+Q.animations "playerWithGun",
+  stand:
+    frames: [1]
+    rate: 1
+  run:
+    frames: [0, 1, 2, 1]
     rate: 1/4
   hit:
     frames: [3]
@@ -14,23 +30,7 @@ Q.animations "player",
     rate: 1
     next: "stand"
   jump:
-    frames: [1, 3, 5, 3]
-    rate: 1/3
-
-Q.animations "playerWithGun",
-  stand:
-    frames: [2]
-    rate: 1
-  run:
-    frames: [0, 2, 4, 2]
-    rate: 1/4
-  hit:
-    frames: [1]
-    loop: false
-    rate: 1
-    next: "stand"
-  jump:
-    frames: [1]
+    frames: [3]
     rate: 1
 
 # player object and logic

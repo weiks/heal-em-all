@@ -214,7 +214,9 @@
       });
     },
     trackEvent: function(category, action, label, value) {
-      if (value == null) {
+      if (label == null) {
+        return ga('send', 'event', category, action);
+      } else if (value == null) {
         return ga('send', 'event', category, action, label.toString());
       } else {
         return ga('send', 'event', category, action, label.toString(), parseInt(value, 10));
@@ -1564,6 +1566,42 @@
 
   Q = Game.Q;
 
+  Q.animations("deadZombie", {
+    intro: {
+      frames: [16, 17, 18, 19, 20, 21],
+      rate: 0.6,
+      next: "stand"
+    },
+    stand: {
+      frames: [21],
+      rate: 1
+    }
+  });
+
+  Q.Sprite.extend("DeadZombie", {
+    init: function(p) {
+      this._super(p, {
+        x: 0,
+        y: 0,
+        vx: 0,
+        z: 18,
+        sheet: "zombie",
+        sprite: "deadZombie",
+        type: Game.SPRITE_NONE,
+        collisionMask: Game.SPRITE_TILES
+      });
+      this.add("2d, animation");
+      return this.play("intro");
+    }
+  });
+
+}).call(this);
+
+(function() {
+  var Q;
+
+  Q = Game.Q;
+
   Q.animations("human", {
     intro: {
       frames: [0, 1, 2, 3],
@@ -1641,11 +1679,32 @@
 
   Q.animations("player", {
     stand: {
-      frames: [2],
+      frames: [1],
       rate: 1
     },
     run: {
-      frames: [0, 2, 4, 2],
+      frames: [0, 1, 2, 1],
+      rate: 1 / 4
+    },
+    hit: {
+      frames: [4],
+      loop: false,
+      rate: 1,
+      next: "stand"
+    },
+    jump: {
+      frames: [3, 4, 5, 4],
+      rate: 1 / 3
+    }
+  });
+
+  Q.animations("playerWithGun", {
+    stand: {
+      frames: [1],
+      rate: 1
+    },
+    run: {
+      frames: [0, 1, 2, 1],
       rate: 1 / 4
     },
     hit: {
@@ -1655,28 +1714,7 @@
       next: "stand"
     },
     jump: {
-      frames: [1, 3, 5, 3],
-      rate: 1 / 3
-    }
-  });
-
-  Q.animations("playerWithGun", {
-    stand: {
-      frames: [2],
-      rate: 1
-    },
-    run: {
-      frames: [0, 2, 4, 2],
-      rate: 1 / 4
-    },
-    hit: {
-      frames: [1],
-      loop: false,
-      rate: 1,
-      next: "stand"
-    },
-    jump: {
-      frames: [1],
+      frames: [3],
       rate: 1
     }
   });
@@ -1831,28 +1869,24 @@
   Q = Game.Q;
 
   Q.animations("zombie", {
-    stand: {
-      frames: [4],
-      rate: 1
-    },
     run: {
-      frames: [0, 4, 8, 12],
+      frames: [0, 1, 2, 3],
       rate: 0.4
     },
     hit: {
-      frames: [13],
+      frames: [10],
       loop: false,
       rate: 1,
       next: "run"
     },
     attack: {
-      frames: [1, 5, 9, 13],
+      frames: [8, 9, 10, 11],
       loop: false,
       rate: 1 / 2,
       next: "run"
     },
     fall: {
-      frames: [3, 7, 11, 15, 15, 15, 15],
+      frames: [4, 5, 6, 7, 7, 7, 7],
       rate: 1 / 5,
       loop: false,
       next: "run"
@@ -1920,6 +1954,11 @@
           x: this.p.x,
           y: this.p.y
         }));
+      } else {
+        this.stage.insert(new Q.DeadZombie({
+          x: this.p.x,
+          y: this.p.y
+        }));
       }
       return Q.state.dec("enemiesCounter", 1);
     }
@@ -1934,16 +1973,21 @@
 
   Q.animations("zombiePlayer", {
     stand: {
-      frames: [1],
+      frames: [4],
       rate: 1
     },
     run: {
-      frames: [0, 1, 2, 3],
+      frames: [3, 4, 5, 4],
       rate: 1 / 3
     },
     jump: {
-      frames: [0],
+      frames: [3],
       rate: 1
+    },
+    intro: {
+      frames: [0, 1, 2],
+      rate: 0.7,
+      next: "stand"
     }
   });
 
