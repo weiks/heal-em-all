@@ -43,6 +43,3 @@ Q.scene "end", (stage) ->
 
   button.on "click", (e) ->
     Game.stageLevelSelectScreen()
-
-  # track events
-  Game.trackEvent("End Screen", "displayed", true)

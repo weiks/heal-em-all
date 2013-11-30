@@ -169,6 +169,9 @@ window.Game =
     # the story
     Game.infoLabel.intro()
 
+    # for analytics
+    Game.currentScreen = "level" + number
+
   stageLevelSelectScreen: ->
     @Q.input.disableTouchControls()
 
@@ -178,28 +181,52 @@ window.Game =
     @Q.clearStages()
     @Q.stageScene "levelSelect"
 
+    # for analytics
+    Game.currentScreen = "levelSelect"
+
   stageEndLevelScreen: ->
     @Q.input.disableTouchControls()
 
     @Q.clearStages()
     @Q.stageScene "levelSummary", Game.currentLevelData
 
+    # for analytics
+    Game.currentScreen = "levelSummary for level" + @Q.state.get("currentLevel")
+
   stageStartScreen: ->
     @Q.clearStages()
     @Q.stageScene "start"
+
+    # for analytics
+    Game.currentScreen = "start"
 
   stageEndScreen: ->
     @Q.input.disableTouchControls()
     @Q.clearStages()
     @Q.stageScene "end"
 
+    # for analytics
+    Game.currentScreen = "end"
+
+    # track events
+    Game.trackEvent("End Screen", "displayed")
+
   stageControlsScreen: ->
     @Q.clearStages()
     @Q.stageScene "controls"
 
+    # for analytics
+    Game.currentScreen = "controls"
+
   stageGameOverScreen: ->
     @Q.clearStages()
     @Q.stageScene "gameOver"
+
+    # for analytics
+    Game.currentScreen = "gameOver"
+
+    # track events
+    Game.trackEvent("Game Over Screen", "displayed")
 
   setCameraTo: (stage, toFollowObj) ->
     stage.follow toFollowObj,
@@ -213,15 +240,15 @@ window.Game =
 
   trackEvent: (category, action, label, value) ->
     unless value?
-      # _gaq.push ['_trackEvent', category, action, label.toString()]
-      console.log('_gaq.push', category + ' | ', action + ' | ', label.toString())
+      ga 'send', 'event', category, action, label.toString()
+      # console.log('_gaq.push', category + ' | ', action + ' | ', label.toString())
     else
-      # _gaq.push ['_trackEvent', category, action, label.toString(), parseInt(value, 10)]
-      console.log('_gaq.push', category + ' | ', action + ' | ', label.toString() + ' | ', parseInt(value, 10))
+      ga 'send', 'event', category, action, label.toString(), parseInt(value, 10)
+      # console.log('_gaq.push', category + ' | ', action + ' | ', label.toString() + ' | ', parseInt(value, 10))
 
   initUnloadEvent: ->
-    # window.addEventListener "beforeunload", (e) ->
-    #   Game.trackEvent("Unload", "Current Page", Game.currentScreen)
+    window.addEventListener "beforeunload", (e) ->
+      Game.trackEvent("Unload", "Current Screen", Game.currentScreen)
 
 # init game
 Game.init()

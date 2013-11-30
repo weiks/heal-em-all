@@ -163,35 +163,44 @@
       Q.stageScene("hud", 1, {
         sort: true
       });
-      return Game.infoLabel.intro();
+      Game.infoLabel.intro();
+      return Game.currentScreen = "level" + number;
     },
     stageLevelSelectScreen: function() {
       this.Q.input.disableTouchControls();
       this.Q.state.set("currentLevel", 0);
       this.Q.clearStages();
-      return this.Q.stageScene("levelSelect");
+      this.Q.stageScene("levelSelect");
+      return Game.currentScreen = "levelSelect";
     },
     stageEndLevelScreen: function() {
       this.Q.input.disableTouchControls();
       this.Q.clearStages();
-      return this.Q.stageScene("levelSummary", Game.currentLevelData);
+      this.Q.stageScene("levelSummary", Game.currentLevelData);
+      return Game.currentScreen = "levelSummary for level" + this.Q.state.get("currentLevel");
     },
     stageStartScreen: function() {
       this.Q.clearStages();
-      return this.Q.stageScene("start");
+      this.Q.stageScene("start");
+      return Game.currentScreen = "start";
     },
     stageEndScreen: function() {
       this.Q.input.disableTouchControls();
       this.Q.clearStages();
-      return this.Q.stageScene("end");
+      this.Q.stageScene("end");
+      Game.currentScreen = "end";
+      return Game.trackEvent("End Screen", "displayed");
     },
     stageControlsScreen: function() {
       this.Q.clearStages();
-      return this.Q.stageScene("controls");
+      this.Q.stageScene("controls");
+      return Game.currentScreen = "controls";
     },
     stageGameOverScreen: function() {
       this.Q.clearStages();
-      return this.Q.stageScene("gameOver");
+      this.Q.stageScene("gameOver");
+      Game.currentScreen = "gameOver";
+      return Game.trackEvent("Game Over Screen", "displayed");
     },
     setCameraTo: function(stage, toFollowObj) {
       return stage.follow(toFollowObj, {
@@ -206,12 +215,16 @@
     },
     trackEvent: function(category, action, label, value) {
       if (value == null) {
-        return console.log('_gaq.push', category + ' | ', action + ' | ', label.toString());
+        return ga('send', 'event', category, action, label.toString());
       } else {
-        return console.log('_gaq.push', category + ' | ', action + ' | ', label.toString() + ' | ', parseInt(value, 10));
+        return ga('send', 'event', category, action, label.toString(), parseInt(value, 10));
       }
     },
-    initUnloadEvent: function() {}
+    initUnloadEvent: function() {
+      return window.addEventListener("beforeunload", function(e) {
+        return Game.trackEvent("Unload", "Current Screen", Game.currentScreen);
+      });
+    }
   };
 
   Game.init();
@@ -617,10 +630,9 @@
       keyActionName: "confirm",
       type: Q.SPRITE_UI | Q.SPRITE_DEFAULT
     }));
-    button.on("click", function(e) {
+    return button.on("click", function(e) {
       return Game.stageLevelSelectScreen();
     });
-    return Game.trackEvent("End Screen", "displayed", true);
   });
 
 }).call(this);
@@ -664,10 +676,9 @@
       keyActionName: "confirm",
       type: Q.SPRITE_UI | Q.SPRITE_DEFAULT
     }));
-    button.on("click", function(e) {
+    return button.on("click", function(e) {
       return Game.stageLevelSelectScreen();
     });
-    return Game.trackEvent("Game Over Screen", "displayed", true);
   });
 
 }).call(this);
@@ -2702,7 +2713,7 @@
       });
       return this.on('click', function() {
         Game.stageLevelSelectScreen();
-        return Game.trackEvent("Menu Button", "clicked", true);
+        return Game.trackEvent("Menu Button", "clicked");
       });
     }
   });
