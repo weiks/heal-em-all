@@ -67,8 +67,7 @@
           sheet: "bullet.png"
         },
         map: {
-          sheet: "map_tiles.png",
-          bg: "bg.png"
+          sheet: "map_tiles.png"
         },
         gradient: "gradient-top.png",
         level1: {

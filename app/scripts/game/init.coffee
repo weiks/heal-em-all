@@ -73,7 +73,6 @@ window.Game =
         sheet: "bullet.png"
       map:
         sheet: "map_tiles.png"
-        bg: "bg.png"
       gradient: "gradient-top.png"
 
       level1:
