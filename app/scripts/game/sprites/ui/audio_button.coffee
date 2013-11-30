@@ -20,8 +20,12 @@ Q.UI.AudioButton = Q.UI.Button.extend "UI.AudioButton",
         @p.sheet = "hud_audio_off_button"
         Game.isMuted = true
 
+        Game.trackEvent("Audio Button", "clicked", "off")
+
       else
         Q.AudioManager.unmute()
         @p.sheet = "hud_audio_on_button"
         Game.isMuted = false
+
+        Game.trackEvent("Audio Button", "clicked", "on")
 

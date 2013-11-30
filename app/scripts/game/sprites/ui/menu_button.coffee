@@ -12,3 +12,5 @@ Q.UI.MenuButton = Q.UI.Button.extend "UI.MenuButton",
 
     @on 'click', =>
       Game.stageLevelSelectScreen()
+
+      Game.trackEvent("Menu Button", "clicked", true)

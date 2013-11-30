@@ -44,5 +44,5 @@ Q.scene "end", (stage) ->
   button.on "click", (e) ->
     Game.stageLevelSelectScreen()
 
-  # reset current level state
-  Q.state.set "currentLevel", 0
+  # track events
+  Game.trackEvent("End Screen", "displayed", true)

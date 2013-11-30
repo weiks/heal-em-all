@@ -36,6 +36,8 @@ Q.UI.PauseButton = Q.UI.Button.extend "UI.PauseButton",
         @stage.insert pausedScreen
         pausedScreen.insert pausedText
 
+        Game.trackEvent("Pause Button", "clicked", "on")
+
       else
         Q.stage().unpause()
         if !Game.isMuted
@@ -44,4 +46,6 @@ Q.UI.PauseButton = Q.UI.Button.extend "UI.PauseButton",
         @isPaused = false
 
         @stage.remove pausedScreen
+
+        Game.trackEvent("Pause Button", "clicked", "off")
 

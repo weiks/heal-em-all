@@ -40,6 +40,7 @@ window.Game =
     # rest of init
     @prepareAssets()
     @initStats()
+    @initUnloadEvent()
 
     # helpers
     Q.tilePos = (col, row, otherParams = {}) ->
@@ -128,11 +129,11 @@ window.Game =
     stats.setMode(0) # 0: fps, 1: ms
 
     # Align top-left
-    stats.domElement.style.position = 'absolute'
-    stats.domElement.style.left = '0px'
-    stats.domElement.style.top = '140px'
+    # stats.domElement.style.position = 'absolute'
+    # stats.domElement.style.left = '0px'
+    # stats.domElement.style.top = '140px'
 
-    document.body.appendChild( stats.domElement )
+    # document.body.appendChild( stats.domElement )
 
   stageLevel: (number = 1) ->
     Q = @Q
@@ -170,6 +171,10 @@ window.Game =
 
   stageLevelSelectScreen: ->
     @Q.input.disableTouchControls()
+
+    # reset current level state
+    @Q.state.set "currentLevel", 0
+
     @Q.clearStages()
     @Q.stageScene "levelSelect"
 
@@ -206,6 +211,17 @@ window.Game =
       minY: 0
       maxY: Game.map.p.h
 
+  trackEvent: (category, action, label, value) ->
+    unless value?
+      # _gaq.push ['_trackEvent', category, action, label.toString()]
+      console.log('_gaq.push', category + ' | ', action + ' | ', label.toString())
+    else
+      # _gaq.push ['_trackEvent', category, action, label.toString(), parseInt(value, 10)]
+      console.log('_gaq.push', category + ' | ', action + ' | ', label.toString() + ' | ', parseInt(value, 10))
+
+  initUnloadEvent: ->
+    # window.addEventListener "beforeunload", (e) ->
+    #   Game.trackEvent("Unload", "Current Page", "")
 
 # init game
 Game.init()

@@ -30,6 +30,7 @@
       this.SPRITE_ALL = 0xFFFF;
       this.prepareAssets();
       this.initStats();
+      this.initUnloadEvent();
       Q.tilePos = function(col, row, otherParams) {
         var position;
         if (otherParams == null) {
@@ -123,11 +124,7 @@
     initStats: function() {
       var stats;
       this.Q.stats = stats = new Stats();
-      stats.setMode(0);
-      stats.domElement.style.position = 'absolute';
-      stats.domElement.style.left = '0px';
-      stats.domElement.style.top = '140px';
-      return document.body.appendChild(stats.domElement);
+      return stats.setMode(0);
     },
     stageLevel: function(number) {
       var Q;
@@ -170,6 +167,7 @@
     },
     stageLevelSelectScreen: function() {
       this.Q.input.disableTouchControls();
+      this.Q.state.set("currentLevel", 0);
       this.Q.clearStages();
       return this.Q.stageScene("levelSelect");
     },
@@ -205,7 +203,15 @@
         minY: 0,
         maxY: Game.map.p.h
       });
-    }
+    },
+    trackEvent: function(category, action, label, value) {
+      if (value == null) {
+        return console.log('_gaq.push', category + ' | ', action + ' | ', label.toString());
+      } else {
+        return console.log('_gaq.push', category + ' | ', action + ' | ', label.toString() + ' | ', parseInt(value, 10));
+      }
+    },
+    initUnloadEvent: function() {}
   };
 
   Game.init();
@@ -614,7 +620,7 @@
     button.on("click", function(e) {
       return Game.stageLevelSelectScreen();
     });
-    return Q.state.set("currentLevel", 0);
+    return Game.trackEvent("End Screen", "displayed", true);
   });
 
 }).call(this);
@@ -658,9 +664,10 @@
       keyActionName: "confirm",
       type: Q.SPRITE_UI | Q.SPRITE_DEFAULT
     }));
-    return button.on("click", function(e) {
+    button.on("click", function(e) {
       return Game.stageLevelSelectScreen();
     });
+    return Game.trackEvent("Game Over Screen", "displayed", true);
   });
 
 }).call(this);
@@ -1315,7 +1322,7 @@
   Q = Game.Q;
 
   Q.scene("levelSummary", function(stage) {
-    var buttonBack, buttonNext, columnInP, columnWidth, columnsNo, empty, gutterX, gutterXinP, index, lineHeight, marginX, marginXinP, marginY, previousStars, score, scoreImg, stars, starsContainer, summaryContainer, x, _i, _results;
+    var buttonBack, buttonNext, columnInP, columnWidth, columnsNo, empty, gutterX, gutterXinP, index, lineHeight, marginX, marginXinP, marginY, previousStars, score, scoreImg, stars, starsContainer, summaryContainer, x, _i;
     marginY = Q.height * 0.25;
     marginXinP = 20;
     gutterXinP = 8;
@@ -1435,7 +1442,6 @@
       y: Q.height / 2
     }));
     x = -80 - 20;
-    _results = [];
     for (index = _i = 1; _i <= 3; index = ++_i) {
       empty = stars >= index ? false : true;
       scoreImg = starsContainer.insert(new Q.UI.LevelScoreImg({
@@ -1443,9 +1449,14 @@
         y: -lineHeight / 2,
         empty: empty
       }));
-      _results.push(x += scoreImg.p.w + 20);
+      x += scoreImg.p.w + 20;
     }
-    return _results;
+    Game.trackEvent("levelSummary:" + Q.state.get("currentLevel"), "score", score);
+    Game.trackEvent("levelSummary:" + Q.state.get("currentLevel"), "stars", stars);
+    Game.trackEvent("levelSummary:" + Q.state.get("currentLevel"), "Zombie Mode", stage.options.zombieModeFound);
+    Game.trackEvent("levelSummary:" + Q.state.get("currentLevel"), "Health collected", stage.options.health.collected + "/" + stage.options.health.available);
+    Game.trackEvent("levelSummary:" + Q.state.get("currentLevel"), "Zombies healed", stage.options.zombies.healed + "/" + stage.options.zombies.available);
+    return Game.trackEvent("levelSummary:" + Q.state.get("currentLevel"), "Bullets waisted", stage.options.bullets.waisted + "/" + stage.options.bullets.available);
   });
 
 }).call(this);
@@ -2563,11 +2574,13 @@
         if (!Game.isMuted) {
           Q.AudioManager.mute();
           _this.p.sheet = "hud_audio_off_button";
-          return Game.isMuted = true;
+          Game.isMuted = true;
+          return Game.trackEvent("Audio Button", "clicked", "off");
         } else {
           Q.AudioManager.unmute();
           _this.p.sheet = "hud_audio_on_button";
-          return Game.isMuted = false;
+          Game.isMuted = false;
+          return Game.trackEvent("Audio Button", "clicked", "on");
         }
       });
     }
@@ -2625,6 +2638,8 @@
           } else {
             return Game.stageControlsScreen();
           }
+        } else {
+          return Game.trackEvent("Level Button", "clicked", "locked");
         }
       });
     }
@@ -2686,7 +2701,8 @@
         keyActionName: "escape"
       });
       return this.on('click', function() {
-        return Game.stageLevelSelectScreen();
+        Game.stageLevelSelectScreen();
+        return Game.trackEvent("Menu Button", "clicked", true);
       });
     }
   });
@@ -2733,14 +2749,16 @@
           Q.AudioManager.stopAll();
           _this.isPaused = true;
           _this.stage.insert(pausedScreen);
-          return pausedScreen.insert(pausedText);
+          pausedScreen.insert(pausedText);
+          return Game.trackEvent("Pause Button", "clicked", "on");
         } else {
           Q.stage().unpause();
           if (!Game.isMuted) {
             Q.AudioManager.playAll();
           }
           _this.isPaused = false;
-          return _this.stage.remove(pausedScreen);
+          _this.stage.remove(pausedScreen);
+          return Game.trackEvent("Pause Button", "clicked", "off");
         }
       });
     }

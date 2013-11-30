@@ -43,3 +43,6 @@ Q.scene "gameOver", (stage) ->
 
   button.on "click", (e) ->
     Game.stageLevelSelectScreen()
+
+  # track events
+  Game.trackEvent("Game Over Screen", "displayed", true)

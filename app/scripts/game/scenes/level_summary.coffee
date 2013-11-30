@@ -151,3 +151,13 @@ Q.scene "levelSummary", (stage) ->
 
     x += scoreImg.p.w + 20
 
+
+  # track events
+  Game.trackEvent("levelSummary:" + Q.state.get("currentLevel"), "score", score)
+  Game.trackEvent("levelSummary:" + Q.state.get("currentLevel"), "stars", stars)
+
+  Game.trackEvent("levelSummary:" + Q.state.get("currentLevel"), "Zombie Mode", stage.options.zombieModeFound)
+  Game.trackEvent("levelSummary:" + Q.state.get("currentLevel"), "Health collected", stage.options.health.collected + "/" + stage.options.health.available)
+  Game.trackEvent("levelSummary:" + Q.state.get("currentLevel"), "Zombies healed", stage.options.zombies.healed + "/" + stage.options.zombies.available)
+  Game.trackEvent("levelSummary:" + Q.state.get("currentLevel"), "Bullets waisted", stage.options.bullets.waisted + "/" + stage.options.bullets.available)
+

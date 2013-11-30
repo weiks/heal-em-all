@@ -26,3 +26,6 @@ Q.UI.LevelButton = Q.UI.Button.extend "UI.LevelButton",
           Game.stageLevel(@p.level)
         else
           Game.stageControlsScreen()
+
+      else
+        Game.trackEvent("Level Button", "clicked", "locked")
