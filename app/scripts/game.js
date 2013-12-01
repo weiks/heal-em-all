@@ -2287,7 +2287,7 @@
       return this.afterLabelChange();
     },
     zombieModeOff: function() {
-      this.p.label = "Ok, back to businness";
+      this.p.label = "Ok, back to business";
       return this.afterLabelChange();
     }
   });

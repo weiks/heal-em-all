@@ -65,7 +65,7 @@ Q.UI.InfoLabel = Q.UI.Text.extend "UI.InfoLabel",
     @afterLabelChange()
 
   zombieModeOff: ->
-    @p.label = "Ok, back to businness"
+    @p.label = "Ok, back to business"
     @afterLabelChange()
 
 
