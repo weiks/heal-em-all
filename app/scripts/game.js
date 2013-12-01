@@ -533,7 +533,7 @@
     column2Container.insert(new Q.UI.Text({
       x: 0,
       y: step1text1.p.y,
-      label: "2st",
+      label: "2nd",
       color: "#ec655d",
       family: "Boogaloo",
       size: 26
@@ -554,7 +554,7 @@
     column3Container.insert(new Q.UI.Text({
       x: 0,
       y: step1text1.p.y,
-      label: "3st",
+      label: "3rd",
       color: "#ec655d",
       family: "Boogaloo",
       size: 26
