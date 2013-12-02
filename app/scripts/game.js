@@ -1381,7 +1381,7 @@
       summaryContainer.insert(new Q.UI.Text({
         x: 0,
         y: 0,
-        label: "Bullets waisted: " + stage.options.bullets.waisted + "/" + stage.options.bullets.available,
+        label: "Bullets wasted: " + stage.options.bullets.waisted + "/" + stage.options.bullets.available,
         color: "#c4da4a",
         family: "Boogaloo",
         size: 36
