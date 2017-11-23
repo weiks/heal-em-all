@@ -586,7 +586,14 @@
       type: Q.SPRITE_UI | Q.SPRITE_DEFAULT
     }));
     return button.on("click", function(e) {
-      return Game.stageLevel(1);
+      console.log("click")
+      document.querySelectorAll('.buy-quarters-button')[0].click();
+      window.onQuartersCallback = function(data) {
+                                if (data.txId) {
+                                    return Game.stageLevel(1);
+                                }   
+                            }
+      
     });
   });
 
